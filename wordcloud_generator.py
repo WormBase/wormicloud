@@ -1,9 +1,9 @@
 import argparse
 import logging
 
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-from dbmanager import DBManager
+from backend.dbmanager import DBManager
 
 logger = logging.getLogger(__name__)
 
