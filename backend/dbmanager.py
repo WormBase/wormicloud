@@ -29,7 +29,7 @@ class DBManager(object):
                          "WHERE int_genebait.int_genebait = '{}' AND int_genetarget.int_genetarget = '\"{}\"'".format(
             wb_geneid_a, wb_geneid_b))
         rows = self.cur.fetchall()
-        ids = [row[0] for row in rows]
+        ids = set([row[0][7:] for row in rows])
         self.cur.execute("SELECT pap_abstract from pap_abstract WHERE pap_abstract.joinkey IN ('{}')".format(
             "','".join(ids)))
         rows = self.cur.fetchall()
@@ -43,6 +43,6 @@ class DBManager(object):
             gene_name, gene_name))
         row = self.cur.fetchone()
         if row:
-            return row[0]
+            return "WBGene" + row[0]
         else:
             return None

@@ -3,14 +3,21 @@
 import argparse
 import logging
 import falcon
+import nltk
 
 from wsgiref import simple_server
 from falcon import HTTPStatus
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
 from collections import Counter
 
 from backend.dbmanager import DBManager
+
+
+nltk.download('wordnet')
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 
 class StorageEngine(object):
@@ -49,11 +56,11 @@ class WordListReader:
                 abstracts = self.db.get_interaction_abstracts(wb_geneid_a, wb_geneid_b)
                 tokenizer = RegexpTokenizer(r'\w+')
                 lemmatizer = WordNetLemmatizer()
-                abs_tokens = [lemmatizer.lemmatize(word) for abstract in abstracts for word in
-                              tokenizer.tokenize(abstract)]
+                abs_tokens = [lemmatizer.lemmatize(word).lower() for abstract in abstracts for word in
+                              tokenizer.tokenize(abstract) if word not in stop_words and len(word) > 1]
                 counters = Counter(abs_tokens).most_common(
                     n=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None)
-                resp.body = '{{"counters": {}}}'.format(counters)
+                resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for word, count in counters]) + "}")
                 resp.status = falcon.HTTP_OK
             else:
                 resp.status = falcon.HTTP_BAD_REQUEST
