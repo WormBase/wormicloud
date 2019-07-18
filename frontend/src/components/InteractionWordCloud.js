@@ -84,7 +84,7 @@ class InteractionWordCloud extends React.Component {
                                             size={[500, 500]}
                                             options={{
                                                 rotations: 2,
-                                                rotationAngles: [0, 90],
+                                                rotationAngles: [-90, 0],
                                                 fontSizes: [10, 100, 150, 200]
                                             }}/>
                         </LoadingOverlay>
