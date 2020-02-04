@@ -1,37 +1,32 @@
 import React from 'react';
-import LoadingOverlay from 'react-loading-overlay';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ReactWordcloud from 'react-wordcloud';
+import ReactWordcloud from "react-wordcloud";
+import LoadingOverlay from "react-loading-overlay";
+import Button from "react-bootstrap/Button";
+import {Link} from "react-router-dom";
 
-class InteractionWordCloud extends React.Component {
+class Cloud extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
             isLoading: false,
-            target: undefined,
-            bait: undefined,
             words: []
         };
         this.loadDataFromAPI = this.loadDataFromAPI.bind(this);
     }
 
     componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.bait !== this.props.bait || prevProps.target !== this.props.target) {
-            this.loadDataFromAPI();
-        }
+        this.loadDataFromAPI();
     }
 
     loadDataFromAPI() {
-        if (this.props.bait !== undefined && this.props.target !== undefined) {
+        if (this.props.match.params.gene1 !== undefined && this.props.match.params.gene2 !== undefined) {
             this.setState({isLoading: true});
             let payload = {
-                bait: this.props.bait,
-                target: this.props.target
+                gene1: this.props.match.params.gene1,
+                gene2: this.props.match.params.gene2
             };
             fetch(process.env.REACT_APP_API_ENDPOINT + "/get_words_counter_from_wb_db", {
                 method: 'POST',
@@ -67,8 +62,8 @@ class InteractionWordCloud extends React.Component {
     render() {
         return(
             <Container fluid>
-                <Row>
-                    <Col>
+                <Row className="justify-content-md-center">
+                    <Col sm={4}>
                         <LoadingOverlay
                             active={this.state.isLoading}
                             spinner
@@ -90,9 +85,16 @@ class InteractionWordCloud extends React.Component {
                         </LoadingOverlay>
                     </Col>
                 </Row>
+                <Row className="justify-content-md-center">
+                    <Col sm={1}>
+                        <Link to="/">
+                            <Button>Back</Button>
+                        </Link>
+                    </Col>
+                </Row>
             </Container>
         );
     }
 }
 
-export default InteractionWordCloud;
+export default Cloud;

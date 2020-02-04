@@ -50,10 +50,11 @@ class WordListReader:
 
     def on_post(self, req, resp):
         with self.db:
-            if "bait" in req.media and "target" in req.media:
-                wb_geneid_a = self.db.get_wb_geneid_from_gene_name(req.media["bait"])
-                wb_geneid_b = self.db.get_wb_geneid_from_gene_name(req.media["target"])
-                abstracts = self.db.get_interaction_abstracts(wb_geneid_a, wb_geneid_b)
+            if "gene1" in req.media and "gene2" in req.media:
+                wb_geneid_a = self.db.get_wb_geneid_from_gene_name(req.media["gene1"])
+                wb_geneid_b = self.db.get_wb_geneid_from_gene_name(req.media["gene2"])
+                abstracts = set(self.db.get_interaction_abstracts(wb_geneid_a, wb_geneid_b)) | set(
+                    self.db.get_interaction_abstracts(wb_geneid_b, wb_geneid_a))
                 tokenizer = RegexpTokenizer(r'\w+')
                 lemmatizer = WordNetLemmatizer()
                 abs_tokens = [lemmatizer.lemmatize(word).lower() for abstract in abstracts for word in

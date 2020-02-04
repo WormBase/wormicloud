@@ -2,23 +2,21 @@ import React from 'react';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import InteractionWordCloud from "./InteractionWordCloud";
+import Button from "react-bootstrap/Button";
+import {Link} from "react-router-dom";
 
-class Main extends React.Component {
+class Selection extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            target: undefined,
-            bait: undefined,
-            target_tmp: undefined,
-            bait_tmp: undefined
+            gene1: undefined,
+            gene2: undefined,
         };
     }
 
     render() {
-        return(
+        return (
             <Container fluid>
                 <Row>
                     <Col xs={12}>
@@ -33,10 +31,10 @@ class Main extends React.Component {
                         <Form>
                             <Row>
                                 <Col>
-                                    <Form.Control placeholder="Bait" onInput={(event) => {this.setState({bait_tmp: event.target.value})}}/>
+                                    <Form.Control placeholder="Gene 1" onInput={(event) => {this.setState({gene1: event.target.value})}}/>
                                 </Col>
                                 <Col>
-                                    <Form.Control placeholder="Target" onInput={(event) => {this.setState({target_tmp: event.target.value})}}/>
+                                    <Form.Control placeholder="Gene 2" onInput={(event) => {this.setState({gene2: event.target.value})}}/>
                                 </Col>
                             </Row>
                             <Row>
@@ -46,7 +44,9 @@ class Main extends React.Component {
                             </Row>
                             <Row>
                                 <Col className="text-center">
-                                    <Button variant="outline-primary" onClick={() => this.setState({target: this.state.target_tmp, bait: this.state.bait_tmp})}>Generate Wordcloud</Button>
+                                    <Link to={`/cloud/${this.state.gene1}/${this.state.gene2}`}>
+                                        <Button variant="outline-primary">Generate Wordcloud</Button>
+                                    </Link>
                                 </Col>
                             </Row>
                         </Form>
@@ -55,20 +55,9 @@ class Main extends React.Component {
                         &nbsp;
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={4}>
-                        &nbsp;
-                    </Col>
-                    <Col xs={4}>
-                        <InteractionWordCloud bait={this.state.bait} target={this.state.target}/>
-                    </Col>
-                    <Col xs={4}>
-                        &nbsp;
-                    </Col>
-                </Row>
             </Container>
         );
     }
 }
 
-export default Main;
+export default Selection;
