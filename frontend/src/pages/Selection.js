@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
+import {sources} from "../commons";
 
 class Selection extends React.Component {
     constructor(props, context) {
@@ -12,21 +13,25 @@ class Selection extends React.Component {
         this.state = {
             gene1: undefined,
             gene2: undefined,
+            source: sources.WORMBASE
         };
     }
 
     render() {
         return (
             <Container fluid>
-                <Row>
-                    <Col xs={12}>
-                        &nbsp;
+                <Row className="justify-content-md-center">
+                    <Col xs={2}>
+                        <Form.Group>
+                            <Form.Label>Data Source</Form.Label>
+                            <Form.Control as="select" onChange={(event) => {this.setState({source: event.target.value})}}>
+                                <option value={sources.WORMBASE}>WormBase curated data</option>
+                                <option value={sources.TPC}>Textpresso</option>
+                            </Form.Control>
+                        </Form.Group>
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={5}>
-                        &nbsp;
-                    </Col>
+                <Row className="justify-content-md-center">
                     <Col xs={2}>
                         <Form>
                             <Row>
@@ -44,15 +49,12 @@ class Selection extends React.Component {
                             </Row>
                             <Row>
                                 <Col className="text-center">
-                                    <Link to={`/cloud/${this.state.gene1}/${this.state.gene2}`}>
+                                    <Link to={`/cloud/${this.state.gene1}/${this.state.gene2}/${this.state.source}`}>
                                         <Button variant="outline-primary">Generate Wordcloud</Button>
                                     </Link>
                                 </Col>
                             </Row>
                         </Form>
-                    </Col>
-                    <Col xs={5}>
-                        &nbsp;
                     </Col>
                 </Row>
             </Container>

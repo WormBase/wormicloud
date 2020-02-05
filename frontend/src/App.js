@@ -11,7 +11,7 @@ function App() {
       <Router>
           <Route exact path="/" render={() => (<Redirect to={"/selection"}/>)}/>
           <Route path="/selection" component={Selection} />
-          <Route path="/cloud/:gene1/:gene2" component={Cloud} />
+          <Route path="/cloud/:gene1/:gene2/:source" component={Cloud} />
       </Router>
   );
 }

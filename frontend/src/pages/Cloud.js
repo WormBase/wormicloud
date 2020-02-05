@@ -6,6 +6,8 @@ import ReactWordcloud from "react-wordcloud";
 import LoadingOverlay from "react-loading-overlay";
 import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
+import {loadCuratedData, loadTextpressoData} from "../DataManager";
+import {sources} from "../commons";
 
 class Cloud extends React.Component {
     constructor(props, context) {
@@ -14,48 +16,32 @@ class Cloud extends React.Component {
             isLoading: false,
             words: []
         };
-        this.loadDataFromAPI = this.loadDataFromAPI.bind(this);
+        this.loadData = this.loadData.bind(this);
     }
 
     componentDidMount() {
-        this.loadDataFromAPI();
+        this.loadData();
     }
 
-    loadDataFromAPI() {
-        if (this.props.match.params.gene1 !== undefined && this.props.match.params.gene2 !== undefined) {
+    loadData() {
+        if (this.props.match.params.gene1 !== undefined && this.props.match.params.gene2 !== undefined &&
+            this.props.match.params.source !== undefined) {
             this.setState({isLoading: true});
-            let payload = {
-                gene1: this.props.match.params.gene1,
-                gene2: this.props.match.params.gene2
-            };
-            fetch(process.env.REACT_APP_API_ENDPOINT + "/get_words_counter_from_wb_db", {
-                method: 'POST',
-                headers: {
-                    'Accept': 'text/html',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            }).then(res => {
-                if (res.status === 200) {
-                    return res.json();
-                } else {
-                    alert("Error")
-                }
-            }).then(data => {
-                if (data === undefined) {
-                    alert("Empty response")
-                }
-                let arr = [];
-                Object.keys(data["counters"]).forEach((k) => {
-                    arr.push({"text": k, "value": parseInt(data["counters"][k])});
-                });
-                this.setState({
-                    words: arr,
-                    isLoading: false
-                });
-            }).catch((err) => {
-                alert(err);
-            });
+            if (this.props.match.params.source === sources.WORMBASE) {
+                loadCuratedData(this.props.match.params.gene1, this.props.match.params.gene2)
+                    .then(result => this.setState({words: result, isLoading: false}))
+                    .catch(error => {
+                        this.setState({isLoading: false});
+                        alert(error)
+                    });
+            } else if (this.props.match.params.source === sources.TPC) {
+                loadTextpressoData(this.props.match.params.gene1, this.props.match.params.gene2)
+                    .then(result => this.setState({words: result, isLoading: false}))
+                    .catch(error => {
+                        this.setState({isLoading: false});
+                        alert(error)
+                    });
+            }
         }
     }
 

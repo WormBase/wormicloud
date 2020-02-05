@@ -7,13 +7,10 @@ import nltk
 
 from wsgiref import simple_server
 from falcon import HTTPStatus
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
-from collections import Counter
-
 from backend.dbmanager import DBManager
-
+from backend.nlp import *
+from backend.tpcmanager import TPCManager
 
 nltk.download('wordnet')
 nltk.download('stopwords')
@@ -42,11 +39,11 @@ class StorageEngine(object):
         return self.db_manager.get_wb_geneid_from_gene_name(gene_name)
 
 
-class WordListReader:
+class WBDBWordListReader:
 
     def __init__(self, storage_engine: StorageEngine):
         self.db = storage_engine
-        self.logger = logging.getLogger("AFP API")
+        self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
         with self.db:
@@ -55,16 +52,31 @@ class WordListReader:
                 wb_geneid_b = self.db.get_wb_geneid_from_gene_name(req.media["gene2"])
                 abstracts = set(self.db.get_interaction_abstracts(wb_geneid_a, wb_geneid_b)) | set(
                     self.db.get_interaction_abstracts(wb_geneid_b, wb_geneid_a))
-                tokenizer = RegexpTokenizer(r'\w+')
-                lemmatizer = WordNetLemmatizer()
-                abs_tokens = [lemmatizer.lemmatize(word).lower() for abstract in abstracts for word in
-                              tokenizer.tokenize(abstract) if word not in stop_words and len(word) > 1]
-                counters = Counter(abs_tokens).most_common(
-                    n=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None)
-                resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for word, count in counters]) + "}")
+                counters = get_word_counts(corpus=list(abstracts), count=int(req.media["count"]) if
+                                           "count" in req.media and int(req.media["count"]) > 0 else None)
+                resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for
+                                                                         word, count in counters]) + "}")
                 resp.status = falcon.HTTP_OK
             else:
                 resp.status = falcon.HTTP_BAD_REQUEST
+
+
+class TPCWordListReader:
+
+    def __init__(self, tpc_manager: TPCManager):
+        self.tpc_manager = tpc_manager
+        self.logger = logging.getLogger(__name__)
+
+    def on_post(self, req, resp):
+        if "gene1" in req.media and "gene2" in req.media:
+            abstracts = self.tpc_manager.get_abstracts([req.media["gene1"], req.media["gene2"]])
+            counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
+                                       "count" in req.media and int(req.media["count"]) > 0 else None)
+            resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for
+                                                                     word, count in counters]) + "}")
+            resp.status = falcon.HTTP_OK
+        else:
+            resp.status = falcon.HTTP_BAD_REQUEST
 
 
 def main():
@@ -79,6 +91,7 @@ def main():
     parser.add_argument("-L", "--log-level", dest="log_level", choices=['DEBUG', 'INFO', 'WARNING', 'ERROR',
                                                                         'CRITICAL'], default="INFO",
                         help="set the logging level")
+    parser.add_argument("-t", "--tpc-token", metavar="tpc_token", dest="tpc_token", type=str, default="")
     parser.add_argument("-p", "--port", metavar="port", dest="port", type=int, help="API port")
     args = parser.parse_args()
 
@@ -100,8 +113,11 @@ def main():
 
     app = falcon.API(middleware=[HandleCORS()])
     db = StorageEngine(dbname=args.db_name, user=args.db_user, password=args.db_password, host=args.db_host)
-    writer = WordListReader(storage_engine=db)
-    app.add_route('/api/get_words_counter_from_wb_db', writer)
+    tpc_manager = TPCManager(textpresso_api_token=args.tpc_token)
+    db_writer = WBDBWordListReader(storage_engine=db)
+    app.add_route('/api/get_words_counter_from_wb_db', db_writer)
+    tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
+    app.add_route('/api/get_words_counter_from_tpc', tpc_writer)
 
     httpd = simple_server.make_server('0.0.0.0', args.port, app)
     httpd.serve_forever()
