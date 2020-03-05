@@ -70,7 +70,7 @@ class Main extends React.Component {
                                 this.props.fetchWordCounters(this.state.keywords);
                                 this.setState({keywords: filteredKeywords});
                             } else {
-
+                                this.setState({error: "The provided keywords are not valid"})
                             }
                         }}>Generate word cloud {this.props.isLoading ? <Spinner as="span" animation="border"
                                                                                 size="sm" role="status"
