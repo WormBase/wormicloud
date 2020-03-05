@@ -68,8 +68,8 @@ class TPCWordListReader:
         self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
-        if "gene1" in req.media and "gene2" in req.media:
-            abstracts = self.tpc_manager.get_abstracts([req.media["gene1"], req.media["gene2"]])
+        if "keywords" in req.media:
+            abstracts = self.tpc_manager.get_abstracts(req.media["keywords"])
             counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
                                        "count" in req.media and int(req.media["count"]) > 0 else None)
             resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for
@@ -114,10 +114,8 @@ def main():
     app = falcon.API(middleware=[HandleCORS()])
     db = StorageEngine(dbname=args.db_name, user=args.db_user, password=args.db_password, host=args.db_host)
     tpc_manager = TPCManager(textpresso_api_token=args.tpc_token)
-    db_writer = WBDBWordListReader(storage_engine=db)
-    app.add_route('/api/get_words_counter_from_wb_db', db_writer)
     tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
-    app.add_route('/api/get_words_counter_from_tpc', tpc_writer)
+    app.add_route('/word_counter', tpc_writer)
 
     httpd = simple_server.make_server('0.0.0.0', args.port, app)
     httpd.serve_forever()
