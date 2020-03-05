@@ -1,4 +1,9 @@
 export const sources = {
-    WORMBASE: "wormbase",
-    TPC: "tpc"
+    WORMBASE: "WORMBASE",
+    TPC: "TPC"
+};
+
+export const entityTypes = {
+    GENE: "Gene",
+    KEYWORD: "Keyword"
 };
