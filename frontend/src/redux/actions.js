@@ -12,8 +12,8 @@ export const fetchWordCounters = (keywords) => {
         axios
           .post(apiEndpoint, {keywords: keywords})
           .then(res => {
-              if (res.data.counters) {
-                  dispatch(fetchWordCountersSuccess(res.data.counters));
+              if (res.data.counters && res.data.references) {
+                  dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references));
               }
               else {
                   dispatch(fetchWordCountersError('No data found for the specified keywords'));
@@ -29,9 +29,9 @@ export const fetchWordCountersRequest = () => ({
    type: FETCH_WORD_COUNTERS_REQUEST,
 });
 
-export const fetchWordCountersSuccess = counters => ({
+export const fetchWordCountersSuccess = (counters, references) => ({
     type: FETCH_WORD_COUNTERS_SUCCESS,
-    payload: { counters }
+    payload: { counters: counters, references: references }
 });
 
 export const fetchWordCountersError = error => ({

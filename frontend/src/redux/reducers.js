@@ -2,9 +2,10 @@ import {createReducer} from '@reduxjs/toolkit'
 
 
 const initialState = {
-  counters: [],
-  isLoading: false,
-  error: null
+    counters: [],
+    references : [],
+    isLoading: false,
+    error: null
 };
 
 export const wordReducer = createReducer(initialState, {
@@ -14,6 +15,7 @@ export const wordReducer = createReducer(initialState, {
             keyword => {
                 return {text: keyword, value: action.payload.counters[keyword], active: true }
             });
+        state.references = action.payload.references;
         state.isLoading = false;
         state.error = null;
     },

@@ -69,11 +69,14 @@ class TPCWordListReader:
 
     def on_post(self, req, resp):
         if "keywords" in req.media:
-            abstracts = self.tpc_manager.get_abstracts(req.media["keywords"])
+            papers = self.tpc_manager.get_papers(req.media["keywords"])
+            abstracts = self.tpc_manager.get_abstracts(papers)
+            references = self.tpc_manager.get_references(papers)
             counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
                                        "count" in req.media and int(req.media["count"]) > 0 else None)
-            resp.body = '{{"counters": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(count) for
-                                                                     word, count in counters]) + "}")
+            resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
+                count) for word, count in counters]) + "}", "[\"" + "\",\"".join(references) + "\"]" if references
+                else "[]")
             resp.status = falcon.HTTP_OK
         else:
             resp.status = falcon.HTTP_BAD_REQUEST
