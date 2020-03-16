@@ -75,7 +75,8 @@ class TPCWordListReader:
             counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
                                        "count" in req.media and int(req.media["count"]) > 0 else None)
             resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
-                count) for word, count in counters]) + "}", "[\"" + "\",\"".join(references) + "\"]" if references
+                count) for word, count in counters]) + "}", "[" + ",".join(
+                ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\"}" for ref in references]) + "]" if references
                 else "[]")
             resp.status = falcon.HTTP_OK
         else:
@@ -115,7 +116,7 @@ def main():
                 raise HTTPStatus(falcon.HTTP_200, body='\n')
 
     app = falcon.API(middleware=[HandleCORS()])
-    db = StorageEngine(dbname=args.db_name, user=args.db_user, password=args.db_password, host=args.db_host)
+    #db = StorageEngine(dbname=args.db_name, user=args.db_user, password=args.db_password, host=args.db_host)
     tpc_manager = TPCManager(textpresso_api_token=args.tpc_token)
     tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
     app.add_route('/word_counter', tpc_writer)

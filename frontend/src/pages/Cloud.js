@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ReactWordcloud from "react-wordcloud";
 import Form from "react-bootstrap/Form";
-import {fetchWordCounters, toggleWord} from "../redux/actions";
+import {fetchWordCounters, resetCloud, toggleWord} from "../redux/actions";
 import {connect} from "react-redux";
 import {getCounters, getError, isLoading} from "../redux/selectors";
 import Button from "react-bootstrap/Button";
@@ -17,7 +17,8 @@ class Cloud extends React.Component {
         super(props, context);
         this.state = {
             keywords: [''],
-            error: this.props.error
+            error: this.props.error,
+            redraw: false
         }
     }
 
@@ -36,6 +37,7 @@ class Cloud extends React.Component {
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
                                     <Form.Control type="text" placeholder="insert keyword" onChange={(event) => {
+                                        this.props.resetCloud();
                                         let newKeywords = this.state.keywords;
                                         newKeywords[idx] = event.target.value;
                                         this.setState({keywords: newKeywords})
@@ -48,10 +50,12 @@ class Cloud extends React.Component {
                 <Row>
                     <Col sm={4}>
                         <Button variant="light" onClick={() => {
+                            this.props.resetCloud();
                             this.setState({keywords: [...this.state.keywords, '']})
                             }}><IoIosAddCircleOutline /></Button>
                     {this.state.keywords.length > 1 ?
                             <Button variant="light" onClick={() => {
+                                this.props.resetCloud();
                                 this.setState({keywords: this.state.keywords.slice(0, this.state.keywords.length - 1)})}}>
                                 <IoIosRemoveCircleOutline />
                             </Button> : ''}
@@ -78,9 +82,22 @@ class Cloud extends React.Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col>
+                        &nbsp;
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
+                            this.setState({redraw: !this.state.redraw});
+                        }}>Redraw cloud</Button> : ''}
+                    </Col>
+                </Row>
+                <Row>
                     <Col sm={4}>
                         {!this.props.isLoading ?
-                        <ReactWordcloud words={this.props.counters}
+                        <ReactWordcloud redraw={this.state.redraw}
+                                        words={this.props.counters}
                                         size={[500, 500]}
                                         options={{
                                             rotations: 1,
@@ -131,4 +148,4 @@ const mapStateToProps = state => ({
     error: getError(state)
 });
 
-export default connect(mapStateToProps, {toggleWord, fetchWordCounters})(Cloud);
+export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud})(Cloud);

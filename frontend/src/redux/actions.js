@@ -4,6 +4,7 @@ export const FETCH_WORD_COUNTERS_REQUEST = "FETCH_WORD_COUNTERS_REQUEST";
 export const FETCH_WORD_COUNTERS_SUCCESS = "FETCH_WORD_COUNTERS_SUCCESS";
 export const FETCH_WORD_COUNTERS_ERROR = "FETCH_WORD_COUNTERS_ERROR";
 export const TOGGLE_WORD = "TOGGLE_WORD";
+export const RESET_CLOUD ="RESET_CLOUD";
 
 export const fetchWordCounters = (keywords) => {
     return dispatch => {
@@ -43,4 +44,8 @@ export const fetchWordCountersError = error => ({
 export const toggleWord = word => ({
    type: TOGGLE_WORD,
    payload: { word }
+});
+
+export const resetCloud = () => ({
+    type: RESET_CLOUD
 });

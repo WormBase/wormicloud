@@ -32,5 +32,9 @@ export const wordReducer = createReducer(initialState, {
                 return true
             }
         })
+    },
+    RESET_CLOUD: (state, action) => {
+        state.counters = [];
+        state.references = [];
     }
 });
