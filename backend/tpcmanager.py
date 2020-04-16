@@ -35,8 +35,9 @@ class TPCManager(object):
         Returns:
             List[str]: the list of references
         """
-        return [(paper["identifier"].split("/")[1], paper["title"].replace('\'', '').replace('\"', '').replace('\\', '')
-                 ) for paper in papers] if papers and papers != 'null' else []
+        return [(paper["identifier"].split("/")[1], paper["title"].replace('\'', '').replace('\"', '')
+                 .replace('\\', ''), paper["journal"], paper["year"]) for paper in papers] \
+            if papers and papers != 'null' else []
 
     def get_papers(self, keywords: List[str]):
         """get all papers that match **all** the specified keywords

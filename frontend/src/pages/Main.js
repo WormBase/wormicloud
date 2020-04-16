@@ -11,10 +11,10 @@ class Main extends React.Component {
         return(
             <Container fluid>
                 <Row>
-                    <Col sm={6}>
+                    <Col sm={5}>
                         <Cloud />
                     </Col>
-                    <Col sm={6}>
+                    <Col sm={7}>
                         <ReferenceList />
                     </Col>
                 </Row>

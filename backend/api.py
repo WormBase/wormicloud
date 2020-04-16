@@ -76,7 +76,8 @@ class TPCWordListReader:
                                        "count" in req.media and int(req.media["count"]) > 0 else None)
             resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
                 count) for word, count in counters]) + "}", "[" + ",".join(
-                ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\"}" for ref in references]) + "]" if references
+                ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
+                 "\", \"year\":\"" + ref[3] + "\"}" for ref in references]) + "]" if references
                 else "[]")
             resp.status = falcon.HTTP_OK
         else:

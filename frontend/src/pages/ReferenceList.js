@@ -11,7 +11,7 @@ class ReferenceList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            elemPerPage: 10
+            elemPerPage: 5
         }
     }
     render() {
