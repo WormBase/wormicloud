@@ -13,7 +13,7 @@ export const fetchWordCounters = (keywords) => {
         axios
           .post(apiEndpoint, {keywords: keywords})
           .then(res => {
-              if (res.data.counters && res.data.references) {
+              if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0) {
                   dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references));
               }
               else {

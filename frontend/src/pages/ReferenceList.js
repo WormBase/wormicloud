@@ -35,6 +35,11 @@ class ReferenceList extends React.Component {
                         </Row>
                         <Row>
                             <Col>
+                                sorted by relevance and limited to 200 results
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <PaginatedReferences elemPerPage={this.state.elemPerPage} setNumElemPerPageCallback={(num) => this.setState({elemPerPage: num})} showNumElemPerPageSelector />
                             </Col>
                         </Row>
