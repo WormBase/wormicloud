@@ -115,11 +115,11 @@ class Cloud extends React.Component {
                         {!this.props.isLoading ?
                         <ReactWordcloud redraw={this.state.redraw}
                                         words={this.props.counters}
-                                        size={[500, 500]}
+                                        size={[600, 600]}
                                         options={{
                                             rotations: 1,
                                             rotationAngles: [-0, 0],
-                                            fontSizes: [10, 100, 150, 200]
+                                            fontSizes: [20, 100, 150, 200]
                                         }}/> : ''}
                     </Col>
                 </Row>
