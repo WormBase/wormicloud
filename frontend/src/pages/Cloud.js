@@ -28,6 +28,17 @@ class Cloud extends React.Component {
         }
     }
 
+    downloadFile = async (fileContent, fileName, fileType, fileExtension) => {
+        const blob = new Blob([fileContent],{type: fileType});
+        const href = await URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = fileName + '.' + fileExtension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     render() {
         return(
             <Container fluid>
@@ -87,10 +98,16 @@ class Cloud extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col sm={4}>
                         {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
                             this.setState({redraw: !this.state.redraw});
                         }}>Redraw cloud</Button> : ''}
+                    </Col>
+                    <Col sm={4}>
+                        {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
+                            this.downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
+                                .map((c) => c.text + ': ' + c.value).join('\n'), "counters", "text/plain", "txt").then(r => {});
+                        }}>Download counters</Button> : ''}
                     </Col>
                 </Row>
                 <Row>
