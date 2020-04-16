@@ -11,6 +11,26 @@ class Main extends React.Component {
         return(
             <Container fluid>
                 <Row>
+                    <Col sm={12}>
+                        <h3>Wormicloud</h3>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={12}>
+                        <h6><i>Powered by Textpressocentral</i></h6>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={12}>
+                        <div id="titleBanner">&nbsp;</div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={12}>
+                        &nbsp;
+                    </Col>
+                </Row>
+                <Row>
                     <Col sm={5}>
                         <Cloud />
                     </Col>
