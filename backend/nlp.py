@@ -1,3 +1,4 @@
+import os
 from typing import List
 from nltk import RegexpTokenizer, MWETokenizer, WordNetLemmatizer, Counter
 from backend.api import stop_words
@@ -5,7 +6,7 @@ import yaml
 
 
 fixed_words = [('C.', 'elegans'), ('Caenorhabditis', 'elegans')]
-with open("config.yml", 'r') as stream:
+with open(os.path.join(os.getcwd(), "backend", "config.yml"), 'r') as stream:
     try:
         EXCLUSION_LIST = yaml.safe_load(stream)["exclusion_list"]
         EXCLUSION_LIST.extend([word.capitalize() for word in EXCLUSION_LIST])
