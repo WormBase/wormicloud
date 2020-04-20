@@ -3,3 +3,4 @@ wordcloud
 psycopg2-binary
 falcon
 nltk
+pyyaml

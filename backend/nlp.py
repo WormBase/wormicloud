@@ -1,9 +1,16 @@
 from typing import List
 from nltk import RegexpTokenizer, MWETokenizer, WordNetLemmatizer, Counter
 from backend.api import stop_words
+import yaml
+
 
 fixed_words = [('C.', 'elegans'), ('Caenorhabditis', 'elegans')]
-EXCLUSION_LIST = {'the', 'The', 'in', 'In', 'we', 'We'}
+with open("config.yml", 'r') as stream:
+    try:
+        EXCLUSION_LIST = yaml.safe_load(stream)["exclusion_list"]
+        EXCLUSION_LIST.extend([word.capitalize() for word in EXCLUSION_LIST])
+    except yaml.YAMLError as exc:
+        print(exc)
 
 
 def get_word_counts(corpus: List[str], count: int = None):
