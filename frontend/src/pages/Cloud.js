@@ -119,7 +119,9 @@ class Cloud extends React.Component {
                                         options={{
                                             rotations: 1,
                                             rotationAngles: [-0, 0],
-                                            fontSizes: [20, 100, 150, 200]
+                                            padding: 3,
+                                            fontSizes: [20, 100, 150, 200],
+                                            fontFamily: 'verdana'
                                         }}/> : ''}
                     </Col>
                 </Row>
