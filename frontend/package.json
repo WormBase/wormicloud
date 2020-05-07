@@ -5,6 +5,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
     "axios": "^0.19.2",
+    "d3-selection": "^1.4.1",
     "node": "^8.16.0",
     "paginated-list": "^1.0.7",
     "react": "^16.8.6",

@@ -177,6 +177,13 @@ class Cloud extends React.Component {
                                    padding: 3,
                                    fontSizes: [14, 32],
                                    fontFamily: 'verdana'
+                               }}
+                               callbacks={{
+                                   onWordClick: (word, event) => {
+                                       let newKeywords = [...this.state.keywords];
+                                       newKeywords.push(word.text)
+                                       this.setState({keywords: newKeywords});
+                                   }
                                }}/> : ''}
                     </Col>
                 </Row>
