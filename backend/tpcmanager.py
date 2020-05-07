@@ -39,7 +39,7 @@ class TPCManager(object):
                  .replace('\\', ''), paper["journal"], paper["year"]) for paper in papers] \
             if papers and papers != 'null' else []
 
-    def get_papers(self, keywords: List[str]):
+    def get_papers(self, keywords: List[str], caseSensitive: bool = True, year: str = ''):
         """get all papers that match **all** the specified keywords
 
         Args:
@@ -47,9 +47,15 @@ class TPCManager(object):
         Returns:
             List[str]: the list of papers
         """
-        data = json.dumps({"token": self.textpresso_api_token, "query": {
-            "keywords": " AND ".join(keywords), "type": "document", "case_sensitive": True, "corpora": ["C. elegans"]},
-                           "include_fulltext": True, "count": 200})
+        query = {
+            "keywords": " AND ".join(keywords),
+            "type": "document",
+            "case_sensitive": caseSensitive,
+            "corpora": ["C. elegans"]
+        }
+        if year != '':
+            query["year"] = year
+        data = json.dumps({"token": self.textpresso_api_token, "query": query, "include_fulltext": True, "count": 200})
         data = data.encode('utf-8')
         req = urllib.request.Request(self.tpc_api_endpoint, data, headers={'Content-type': 'application/json',
                                                                            'Accept': 'application/json'})

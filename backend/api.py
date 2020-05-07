@@ -68,8 +68,8 @@ class TPCWordListReader:
         self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
-        if "keywords" in req.media:
-            papers = self.tpc_manager.get_papers(req.media["keywords"])
+        if "keywords" in req.media and "caseSensitive" in req.media and "year" in req.media:
+            papers = self.tpc_manager.get_papers(req.media["keywords"], req.media["caseSensitive"], req.media["year"])
             abstracts = self.tpc_manager.get_abstracts(papers)
             references = self.tpc_manager.get_references(papers)
             counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if

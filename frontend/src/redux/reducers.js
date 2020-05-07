@@ -20,6 +20,9 @@ export const wordReducer = createReducer(initialState, {
         state.isLoading = false;
         state.error = action.payload.error
     },
+    DISMISS_ERROR: (state, action) => {
+        state.error = null
+    },
     TOGGLE_WORD: (state, action) => {
         state.counters.every(c => {
             if (c.keyword === action.payload.keyword) {

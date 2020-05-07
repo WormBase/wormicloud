@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ReactWordcloud from "react-wordcloud";
 import Form from "react-bootstrap/Form";
-import {fetchWordCounters, resetCloud, toggleWord} from "../redux/actions";
+import {dismissError, fetchWordCounters, resetCloud, toggleWord} from "../redux/actions";
 import {connect} from "react-redux";
 import {getCounters, getError, isLoading} from "../redux/selectors";
 import Button from "react-bootstrap/Button";
@@ -12,20 +12,17 @@ import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io'
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import {downloadFile} from "../lib/file";
+import Collapse from "react-bootstrap/Collapse";
 
 class Cloud extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
             keywords: [''],
-            error: this.props.error,
-            redraw: false
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.error !== prevProps.error) {
-            this.setState({error: this.props.error})
+            redraw: false,
+            showAdvOpts: false,
+            caseSensitive: true,
+            publicationYear: '',
         }
     }
 
@@ -79,11 +76,47 @@ class Cloud extends React.Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col sm={5}>
+                        <Button variant="light" size="sm" onClick={() => this.setState({showAdvOpts: !this.state.showAdvOpts})}>
+                            Advanced options
+                        </Button>
+                        <Collapse in={this.state.showAdvOpts}>
+                            <Container fluid>
+                                <Row>
+                                    <Col>&nbsp;</Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Check type="checkbox" label="Case sensitive"
+                                                    checked={this.state.caseSensitive}
+                                                    onChange={() => this.setState({caseSensitive: !this.state.caseSensitive})}/>
+                                    </Col>
+                                </Row>
+                                <Row><Col>&nbsp;</Col></Row>
+                                <Row>
+                                    <Col>
+                                        Publication year:
+                                    </Col>
+                                    <Col>
+                                        <Form.Control type="text" placeholder="" value={this.state.publicationYear}
+                                                      onChange={(event) => {this.setState({publicationYear: event.target.value})}}/>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Collapse>
+                    </Col>
+                </Row>
+                <Row>
                     <Col>
-                        <Button variant="light" onClick={() => {
+                        &nbsp;
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Button variant="secondary" onClick={() => {
                             let filteredKeywords = this.state.keywords.filter(k => k !== '');
                             if (filteredKeywords.length > 0) {
-                                this.props.fetchWordCounters(this.state.keywords);
+                                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive, this.state.publicationYear);
                                 this.setState({keywords: filteredKeywords});
                             } else {
                                 this.setState({error: "The provided keywords are not valid"})
@@ -115,7 +148,7 @@ class Cloud extends React.Component {
                     <Col sm={4}>
                         {!this.props.isLoading ?
                         <ReactWordcloud redraw={this.state.redraw}
-                                        words={this.props.counters}
+                                        words={this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1).slice(0,100)}
                                         size={[600, 600]}
                                         options={{
                                             rotations: 1,
@@ -127,10 +160,10 @@ class Cloud extends React.Component {
                     </Col>
                 </Row>
                 <ErrorModal
-                    show={this.state.error !== null}
-                    onHide={() => this.setState({error: null})}
+                    show={this.props.error !== null}
+                    onHide={this.props.dismissError}
                     title="Error"
-                    body={this.state.error}
+                    body={this.props.error}
                 />
             </Container>
         );
@@ -168,4 +201,4 @@ const mapStateToProps = state => ({
     error: getError(state)
 });
 
-export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud})(Cloud);
+export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud, dismissError})(Cloud);
