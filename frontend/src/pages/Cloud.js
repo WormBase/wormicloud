@@ -113,7 +113,7 @@ class Cloud extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <Button variant="secondary" onClick={() => {
+                        <Button onClick={() => {
                             let filteredKeywords = this.state.keywords.filter(k => k !== '');
                             if (filteredKeywords.length > 0) {
                                 this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive, this.state.publicationYear);

@@ -11,7 +11,9 @@ export const fetchWordCounters = (keywords, caseSensitive, year) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
         keywords = keywords.map(k => {return '"' + k + '"'});
-        year = year + '*';
+        if (year !== '') {
+            year = year + '*';
+        }
         let apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
         axios
           .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, year: year})
