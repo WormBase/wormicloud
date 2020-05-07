@@ -34,15 +34,30 @@ class Cloud extends React.Component {
             <Container fluid>
                 {this.state.keywords.map((keyword, idx) =>
                     <Row>
-                        <Col sm={4}>
+                        <Col sm={7}>
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
-                                    <Form.Control type="text" placeholder="insert keyword" onChange={(event) => {
-                                        this.props.resetCloud();
-                                        let newKeywords = this.state.keywords;
-                                        newKeywords[idx] = event.target.value;
-                                        this.setState({keywords: newKeywords})
-                                    }}/>
+                                    <Container fluid>
+                                        <Row>
+                                            <Col sm={11}>
+                                                <Form.Control inline type="text" placeholder="insert keyword" onChange={(event) => {
+                                                    this.props.resetCloud();
+                                                    let newKeywords = this.state.keywords;
+                                                    newKeywords[idx] = event.target.value;
+                                                    this.setState({keywords: newKeywords})
+                                                }}/>
+                                            </Col>
+                                            <Col sm={1}>
+                                                {this.state.keywords.length > 1 ?
+                                                <Button variant="light" onClick={() => {
+                                                    this.props.resetCloud();
+                                                    let newKeywords = this.state.keywords.splice(idx, 1);
+                                                    this.setState({keywords: newKeywords})}}>
+                                                    <IoIosRemoveCircleOutline />
+                                                </Button> : ''}
+                                            </Col>
+                                        </Row>
+                                    </Container>
                                 </Form.Group>
                             </Form>
                         </Col>
@@ -54,12 +69,6 @@ class Cloud extends React.Component {
                             this.props.resetCloud();
                             this.setState({keywords: [...this.state.keywords, '']})
                             }}><IoIosAddCircleOutline /></Button>
-                    {this.state.keywords.length > 1 ?
-                            <Button variant="light" onClick={() => {
-                                this.props.resetCloud();
-                                this.setState({keywords: this.state.keywords.slice(0, this.state.keywords.length - 1)})}}>
-                                <IoIosRemoveCircleOutline />
-                            </Button> : ''}
                     </Col>
                 </Row>
                 <Row>
