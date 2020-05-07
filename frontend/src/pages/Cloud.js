@@ -40,9 +40,10 @@ class Cloud extends React.Component {
                                     <Container fluid>
                                         <Row>
                                             <Col sm={11}>
-                                                <Form.Control inline type="text" placeholder="insert keyword" onChange={(event) => {
+                                                <Form.Control inline type="text" placeholder="insert keyword"
+                                                              value={keyword} onChange={(event) => {
                                                     this.props.resetCloud();
-                                                    let newKeywords = this.state.keywords;
+                                                    let newKeywords = [...this.state.keywords];
                                                     newKeywords[idx] = event.target.value;
                                                     this.setState({keywords: newKeywords})
                                                 }}/>
@@ -51,7 +52,8 @@ class Cloud extends React.Component {
                                                 {this.state.keywords.length > 1 ?
                                                 <Button variant="light" onClick={() => {
                                                     this.props.resetCloud();
-                                                    let newKeywords = this.state.keywords.splice(idx, 1);
+                                                    let newKeywords = [...this.state.keywords];
+                                                    newKeywords.splice(idx, 1);
                                                     this.setState({keywords: newKeywords})}}>
                                                     <IoIosRemoveCircleOutline />
                                                 </Button> : ''}
