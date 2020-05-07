@@ -9,6 +9,7 @@ export const RESET_CLOUD ="RESET_CLOUD";
 export const fetchWordCounters = (keywords) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
+        keywords = keywords.map(k => {return '"' + k + '"'});
         let apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
         axios
           .post(apiEndpoint, {keywords: keywords})
