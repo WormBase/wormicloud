@@ -11,6 +11,7 @@ import Button from "react-bootstrap/Button";
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
+import {downloadFile} from "../lib/file";
 
 class Cloud extends React.Component {
     constructor(props, context) {
@@ -26,17 +27,6 @@ class Cloud extends React.Component {
         if (this.props.error !== prevProps.error) {
             this.setState({error: this.props.error})
         }
-    }
-
-    downloadFile = async (fileContent, fileName, fileType, fileExtension) => {
-        const blob = new Blob([fileContent],{type: fileType});
-        const href = await URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = href;
-        link.download = fileName + '.' + fileExtension;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     }
 
     render() {
@@ -105,7 +95,7 @@ class Cloud extends React.Component {
                     </Col>
                     <Col sm={4}>
                         {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
-                            this.downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
+                            downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
                                 .map((c) => c.text + ': ' + c.value).join('\n'), "counters", "text/plain", "txt").then(r => {});
                         }}>Download counters</Button> : ''}
                     </Col>

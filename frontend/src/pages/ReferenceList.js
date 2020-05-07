@@ -6,6 +6,8 @@ import withPaginatedList from "paginated-list";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import {downloadFile} from "../lib/file";
 
 class ReferenceList extends React.Component {
     constructor(props) {
@@ -36,6 +38,12 @@ class ReferenceList extends React.Component {
                         <Row>
                             <Col>
                                 sorted by relevance and limited to 200 results
+                            </Col>
+                            <Col>
+                                <Button variant="light" onClick={() => {
+                                    downloadFile(this.props.references.map((r) => r.index + '\t' + r.title + '\t' +
+                                        r.journal + '\t' + r.year).join('\n'), "references", "text/plain", "txt").then(r => {})}}
+                                >Download references</Button>
                             </Col>
                         </Row>
                         <Row>
