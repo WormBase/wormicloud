@@ -11,10 +11,7 @@ const initialState = {
 export const wordReducer = createReducer(initialState, {
     FETCH_WORD_COUNTERS_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_WORD_COUNTERS_SUCCESS: (state, action) => {
-        state.counters = Object.keys(action.payload.counters).map(
-            keyword => {
-                return {text: keyword, value: action.payload.counters[keyword], active: true }
-            });
+        state.counters = action.payload.counters;
         state.references = action.payload.references;
         state.isLoading = false;
         state.error = null;

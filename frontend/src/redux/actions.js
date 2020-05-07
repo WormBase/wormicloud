@@ -14,6 +14,13 @@ export const fetchWordCounters = (keywords) => {
           .post(apiEndpoint, {keywords: keywords})
           .then(res => {
               if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0) {
+                  let i = 1;
+                  res.data.references.forEach(r => r.index = i++);
+                  res.data.counters = Object.keys(res.data.counters).map(
+                      keyword => {
+                          return {text: keyword, value: res.data.counters[keyword], active: true }
+                      }).sort((a, b) => (a.value > b.value) ? -1 : 1).slice(
+                          0, Math.min(200, Object.keys(res.data.counters).length));
                   dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references));
               }
               else {
