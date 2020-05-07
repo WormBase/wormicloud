@@ -8,6 +8,7 @@
     "node": "^8.16.0",
     "paginated-list": "^1.0.7",
     "react": "^16.8.6",
+    "react-component-export-image": "^0.1.4",
     "react-dom": "^16.8.6",
     "react-icons": "^3.9.0",
     "react-redux": "^7.2.0",

@@ -13,16 +13,31 @@ import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import {downloadFile} from "../lib/file";
 import Collapse from "react-bootstrap/Collapse";
+import {exportComponentAsJPEG} from "react-component-export-image";
+
+
+class ExtWC extends React.Component {
+ render() {
+   return <ReactWordcloud {...this.props} />
+ }
+}
 
 class Cloud extends React.Component {
     constructor(props, context) {
         super(props, context);
+        this.componentRef = React.createRef();
         this.state = {
             keywords: [''],
             redraw: false,
             showAdvOpts: false,
             caseSensitive: true,
-            publicationYear: '',
+            publicationYear: ''
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state !== prevState) {
+            this.props.resetCloud();
         }
     }
 
@@ -39,7 +54,6 @@ class Cloud extends React.Component {
                                             <Col sm={11}>
                                                 <Form.Control inline type="text" placeholder="insert keyword"
                                                               value={keyword} onChange={(event) => {
-                                                    this.props.resetCloud();
                                                     let newKeywords = [...this.state.keywords];
                                                     newKeywords[idx] = event.target.value;
                                                     this.setState({keywords: newKeywords})
@@ -48,7 +62,6 @@ class Cloud extends React.Component {
                                             <Col sm={1}>
                                                 {this.state.keywords.length > 1 ?
                                                 <Button variant="light" onClick={() => {
-                                                    this.props.resetCloud();
                                                     let newKeywords = [...this.state.keywords];
                                                     newKeywords.splice(idx, 1);
                                                     this.setState({keywords: newKeywords})}}>
@@ -65,7 +78,6 @@ class Cloud extends React.Component {
                 <Row>
                     <Col sm={4}>
                         <Button variant="light" onClick={() => {
-                            this.props.resetCloud();
                             this.setState({keywords: [...this.state.keywords, '']})
                             }}><IoIosAddCircleOutline /></Button>
                     </Col>
@@ -77,7 +89,9 @@ class Cloud extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={5}>
-                        <Button variant="light" size="sm" onClick={() => this.setState({showAdvOpts: !this.state.showAdvOpts})}>
+                        <Button variant="light" size="sm" onClick={() => {
+                            this.setState({showAdvOpts: !this.state.showAdvOpts});
+                        }}>
                             Advanced options
                         </Button>
                         <Collapse in={this.state.showAdvOpts}>
@@ -89,7 +103,9 @@ class Cloud extends React.Component {
                                     <Col>
                                         <Form.Check type="checkbox" label="Case sensitive"
                                                     checked={this.state.caseSensitive}
-                                                    onChange={() => this.setState({caseSensitive: !this.state.caseSensitive})}/>
+                                                    onChange={() => {
+                                                        this.setState({caseSensitive: !this.state.caseSensitive})
+                                                    }}/>
                                     </Col>
                                 </Row>
                                 <Row><Col>&nbsp;</Col></Row>
@@ -133,30 +149,35 @@ class Cloud extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={4}>
-                        {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
+                        {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
                             this.setState({redraw: !this.state.redraw});
                         }}>Redraw cloud</Button> : ''}
                     </Col>
                     <Col sm={4}>
-                        {this.props.counters.length > 0 ? <Button variant="light" onClick={() => {
+                        {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
                             downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
                                 .map((c) => c.text + ': ' + c.value).join('\n'), "counters", "text/plain", "txt").then(r => {});
                         }}>Download counters</Button> : ''}
                     </Col>
+                    <Col sm={4}>
+                        {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
+                            exportComponentAsJPEG(this.componentRef)
+                        }}>Export As JPEG</Button> : ''}
+                    </Col>
                 </Row>
                 <Row>
-                    <Col sm={4}>
+                    <Col sm={12}>
                         {!this.props.isLoading ?
-                        <ReactWordcloud redraw={this.state.redraw}
-                                        words={this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1).slice(0,100)}
-                                        size={[600, 600]}
-                                        options={{
-                                            rotations: 1,
-                                            rotationAngles: [-0, 0],
-                                            padding: 3,
-                                            fontSizes: [20, 100, 150, 200],
-                                            fontFamily: 'verdana'
-                                        }}/> : ''}
+                        <ExtWC ref={this.componentRef}
+                               redraw={this.state.redraw}
+                               words={this.props.counters}
+                               options={{
+                                   rotations: 1,
+                                   rotationAngles: [-0, 0],
+                                   padding: 3,
+                                   fontSizes: [14, 32],
+                                   fontFamily: 'verdana'
+                               }}/> : ''}
                     </Col>
                 </Row>
                 <ErrorModal
