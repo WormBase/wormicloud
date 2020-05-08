@@ -72,8 +72,19 @@ class TPCWordListReader:
             papers = self.tpc_manager.get_papers(req.media["keywords"], req.media["caseSensitive"], req.media["year"])
             abstracts = self.tpc_manager.get_abstracts(papers)
             references = self.tpc_manager.get_references(papers)
-            counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
-                                       "count" in req.media and int(req.media["count"]) > 0 else None)
+            if "genesOnly" in req.media and req.media["genesOnly"] and papers:
+                genes_matches = self.tpc_manager.get_category_matches(
+                    req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                    "Gene (C. elegans) (tpgce:0000001)")
+                protein_matches = self.tpc_manager.get_category_matches(
+                    req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                    "Protein (C. elegans) (tpprce:0000001)")
+                abstracts = [" ".join(gene_m["matches"]) for gene_m in genes_matches if "matches" in gene_m and
+                             gene_m["matches"]]
+                abstracts.extend([" ".join(protein_m["matches"]) for protein_m in protein_matches if "matches" in
+                                  protein_m and protein_m["matches"]])
+            counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if "count" in req.media and int(
+                req.media["count"]) > 0 else None)
             resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
                 count) for word, count in counters]) + "}", "[" + ",".join(
                 ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +

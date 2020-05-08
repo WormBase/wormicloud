@@ -31,13 +31,8 @@ class Cloud extends React.Component {
             redraw: false,
             showAdvOpts: false,
             caseSensitive: true,
-            publicationYear: ''
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state !== prevState) {
-            this.props.resetCloud();
+            publicationYear: '',
+            genesOnly: false
         }
     }
 
@@ -118,6 +113,16 @@ class Cloud extends React.Component {
                                                       onChange={(event) => {this.setState({publicationYear: event.target.value})}}/>
                                     </Col>
                                 </Row>
+                                <Row><Col>&nbsp;</Col></Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Check type="checkbox" label="Word cloud with gene names only"
+                                                    checked={this.state.genesOnly}
+                                                    onChange={() => {
+                                                        this.setState({genesOnly: !this.state.genesOnly})
+                                                    }}/>
+                                    </Col>
+                                </Row>
                             </Container>
                         </Collapse>
                     </Col>
@@ -132,7 +137,9 @@ class Cloud extends React.Component {
                         <Button onClick={() => {
                             let filteredKeywords = this.state.keywords.filter(k => k !== '');
                             if (filteredKeywords.length > 0) {
-                                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive, this.state.publicationYear);
+                                this.props.resetCloud();
+                                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
+                                    this.state.publicationYear, this.state.genesOnly);
                                 this.setState({keywords: filteredKeywords});
                             } else {
                                 this.setState({error: "The provided keywords are not valid"})

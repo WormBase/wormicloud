@@ -12,6 +12,7 @@ class TPCManager(object):
     def __init__(self, textpresso_api_token):
         self.textpresso_api_token = textpresso_api_token
         self.tpc_api_endpoint = "https://textpressocentral.org:18080/v1/textpresso/api/search_documents"
+        self.tpc_category_matches_endpoint = "https://textpressocentral.org:18080/v1/textpresso/api/get_category_matches_document_fulltext"
         if not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
             ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -59,6 +60,22 @@ class TPCManager(object):
         data = data.encode('utf-8')
         req = urllib.request.Request(self.tpc_api_endpoint, data, headers={'Content-type': 'application/json',
                                                                            'Accept': 'application/json'})
+        logger.debug("Sending request to Textpresso Central API")
+        return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+
+    def get_category_matches(self, keywords: List[str], caseSensitive: bool = True, year: str = '', category: str = ''):
+        query = {
+            "keywords": " AND ".join(keywords),
+            "type": "document",
+            "case_sensitive": caseSensitive,
+            "corpora": ["C. elegans"]
+        }
+        if year != '':
+            query["year"] = year
+        data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category})
+        data = data.encode('utf-8')
+        req = urllib.request.Request(self.tpc_category_matches_endpoint, data,
+                                     headers={'Content-type': 'application/json', 'Accept': 'application/json'})
         logger.debug("Sending request to Textpresso Central API")
         return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
 
