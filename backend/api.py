@@ -84,7 +84,8 @@ class TPCWordListReader:
                 abstracts.extend([" ".join(protein_m["matches"]) for protein_m in protein_matches if "matches" in
                                   protein_m and protein_m["matches"]])
             counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if "count" in req.media and int(
-                req.media["count"]) > 0 else None)
+                req.media["count"]) > 0 else None, gene_only=req.media["genesOnly"] if "genesOnly" in req.media
+                else False)
             resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
                 count) for word, count in counters]) + "}", "[" + ",".join(
                 ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +

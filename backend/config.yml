@@ -651,3 +651,9 @@ exclusion_list :
   - "yourselves"
   - "you've"
 
+gene_exclusion_list:
+  - run
+  - running
+  - cat
+  - cated
+  - JP
