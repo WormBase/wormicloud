@@ -37,6 +37,11 @@ class Main extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={12}>
+                        &nbsp;
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={12}>
                         <ReferenceList />
                     </Col>
                 </Row>

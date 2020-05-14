@@ -31,15 +31,10 @@ class ReferenceList extends React.Component {
                 {this.props.references.length > 0 ?
                     <Container fluid>
                         <Row>
-                            <Col>
-                                <h5>List of references</h5>
+                            <Col sm={5}>
+                                <h6>List of references - sorted by relevance and limited to 200 results</h6>
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                sorted by relevance and limited to 200 results
-                            </Col>
-                            <Col>
+                            <Col sm={7}>
                                 <Button variant="light" onClick={() => {
                                     downloadFile(this.props.references.map((r) => r.index + '\t' + r.title + '\t' +
                                         r.journal + '\t' + r.year).join('\n'), "references", "text/plain", "txt").then(r => {})}}

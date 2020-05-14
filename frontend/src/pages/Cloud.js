@@ -87,47 +87,40 @@ class Cloud extends React.Component {
                             </Row>
                             <Row>
                                 <Col sm={5}>
-                                    <Button variant="light" size="sm" onClick={() => {
-                                        this.setState({showAdvOpts: !this.state.showAdvOpts});
-                                    }}>
-                                        Advanced options
-                                    </Button>
-                                    <Collapse in={this.state.showAdvOpts}>
-                                        <Container fluid>
-                                            <Row>
-                                                <Col>&nbsp;</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col>
-                                                    <Form.Check type="checkbox" label="Case sensitive"
-                                                                checked={this.state.caseSensitive}
-                                                                onChange={() => {
-                                                                    this.setState({caseSensitive: !this.state.caseSensitive})
-                                                                }}/>
-                                                </Col>
-                                            </Row>
-                                            <Row><Col>&nbsp;</Col></Row>
-                                            <Row>
-                                                <Col>
-                                                    Publication year:
-                                                </Col>
-                                                <Col>
-                                                    <Form.Control type="text" placeholder="" value={this.state.publicationYear}
-                                                                  onChange={(event) => {this.setState({publicationYear: event.target.value})}}/>
-                                                </Col>
-                                            </Row>
-                                            <Row><Col>&nbsp;</Col></Row>
-                                            <Row>
-                                                <Col>
-                                                    <Form.Check type="checkbox" label="Word cloud with gene names only"
-                                                                checked={this.state.genesOnly}
-                                                                onChange={() => {
-                                                                    this.setState({genesOnly: !this.state.genesOnly})
-                                                                }}/>
-                                                </Col>
-                                            </Row>
-                                        </Container>
-                                    </Collapse>
+                                    <Container fluid>
+                                        <Row>
+                                            <Col>&nbsp;</Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <Form.Check type="checkbox" label="Case sensitive"
+                                                            checked={this.state.caseSensitive}
+                                                            onChange={() => {
+                                                                this.setState({caseSensitive: !this.state.caseSensitive})
+                                                            }}/>
+                                            </Col>
+                                        </Row>
+                                        <Row><Col>&nbsp;</Col></Row>
+                                        <Row>
+                                            <Col>
+                                                Publication year:
+                                            </Col>
+                                            <Col>
+                                                <Form.Control type="text" placeholder="" value={this.state.publicationYear}
+                                                              onChange={(event) => {this.setState({publicationYear: event.target.value})}}/>
+                                            </Col>
+                                        </Row>
+                                        <Row><Col>&nbsp;</Col></Row>
+                                        <Row>
+                                            <Col>
+                                                <Form.Check type="checkbox" label="Word cloud with gene names only"
+                                                            checked={this.state.genesOnly}
+                                                            onChange={() => {
+                                                                this.setState({genesOnly: !this.state.genesOnly})
+                                                            }}/>
+                                            </Col>
+                                        </Row>
+                                    </Container>
                                 </Col>
                             </Row>
                             <Row>
@@ -174,6 +167,11 @@ class Cloud extends React.Component {
                                             {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
                                                 exportComponentAsJPEG(this.componentRef)
                                             }}>Export As JPEG</Button> : ''}
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            &nbsp;
                                         </Col>
                                     </Row>
                                     <Row>
