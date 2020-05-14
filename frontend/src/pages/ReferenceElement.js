@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 class ReferenceElement extends React.Component {
     render() {
         return (
-            <Container>
+            <Container fluid>
                 <Row>
                     <Col sm={1}>{this.props.element.index}</Col>
                     <Col sm={7}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + this.props.element.wb_id}>{this.props.element.title}</a></Col>

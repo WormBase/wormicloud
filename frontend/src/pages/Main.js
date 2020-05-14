@@ -17,7 +17,7 @@ class Main extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={12}>
-                        <h6><i>Powered by Textpressocentral</i></h6>
+                        <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
                     </Col>
                 </Row>
                 <Row>
@@ -31,10 +31,12 @@ class Main extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={5}>
+                    <Col sm={12}>
                         <Cloud />
                     </Col>
-                    <Col sm={7}>
+                </Row>
+                <Row>
+                    <Col sm={12}>
                         <ReferenceList />
                     </Col>
                 </Row>

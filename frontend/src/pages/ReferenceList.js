@@ -29,7 +29,7 @@ class ReferenceList extends React.Component {
         return (
             <div>
                 {this.props.references.length > 0 ?
-                    <Container>
+                    <Container fluid>
                         <Row>
                             <Col>
                                 <h5>List of references</h5>
@@ -47,7 +47,7 @@ class ReferenceList extends React.Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
+                            <Col sm={12} align="left">
                                 <PaginatedReferences elemPerPage={this.state.elemPerPage} setNumElemPerPageCallback={(num) => this.setState({elemPerPage: num})} showNumElemPerPageSelector />
                             </Col>
                         </Row>
