@@ -30,7 +30,8 @@ class Cloud extends React.Component {
             redraw: false,
             caseSensitive: true,
             publicationYear: '',
-            genesOnly: false
+            genesOnly: false,
+            logicOp: 'AND'
         }
     }
 
@@ -93,6 +94,17 @@ class Cloud extends React.Component {
                                 <Col sm={5}>
                                     <Container fluid>
                                         <Row>
+                                            <Col>
+                                                <strong>Combine keywords by:</strong>&nbsp;
+                                                <Form.Check inline type="radio" name="filtersLogic"
+                                                            onChange={() => this.setState({logicOp: 'AND'})}
+                                                            label="AND" defaultChecked/>
+                                                <Form.Check inline type="radio" name="filtersLogic"
+                                                            onChange={() => this.setState({logicOp: 'OR'})}
+                                                            label="OR"/>
+                                            </Col>
+                                        </Row>
+                                        <Row>
                                             <Col>&nbsp;</Col>
                                         </Row>
                                         <Row>
@@ -139,7 +151,7 @@ class Cloud extends React.Component {
                                         if (filteredKeywords.length > 0) {
                                             this.props.resetCloud();
                                             this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
-                                                this.state.publicationYear, this.state.genesOnly);
+                                                this.state.publicationYear, this.state.genesOnly, this.state.logicOp);
                                             this.setState({keywords: filteredKeywords});
                                         } else {
                                             this.setState({error: "The provided keywords are not valid"})

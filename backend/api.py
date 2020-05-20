@@ -69,7 +69,8 @@ class TPCWordListReader:
 
     def on_post(self, req, resp):
         if "keywords" in req.media and "caseSensitive" in req.media and "year" in req.media:
-            papers = self.tpc_manager.get_papers(req.media["keywords"], req.media["caseSensitive"], req.media["year"])
+            papers = self.tpc_manager.get_papers(req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                                                 req.media["logicOp"])
             abstracts = self.tpc_manager.get_abstracts(papers)
             references = self.tpc_manager.get_references(papers)
             if "genesOnly" in req.media and req.media["genesOnly"] and papers:

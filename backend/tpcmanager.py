@@ -40,18 +40,21 @@ class TPCManager(object):
                  .replace('\\', ''), paper["journal"], paper["year"]) for paper in papers] \
             if papers and papers != 'null' else []
 
-    def get_papers(self, keywords: List[str], caseSensitive: bool = True, year: str = ''):
+    def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND'):
         """get all papers that match **all** the specified keywords
 
         Args:
             keywords (List[str]): list of keywords to search
+            case_sensitive (bool): case sensitive search
+            year (str): limit search to specific year
+            logic_op (bool): logic operator used to combine keywords
         Returns:
             List[str]: the list of papers
         """
         query = {
-            "keywords": " AND ".join(keywords),
+            "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
-            "case_sensitive": caseSensitive,
+            "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
         if year != '':
