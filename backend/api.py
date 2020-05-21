@@ -2,6 +2,8 @@
 
 import argparse
 import logging
+from collections import defaultdict
+
 import falcon
 import nltk
 
@@ -68,27 +70,43 @@ class TPCWordListReader:
         self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
-        if "keywords" in req.media and "caseSensitive" in req.media and "year" in req.media:
-            papers = self.tpc_manager.get_papers(req.media["keywords"], req.media["caseSensitive"], req.media["year"],
-                                                 req.media["logicOp"])
-            abstracts = self.tpc_manager.get_abstracts(papers)
-            references = self.tpc_manager.get_references(papers)
-            if "genesOnly" in req.media and req.media["genesOnly"] and papers:
-                genes_matches = self.tpc_manager.get_category_matches(
-                    req.media["keywords"], req.media["caseSensitive"], req.media["year"],
-                    "Gene (C. elegans) (tpgce:0000001)")
-                protein_matches = self.tpc_manager.get_category_matches(
-                    req.media["keywords"], req.media["caseSensitive"], req.media["year"],
-                    "Protein (C. elegans) (tpprce:0000001)")
-                abstracts = [" ".join(gene_m["matches"]) for gene_m in genes_matches if "matches" in gene_m and
-                             gene_m["matches"]]
-                abstracts.extend([" ".join(protein_m["matches"]) for protein_m in protein_matches if "matches" in
-                                  protein_m and protein_m["matches"]])
-            counters = get_word_counts(corpus=abstracts, count=int(req.media["count"]) if "count" in req.media and int(
-                req.media["count"]) > 0 else None, gene_only=req.media["genesOnly"] if "genesOnly" in req.media
-                else False)
+        if "keywords" in req.media and "caseSensitive" in req.media and "year" in req.media and "logicOp" in req.media:
+            keywords_lists = [[k] for k in req.media["keywords"]] if req.media["logicOp"] == 'Overlap' else \
+                [req.media["keywords"]]
+            counters = []
+            references = []
+            for keywords_list in keywords_lists:
+                papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], req.media["year"],
+                                                     req.media["logicOp"])
+                abstracts = self.tpc_manager.get_abstracts(papers)
+                references.extend(self.tpc_manager.get_references(papers))
+                if "genesOnly" in req.media and req.media["genesOnly"] and papers:
+                    genes_matches = self.tpc_manager.get_category_matches(
+                        req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                        "Gene (C. elegans) (tpgce:0000001)")
+                    protein_matches = self.tpc_manager.get_category_matches(
+                        req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                        "Protein (C. elegans) (tpprce:0000001)")
+                    abstracts = [" ".join(gene_m["matches"]) for gene_m in genes_matches if "matches" in gene_m and
+                                 gene_m["matches"]]
+                    abstracts.extend([" ".join(protein_m["matches"]) for protein_m in protein_matches if "matches" in
+                                      protein_m and protein_m["matches"]])
+                counters.append(get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
+                                "count" in req.media and int(req.media["count"]) > 0 else None,
+                                                gene_only=req.media["genesOnly"] if "genesOnly" in req.media else
+                                                False))
+            merged_counters = defaultdict(int)
+            words_overlap = defaultdict(int)
+            for counter in counters:
+                for word, count in counter:
+                    words_overlap[word] += 1
+            words_overlap = [w for w, c in words_overlap.items() if c == len(counters)]
+            for counter in counters:
+                for word, count in counter:
+                    if req.media["logicOp"] != 'Overlap' or word in words_overlap:
+                        merged_counters[word] += count
             resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
-                count) for word, count in counters]) + "}", "[" + ",".join(
+                count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                 ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
                  "\", \"year\":\"" + ref[3] + "\"}" for ref in references]) + "]" if references
                 else "[]")
