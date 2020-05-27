@@ -100,11 +100,8 @@ class Cloud extends React.Component {
                                                             onChange={() => this.setState({logicOp: 'AND'})}
                                                             label="AND" defaultChecked/>
                                                 <Form.Check inline type="radio" name="filtersLogic"
-                                                            onChange={() => this.setState({logicOp: 'OR'})}
-                                                            label="OR"/>
-                                                <Form.Check inline type="radio" name="filtersLogic"
                                                             onChange={() => this.setState({logicOp: 'Overlap'})}
-                                                            label="OR (shared words only)"/>
+                                                            label="OR"/>
                                             </Col>
                                         </Row>
                                         <Row>
