@@ -181,7 +181,7 @@ class Cloud extends React.Component {
                                         </Col>
                                         <Col sm={2}>
                                             {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
-                                                exportComponentAsJPEG(this.componentRef)
+                                                exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
                                             }}>Export As JPEG</Button> : ''}
                                         </Col>
                                         <Col sm={2}>
