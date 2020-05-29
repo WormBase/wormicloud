@@ -37,7 +37,7 @@ class ReferenceList extends React.Component {
                             <Col sm={7}>
                                 <Button variant="light" onClick={() => {
                                     downloadFile(this.props.references.map((r) => r.index + '\t' + r.title + '\t' +
-                                        r.journal + '\t' + r.year).join('\n'), "references", "text/plain", "txt").then(r => {})}}
+                                        r.journal + '\t' + r.year + '\t' + r.wb_id).join('\n'), "references", "text/plain", "txt").then(r => {})}}
                                 >Download references</Button>
                             </Col>
                         </Row>
