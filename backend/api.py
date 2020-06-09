@@ -150,12 +150,10 @@ def main():
     httpd.serve_forever()
 
 
-def app(log_file='./afp_pipeline.log', log_level='INFO', tpc_token='', ):
-    logging.basicConfig(filename=log_file, level=log_level,
-                        format='%(asctime)s - %(name)s - %(levelname)s:%(message)s')
-
+def app():
+    import os
     app = falcon.API(middleware=[HandleCORS()])
-    tpc_manager = TPCManager(textpresso_api_token=tpc_token)
+    tpc_manager = TPCManager(textpresso_api_token=os.environ['TPC_TOKEN'])
     tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
     app.add_route('/word_counter', tpc_writer)
 
