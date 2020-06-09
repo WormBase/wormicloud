@@ -1,8 +1,13 @@
 import os
 from typing import List
-from nltk import RegexpTokenizer, MWETokenizer, WordNetLemmatizer, Counter
-from backend.api import stop_words
+from nltk import RegexpTokenizer, WordNetLemmatizer, Counter
 import yaml
+import nltk
+from nltk.corpus import stopwords
+
+nltk.download('wordnet')
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 
 with open(os.path.join(os.getcwd(), "backend", "config.yml"), 'r') as stream:

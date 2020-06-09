@@ -3,20 +3,27 @@
 import argparse
 import logging
 from collections import defaultdict
-
 import falcon
-import nltk
 
 from wsgiref import simple_server
 from falcon import HTTPStatus
-from nltk.corpus import stopwords
 from backend.dbmanager import DBManager
 from backend.nlp import *
 from backend.tpcmanager import TPCManager
 
-nltk.download('wordnet')
-nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
+
+class HandleCORS(object):
+    def process_request(self, req, resp):
+        allow_headers = req.get_header(
+            'Access-Control-Request-Headers',
+            default='*'
+        )
+        resp.set_header('Access-Control-Allow-Origin', '*')
+        resp.set_header('Access-Control-Allow-Methods', '*')
+        resp.set_header('Access-Control-Allow-Headers', allow_headers)
+        resp.set_header('Access-Control-Max-Age', 1728000)  # 20 days
+        if req.method == 'OPTIONS':
+            raise HTTPStatus(falcon.HTTP_200, body='\n')
 
 
 class StorageEngine(object):
@@ -134,27 +141,23 @@ def main():
     logging.basicConfig(filename=args.log_file, level=args.log_level,
                         format='%(asctime)s - %(name)s - %(levelname)s:%(message)s')
 
-    class HandleCORS(object):
-        def process_request(self, req, resp):
-            allow_headers = req.get_header(
-                'Access-Control-Request-Headers',
-                default='*'
-            )
-            resp.set_header('Access-Control-Allow-Origin', '*')
-            resp.set_header('Access-Control-Allow-Methods', '*')
-            resp.set_header('Access-Control-Allow-Headers', allow_headers)
-            resp.set_header('Access-Control-Max-Age', 1728000)  # 20 days
-            if req.method == 'OPTIONS':
-                raise HTTPStatus(falcon.HTTP_200, body='\n')
-
     app = falcon.API(middleware=[HandleCORS()])
-    #db = StorageEngine(dbname=args.db_name, user=args.db_user, password=args.db_password, host=args.db_host)
     tpc_manager = TPCManager(textpresso_api_token=args.tpc_token)
     tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
     app.add_route('/word_counter', tpc_writer)
 
     httpd = simple_server.make_server('0.0.0.0', args.port, app)
     httpd.serve_forever()
+
+
+def app(log_file='./afp_pipeline.log', log_level='INFO', tpc_token='', ):
+    logging.basicConfig(filename=log_file, level=log_level,
+                        format='%(asctime)s - %(name)s - %(levelname)s:%(message)s')
+
+    app = falcon.API(middleware=[HandleCORS()])
+    tpc_manager = TPCManager(textpresso_api_token=tpc_token)
+    tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
+    app.add_route('/word_counter', tpc_writer)
 
 
 if __name__ == '__main__':
