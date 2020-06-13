@@ -150,13 +150,11 @@ def main():
     httpd.serve_forever()
 
 
-def app():
+if __name__ == '__main__':
+    main()
+else:
     import os
     app = falcon.API(middleware=[HandleCORS()])
     tpc_manager = TPCManager(textpresso_api_token=os.environ['TPC_TOKEN'])
     tpc_writer = TPCWordListReader(tpc_manager=tpc_manager)
     app.add_route('/word_counter', tpc_writer)
-
-
-if __name__ == '__main__':
-    main()
