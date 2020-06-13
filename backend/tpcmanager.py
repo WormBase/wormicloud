@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import ssl
 import urllib.request
 from typing import List
@@ -37,8 +38,9 @@ class TPCManager(object):
             List[str]: the list of references
         """
         return [(paper["identifier"].split("/")[1], paper["title"].replace('\'', '').replace('\"', '')
-                 .replace('\\', ''), paper["journal"], paper["year"]) for paper in papers] \
-            if papers and papers != 'null' else []
+                 .replace('\\', ''), paper["journal"], paper["year"],
+                 re.search(r'.* (PMID:[0-9]+) .*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
+                "PMID:") for paper in papers] if papers and papers != 'null' else []
 
     def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND'):
         """get all papers that match **all** the specified keywords
