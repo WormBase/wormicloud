@@ -91,7 +91,7 @@ class Cloud extends React.Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col sm={5}>
+                                <Col sm={7}>
                                     <Container fluid>
                                         <Row>
                                             <Col>
