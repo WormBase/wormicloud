@@ -31,13 +31,24 @@ class Cloud extends React.Component {
             caseSensitive: true,
             publicationYear: '',
             genesOnly: false,
-            logicOp: 'AND'
+            logicOp: 'AND',
+            showLongWaitMessage: false
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.genesOnly !== prevState.genesOnly) {
             this.props.resetCloud();
+        }
+        if (this.props.isLoading !== prevProps.isLoading) {
+            if (this.props.isLoading) {
+                setTimeout(() => {
+                    if (this.props.isLoading) {
+                        this.setState({showLongWaitMessage: true})
+                    }}, 10000)
+            } else{
+                this.setState({showLongWaitMessage: false});
+            }
         }
     }
 
@@ -338,6 +349,12 @@ class Cloud extends React.Component {
                     onHide={this.props.dismissError}
                     title="Error"
                     body={this.props.error}
+                />
+                <ErrorModal
+                    show={this.state.showLongWaitMessage}
+                    onHide={() => this.setState({showLongWaitMessage: false})}
+                    title="Warning"
+                    body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
                 />
             </Container>
         );
