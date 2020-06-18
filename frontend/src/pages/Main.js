@@ -16,8 +16,11 @@ class Main extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12}>
+                    <Col sm={11}>
                         <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
+                    </Col>
+                    <Col sm={1} align="right">
+                        <a href="mailto:help@wormbase.org">Contact Us</a>
                     </Col>
                 </Row>
                 <Row>
