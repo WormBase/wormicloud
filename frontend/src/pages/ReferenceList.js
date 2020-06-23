@@ -31,6 +31,11 @@ class ReferenceList extends React.Component {
                 {this.props.references.length > 0 ?
                     <Container fluid>
                         <Row>
+                            <Col sm={12}>
+                                &nbsp;
+                            </Col>
+                        </Row>
+                        <Row>
                             <Col sm={5}>
                                 <h6>List of references - sorted by relevance and limited to 200 results</h6>
                             </Col>

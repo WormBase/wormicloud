@@ -19,14 +19,14 @@ export const fetchWordCounters = (keywords, caseSensitive, year, genesOnly, logi
           .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, year: year, genesOnly: genesOnly,
               logicOp: logicOp})
           .then(res => {
-              if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0) {
+              if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0 && res.data.trends) {
                   let i = 1;
                   res.data.references.forEach(r => r.index = i++);
                   res.data.counters = Object.keys(res.data.counters).map(
                       keyword => {
                           return {text: keyword, value: res.data.counters[keyword], active: true }
                       });
-                  dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references));
+                  dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references, res.data.trends));
               }
               else {
                   dispatch(fetchWordCountersError('No data found for the specified keywords'));
@@ -42,9 +42,9 @@ export const fetchWordCountersRequest = () => ({
    type: FETCH_WORD_COUNTERS_REQUEST,
 });
 
-export const fetchWordCountersSuccess = (counters, references) => ({
+export const fetchWordCountersSuccess = (counters, references, trends) => ({
     type: FETCH_WORD_COUNTERS_SUCCESS,
-    payload: { counters: counters, references: references }
+    payload: { counters: counters, references: references, trends: trends }
 });
 
 export const fetchWordCountersError = error => ({

@@ -1,6 +1,7 @@
-matplotlib
-wordcloud
+matplotlib~=3.2.1
+wordcloud~=1.7.0
 psycopg2-binary
-falcon
-nltk
-pyyaml
+falcon~=2.0.0
+nltk~=3.5
+pyyaml~=5.3.1
+python-dateutil~=2.8.1

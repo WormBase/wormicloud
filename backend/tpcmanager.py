@@ -5,6 +5,7 @@ import re
 import ssl
 import urllib.request
 from typing import List
+from dateutil import parser
 
 logger = logging.getLogger(__name__)
 
@@ -19,14 +20,14 @@ class TPCManager(object):
 
     @staticmethod
     def get_abstracts(papers: List):
-        """get the abstracts from the provided list of papers
+        """get the abstracts from the provided list of papers and the respective years of publication
 
         Args:
             papers (List[str]): list of papers
         Returns:
-            List[str]: the list of abstracts
+            List[Tuple[str, int]]: the list of abstracts
         """
-        return [paper["abstract"] for paper in papers] if papers and papers != 'null' else []
+        return [(paper["abstract"], (parser.parse(paper["year"]).year if paper["year"] else 0)) for paper in papers] if papers and papers != 'null' else []
 
     @staticmethod
     def get_references(papers: List):
@@ -51,7 +52,7 @@ class TPCManager(object):
             year (str): limit search to specific year
             logic_op (bool): logic operator used to combine keywords
         Returns:
-            List[str]: the list of papers
+            List[List[str]]: the list of papers
         """
         query = {
             "keywords": (" " + logic_op + " ").join(keywords),

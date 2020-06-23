@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import logging
 from collections import defaultdict
 import falcon
@@ -10,6 +11,7 @@ from falcon import HTTPStatus
 from backend.dbmanager import DBManager
 from backend.nlp import *
 from backend.tpcmanager import TPCManager
+from dateutil import parser
 
 
 class HandleCORS(object):
@@ -82,26 +84,47 @@ class TPCWordListReader:
                 [req.media["keywords"]]
             counters = []
             references = []
+            abstracts = []
+            years_abstracts = defaultdict(list)
             for keywords_list in keywords_lists:
                 papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], req.media["year"],
                                                      req.media["logicOp"])
-                abstracts = self.tpc_manager.get_abstracts(papers)
                 references.extend(self.tpc_manager.get_references(papers))
                 if "genesOnly" in req.media and req.media["genesOnly"] and papers:
+                    paperid_year = {paper["identifier"]: (parser.parse(paper["year"]).year if paper["year"] else 0) for
+                                    paper in papers}
                     genes_matches = self.tpc_manager.get_category_matches(
                         req.media["keywords"], req.media["caseSensitive"], req.media["year"],
                         "Gene (C. elegans) (tpgce:0000001)")
                     protein_matches = self.tpc_manager.get_category_matches(
                         req.media["keywords"], req.media["caseSensitive"], req.media["year"],
                         "Protein (C. elegans) (tpprce:0000001)")
-                    abstracts = [" ".join(gene_m["matches"]) for gene_m in genes_matches if "matches" in gene_m and
-                                 gene_m["matches"]]
-                    abstracts.extend([" ".join(protein_m["matches"]) for protein_m in protein_matches if "matches" in
-                                      protein_m and protein_m["matches"]])
-                counters.append(get_word_counts(corpus=abstracts, count=int(req.media["count"]) if
+                    abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]]) for gene_m in
+                                      genes_matches if "matches" in gene_m and gene_m["matches"]])
+                    abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]]) for
+                                      protein_m in protein_matches if "matches" in protein_m and protein_m["matches"]])
+                else:
+                    abstracts.extend(self.tpc_manager.get_abstracts(papers))
+                for ab, year in abstracts:
+                    years_abstracts[year].append(ab)
+                counters.append(get_word_counts(corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if
                                 "count" in req.media and int(req.media["count"]) > 0 else None,
                                                 gene_only=req.media["genesOnly"] if "genesOnly" in req.media else
                                                 False))
+            word_trends = []
+            all_words = [w for counter in counters for w, _ in counter]
+            for year, all_abstracts in years_abstracts.items():
+                if year != 0:
+                    word_trends.append({"name": year})
+                    word_counters = {wc[0]: wc[1] for wc in get_word_counts(corpus=all_abstracts)}
+                    word_trends[-1].update({w: word_counters[w] if w in word_counters else 0 for w in all_words})
+            word_trends.sort(key=lambda x: x['name'])
+            prev_year = -1
+            for index, year_trend in enumerate(word_trends):
+                if prev_year > 0 and int(prev_year) != int(year_trend['name']) + 1:
+                    word_trends[index:index] = [{**{'name': y}, **{w: 0 for w in all_words}} for y in range(
+                        int(prev_year) + 1, int(year_trend['name']))]
+                prev_year = year_trend['name']
             merged_counters = defaultdict(int)
             words_overlap = defaultdict(int)
             for counter in counters:
@@ -112,11 +135,11 @@ class TPCWordListReader:
                 for word, count in counter:
                     if req.media["logicOp"] != 'Overlap' or word in words_overlap:
                         merged_counters[word] += count
-            resp.body = '{{"counters": {}, "references": {}}}'.format("{" + ", ".join(["\"" + word + "\":" + str(
-                count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
+            resp.body = '{{"counters": {}, "references": {}, "trends": {}}}'.format("{" + ", ".join(
+                ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                 ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
                  "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\"}" for ref in references]) + "]" if
-              references else "[]")
+              references else "[]", json.dumps(word_trends))
             resp.status = falcon.HTTP_OK
         else:
             resp.status = falcon.HTTP_BAD_REQUEST

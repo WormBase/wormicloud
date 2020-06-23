@@ -4,6 +4,7 @@ import {createReducer} from '@reduxjs/toolkit'
 const initialState = {
     counters: [],
     references : [],
+    trends: {},
     isLoading: false,
     error: null
 };
@@ -13,6 +14,7 @@ export const wordReducer = createReducer(initialState, {
     FETCH_WORD_COUNTERS_SUCCESS: (state, action) => {
         state.counters = action.payload.counters;
         state.references = action.payload.references;
+        state.trends = action.payload.trends;
         state.isLoading = false;
         state.error = null;
     },

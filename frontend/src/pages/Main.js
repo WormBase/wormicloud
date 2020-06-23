@@ -4,6 +4,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Cloud from "./Cloud";
 import ReferenceList from "./ReferenceList";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
+import {connect} from "react-redux";
+import {getCounters} from "../redux/selectors";
+import Trends from "./Trends";
+
 
 class Main extends React.Component {
 
@@ -45,7 +51,16 @@ class Main extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={12}>
-                        <ReferenceList />
+                        {this.props.counters.length > 0 ?
+                        <Tabs defaultActiveKey="references" id="uncontrolled-tab-example">
+                            <Tab eventKey="references" title="References">
+                                <ReferenceList />
+                                </Tab>
+                            <Tab eventKey="trends" title="Word Trends">
+                                <Trends />
+                            </Tab>
+                        </Tabs>
+                            : ''}
                     </Col>
                 </Row>
             </Container>
@@ -53,4 +68,8 @@ class Main extends React.Component {
     }
 }
 
-export default Main;
+const mapStateToProps = state => ({
+    counters: getCounters(state)
+});
+
+export default connect(mapStateToProps, {})(Main)
