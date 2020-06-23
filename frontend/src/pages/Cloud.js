@@ -8,12 +8,13 @@ import {dismissError, fetchWordCounters, resetCloud, toggleWord} from "../redux/
 import {connect} from "react-redux";
 import {getCounters, getError, isLoading} from "../redux/selectors";
 import Button from "react-bootstrap/Button";
-import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
+import { IoIosAddCircleOutline, IoIosRemoveCircleOutline, IoIosHelpCircleOutline } from 'react-icons/io';
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import {downloadFile} from "../lib/file";
 import {exportComponentAsJPEG} from "react-component-export-image";
-
+import {Tooltip} from "react-bootstrap";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 class ExtWC extends React.Component {
  render() {
@@ -53,17 +54,32 @@ class Cloud extends React.Component {
     }
 
     render() {
+        const keywordTooltip = <Tooltip id="button-tooltip">You can provide keywords in separate text fields to build a word cloud from abstracts of documents containing all the provided keywords or the union of documents containing each separate keyword (depending on the 'combine by' option). You can also insert text spans with multiple words in each field to perform exact match searches on combination of words.</Tooltip>;
         return(
             <Container fluid>
                 <Row>
                     <Col>
-                        <Container fluid>
+                        <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                            <Row>
+                                <Col>
+                                    <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        <Row>
+                                            <Col>
+                                                <h6>Keywords to search <OverlayTrigger placement="bottom"
+                                                                                       delay={{ show: 250, hide: 400 }}
+                                                                                       overlay={keywordTooltip}>
+                                                    <IoIosHelpCircleOutline/></OverlayTrigger></h6>
+                                            </Col>
+                                        </Row>
+                                    </Container>
+                                </Col>
+                            </Row>
                             {this.state.keywords.map((keyword, idx) =>
                                 <Row>
                                     <Col sm={7}>
                                         <Form>
                                             <Form.Group controlId="formBasicEmail">
-                                                <Container fluid>
+                                                <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                                                     <Row>
                                                         <Col sm={11}>
                                                             <Form.Control inline type="text" placeholder="insert keyword"
@@ -103,7 +119,7 @@ class Cloud extends React.Component {
                             </Row>
                             <Row>
                                 <Col sm={7}>
-                                    <Container fluid>
+                                    <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                                         <Row>
                                             <Col>
                                                 <strong>Combine keywords by:</strong>&nbsp;
@@ -175,7 +191,7 @@ class Cloud extends React.Component {
                         </Container>
                     </Col>
                     <Col>
-                        <Container fluid>
+                        <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                             <Row>
                                 <Col>
                                     <Row>

@@ -28,7 +28,7 @@ class Trends extends React.Component {
 	render() {
 		const colors = Please.make_color({colors_returned: 100});
 		return (
-			<Container fluid>
+			<Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
 				<Row>
 					<Col>
 						&nbsp;
@@ -50,27 +50,42 @@ class Trends extends React.Component {
 						</ResponsiveContainer>
 					</Col>
 					<Col sm={2}>
-						{this.props.counters.length > 0 ? <div><FormControl size="sm" placeholder="Search all words" aria-label="Filter" aria-describedby="basic-addon1" onChange={event => {
-							if (event.target.value === '') {
-								this.setState({filteredWords: [...this.state.chartWords], offset:0})
-							} else {
-								this.setState({offset:0, filteredWords: this.props.counters.filter(c => c.text.startsWith(event.target.value)).map(c => c.text).sort()})
-							}
-						}}/><br/></div> : ''}
-						<Container fluid>
+						{this.props.counters.length > 0 ?
+							<Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+								<Row>
+									<Col sm={7}>
+										<FormControl size="sm" placeholder="Search all words" aria-label="Filter" aria-describedby="basic-addon1" value={this.state.filterValue} onChange={event => {
+											if (event.target.value === '') {
+												this.setState({filterValue: '', filteredWords: [...this.state.chartWords], offset:0})
+											} else {
+												this.setState({filterValue: event.target.value, offset:0, filteredWords: this.props.counters.filter(c => c.text.startsWith(event.target.value)).map(c => c.text).sort()})
+											}
+										}}/>
+									</Col>
+									<Col sm={5}>
+										{this.state.filteredWords.length !== [...this.state.chartWords].length ?<Button variant="outline-primary" size="xs" onClick={() => {this.setState({filterValue: '', filteredWords: [...this.state.chartWords], offset:0})}}>back</Button> : ''}
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										&nbsp;
+									</Col>
+								</Row>
+							</Container> : ''}
+						<Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
 							{this.state.filteredWords.slice(this.state.offset, this.state.offset + this.state.count).map(w => {
 								return <Row>
 									<Col>
 										<FormCheck type="checkbox" inline checked={this.state.chartWords.has(w)}
-													   onClick={() => {
-													   	let tempWords = this.state.chartWords;
-													   	if (tempWords.has(w)) {
-													   		tempWords.delete(w)
-														} else {
-													   		tempWords.add(w);
-														}
-													   	this.setState({chartWords: tempWords});
-													   }} />
+												   onClick={() => {
+													   let tempWords = this.state.chartWords;
+													   if (tempWords.has(w)) {
+														   tempWords.delete(w)
+													   } else {
+														   tempWords.add(w);
+													   }
+													   this.setState({chartWords: tempWords});
+												   }} />
 										{w}
 									</Col>
 								</Row>
@@ -78,10 +93,10 @@ class Trends extends React.Component {
 						</Container>
 						<div>
 							<br/>
-							<Button variant="outline-primary" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
+							<Button size="sm" variant="outline-primary" hidden={this.state.offset === 0} onClick={() => this.setState({offset: this.state.offset - this.state.count})}>
 								prev
 							</Button>
-							<Button variant="outline-primary" hidden={this.state.filteredWords.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
+							<Button size="sm" variant="outline-primary" hidden={this.state.filteredWords.length <= this.state.offset + this.state.count} onClick={() => this.setState({offset: this.state.offset + this.state.count})}>
 								next
 							</Button>
 						</div>
