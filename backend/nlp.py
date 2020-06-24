@@ -4,6 +4,7 @@ from nltk import RegexpTokenizer, WordNetLemmatizer, Counter
 import yaml
 import nltk
 from nltk.corpus import stopwords
+from dateutil import parser
 
 nltk.download('wordnet')
 nltk.download('stopwords')
@@ -33,3 +34,12 @@ def get_word_counts(corpus: List[str], count: int = None, gene_only: bool = Fals
     abs_tokens = [abs_token for abs_token in abs_tokens if len(abs_token) > 1 and abs_token not in EXCLUSION_LIST and
                   (not gene_only or abs_token not in GENE_EXCLUSION_LIST)]
     return Counter(abs_tokens).most_common(n=count)
+
+
+def get_year_from_date(datestring):
+    if datestring:
+        try:
+            return parser.parse(datestring).year
+        except ValueError:
+            pass
+    return 0

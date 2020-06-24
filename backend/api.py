@@ -11,7 +11,6 @@ from falcon import HTTPStatus
 from backend.dbmanager import DBManager
 from backend.nlp import *
 from backend.tpcmanager import TPCManager
-from dateutil import parser
 
 
 class HandleCORS(object):
@@ -91,8 +90,7 @@ class TPCWordListReader:
                                                      req.media["logicOp"])
                 references.extend(self.tpc_manager.get_references(papers))
                 if "genesOnly" in req.media and req.media["genesOnly"] and papers:
-                    paperid_year = {paper["identifier"]: (parser.parse(paper["year"]).year if paper["year"] else 0) for
-                                    paper in papers}
+                    paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
                     genes_matches = self.tpc_manager.get_category_matches(
                         req.media["keywords"], req.media["caseSensitive"], req.media["year"],
                         "Gene (C. elegans) (tpgce:0000001)")

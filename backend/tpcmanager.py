@@ -7,6 +7,8 @@ import urllib.request
 from typing import List
 from dateutil import parser
 
+from backend.nlp import get_year_from_date
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,7 +29,8 @@ class TPCManager(object):
         Returns:
             List[Tuple[str, int]]: the list of abstracts
         """
-        return [(paper["abstract"], (parser.parse(paper["year"]).year if paper["year"] else 0)) for paper in papers] if papers and papers != 'null' else []
+        return [(paper["abstract"], get_year_from_date(paper["year"])) for paper in papers] \
+            if papers and papers != 'null' else []
 
     @staticmethod
     def get_references(papers: List):
