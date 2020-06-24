@@ -92,13 +92,14 @@ class TPCWordListReader:
                 if "genesOnly" in req.media and req.media["genesOnly"] and papers:
                     paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
                     genes_matches = self.tpc_manager.get_category_matches(
-                        req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                        keywords_list, req.media["caseSensitive"], req.media["year"],
                         "Gene (C. elegans) (tpgce:0000001)")
                     protein_matches = self.tpc_manager.get_category_matches(
-                        req.media["keywords"], req.media["caseSensitive"], req.media["year"],
+                        keywords_list, req.media["caseSensitive"], req.media["year"],
                         "Protein (C. elegans) (tpprce:0000001)")
                     abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]]) for gene_m in
-                                      genes_matches if "matches" in gene_m and gene_m["matches"]])
+                                      genes_matches if "matches" in gene_m and gene_m["matches"] and
+                                      gene_m["identifier"] in paperid_year])
                     abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]]) for
                                       protein_m in protein_matches if "matches" in protein_m and protein_m["matches"]])
                 else:

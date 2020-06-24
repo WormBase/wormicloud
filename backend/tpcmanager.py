@@ -72,16 +72,17 @@ class TPCManager(object):
         logger.debug("Sending request to Textpresso Central API")
         return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
 
-    def get_category_matches(self, keywords: List[str], caseSensitive: bool = True, year: str = '', category: str = ''):
+    def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
+                             category: str = '', logic_op: str = 'AND'):
         query = {
-            "keywords": " AND ".join(keywords),
+            "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
-            "case_sensitive": caseSensitive,
+            "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
         if year != '':
             query["year"] = year
-        data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category})
+        data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category, "count": 200})
         data = data.encode('utf-8')
         req = urllib.request.Request(self.tpc_category_matches_endpoint, data,
                                      headers={'Content-type': 'application/json', 'Accept': 'application/json'})
