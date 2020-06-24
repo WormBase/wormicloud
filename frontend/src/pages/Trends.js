@@ -2,13 +2,13 @@ import React from 'react';
 import {getCounters, getTrends} from "../redux/selectors";
 import {connect} from "react-redux";
 import {LineChart, CartesianGrid, XAxis, YAxis, Legend, Line, Tooltip, ResponsiveContainer} from 'recharts';
-import Please from "pleasejs";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import FormCheck from "react-bootstrap/FormCheck";
+import distinctColors from 'distinct-colors'
 
 class Trends extends React.Component {
 
@@ -20,13 +20,14 @@ class Trends extends React.Component {
 			chartWords: new Set(startWords),
 			filteredWords: startWords,
 			count: 5,
-			offset: 0
+			offset: 0,
+			palette: distinctColors({count: 200}) // You may pass an optional config object
 		}
 	}
 
 
 	render() {
-		const colors = Please.make_color({colors_returned: 100});
+
 		return (
 			<Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
 				<Row>
@@ -44,7 +45,7 @@ class Trends extends React.Component {
 								<YAxis />
 								<Tooltip />
 								<Legend />
-								{[...this.state.chartWords].map((c, idx) => {return <Line type="monotone" dataKey={c} strokeWidth="3" stroke={colors[idx]} />
+								{[...this.state.chartWords].map((c, idx) => {return <Line type="monotone" dataKey={c} strokeWidth="3" stroke={this.state.palette[idx]} />
 								})}
 							</LineChart>
 						</ResponsiveContainer>
