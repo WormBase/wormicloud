@@ -211,169 +211,158 @@ class Cloud extends React.Component {
                     </Col>
                     <Col>
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+
+                            <Row>
+                                <Col sm={12}>
+                                    {!this.props.isLoading ?
+                                        <ExtWC ref={this.componentRef}
+                                               redraw={this.state.redraw}
+                                               words={this.props.counters}
+                                               options={{
+                                                   rotations: 1,
+                                                   rotationAngles: [-0, 0],
+                                                   padding: 3,
+                                                   fontSizes: [14, 48],
+                                                   fontFamily: 'verdana'
+                                               }}
+                                               callbacks={{
+                                                   onWordClick: (word, event) => {
+                                                       let newKeywords = [...this.state.keywords];
+                                                       newKeywords.push(word.text)
+                                                       this.setState({keywords: newKeywords});
+                                                   }
+                                               }}/> : ''}
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col>
-                                    <Row>
-                                        <Col sm={2}>
-                                            {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
-                                                this.setState({redraw: !this.state.redraw});
-                                            }}>Redraw cloud</Button> : ''}
-                                        </Col>
-                                        <Col sm={2}>
-                                            {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
-                                                downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
-                                                    .map((c) => c.text + '\t' + c.value).join('\n'), "counters", "text/plain", "csv").then(r => {});
-                                            }}>Download counters</Button> : ''}
-                                        </Col>
-                                        <Col sm={2}>
-                                            {this.props.counters.length > 0 ? <Button size="sm" variant="light" onClick={() => {
-                                                exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
-                                            }}>Export As JPEG</Button> : ''}
-                                        </Col>
-                                        <Col sm={2}>
-                                            {this.props.counters.length > 0 && this.state.genesOnly ?
-                                                <Button size="sm" variant="light" onClick={() => {
-                                                    const form = document.createElement('form');
-                                                    form.setAttribute('method', 'post');
-                                                    form.setAttribute(
-                                                    'action',
-                                                    'https://wormbase.org/tools/mine/simplemine.cgi'
-                                                    );
-                                                    form.setAttribute('target', '_blank');
-                                                    form.setAttribute('enctype', 'multipart/form-data');
+                                    &nbsp;
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm={12} align="right">
+                                    {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
+                                        this.setState({redraw: !this.state.redraw});
+                                    }}>Redraw cloud</Button> : ''}&nbsp;
+                                    {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
+                                        downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
+                                            .map((c) => c.text + '\t' + c.value).join('\n'), "counters", "text/plain", "csv").then(r => {});
+                                    }}>Download counters</Button> : ''}&nbsp;
+                                    {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
+                                        exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
+                                    }}>Export As JPEG</Button> : ''}&nbsp;
+                                    {this.props.counters.length > 0 && this.state.genesOnly ?
+                                        <Button size="sm" variant="outline-primary" onClick={() => {
+                                            const form = document.createElement('form');
+                                            form.setAttribute('method', 'post');
+                                            form.setAttribute(
+                                                'action',
+                                                'https://wormbase.org/tools/mine/simplemine.cgi'
+                                            );
+                                            form.setAttribute('target', '_blank');
+                                            form.setAttribute('enctype', 'multipart/form-data');
 
-                                                    const geneListInput = document.createElement('textarea');
-                                                    geneListInput.setAttribute('type', 'hidden');
-                                                    geneListInput.setAttribute('name', 'geneInput');
-                                                    geneListInput.value = this.props.counters.map(c => c.text).join(' ');
-                                                    form.appendChild(geneListInput);
+                                            const geneListInput = document.createElement('textarea');
+                                            geneListInput.setAttribute('type', 'hidden');
+                                            geneListInput.setAttribute('name', 'geneInput');
+                                            geneListInput.value = this.props.counters.map(c => c.text).join(' ');
+                                            form.appendChild(geneListInput);
 
-                                                    const columnHeaders = [
-                                                    'WormBase Gene ID',
-                                                    'Public Name',
-                                                    'WormBase Status',
-                                                    'Sequence Name',
-                                                    'Other Name',
-                                                    'Transcript',
-                                                    'Operon',
-                                                    'WormPep',
-                                                    'Protein Domain',
-                                                    'Uniprot',
-                                                    'Reference Uniprot ID',
-                                                    'TreeFam',
-                                                    'RefSeq_mRNA',
-                                                    'RefSeq_protein',
-                                                    'Genetic Map Position',
-                                                    'RNAi Phenotype Observed',
-                                                    'Allele Phenotype Observed',
-                                                    'Sequenced Allele',
-                                                    'Interacting Gene',
-                                                    'Expr_pattern Tissue',
-                                                    'Genomic Study Tissue',
-                                                    'Expr_pattern LifeStage',
-                                                    'Genomic Study LifeStage',
-                                                    'Disease Info',
-                                                    'Human Ortholog',
-                                                    'Reference',
-                                                    'Concise Description',
-                                                    'Automated Description',
-                                                    'Expression Cluster Summary',
-                                                    ];
+                                            const columnHeaders = [
+                                                'WormBase Gene ID',
+                                                'Public Name',
+                                                'WormBase Status',
+                                                'Sequence Name',
+                                                'Other Name',
+                                                'Transcript',
+                                                'Operon',
+                                                'WormPep',
+                                                'Protein Domain',
+                                                'Uniprot',
+                                                'Reference Uniprot ID',
+                                                'TreeFam',
+                                                'RefSeq_mRNA',
+                                                'RefSeq_protein',
+                                                'Genetic Map Position',
+                                                'RNAi Phenotype Observed',
+                                                'Allele Phenotype Observed',
+                                                'Sequenced Allele',
+                                                'Interacting Gene',
+                                                'Expr_pattern Tissue',
+                                                'Genomic Study Tissue',
+                                                'Expr_pattern LifeStage',
+                                                'Genomic Study LifeStage',
+                                                'Disease Info',
+                                                'Human Ortholog',
+                                                'Reference',
+                                                'Concise Description',
+                                                'Automated Description',
+                                                'Expression Cluster Summary',
+                                            ];
 
-                                                    const options = [
+                                            const options = [
                                                 { name: 'outputFormat', value: 'html' },
                                                 { name: 'duplicatesToggle', value: 'merge' },
                                                 { name: 'headers', value: columnHeaders.join('\t') },
-                                                    ].concat(
-                                                    columnHeaders.map((name) => ({
+                                            ].concat(
+                                                columnHeaders.map((name) => ({
                                                     name,
                                                 }))
-                                                    );
+                                            );
 
-                                                    options.forEach(({ name, value, checked = 'checked' }) => {
-                                                    const optionInput = document.createElement('input');
-                                                    optionInput.setAttribute('type', 'checkbox');
-                                                    optionInput.setAttribute('name', name);
-                                                    optionInput.setAttribute('value', value || name);
-                                                    optionInput.setAttribute('checked', checked);
-                                                    form.appendChild(optionInput);
-                                                });
+                                            options.forEach(({ name, value, checked = 'checked' }) => {
+                                                const optionInput = document.createElement('input');
+                                                optionInput.setAttribute('type', 'checkbox');
+                                                optionInput.setAttribute('name', name);
+                                                optionInput.setAttribute('value', value || name);
+                                                optionInput.setAttribute('checked', checked);
+                                                form.appendChild(optionInput);
+                                            });
 
-                                                    const submitInput = document.createElement('input');
-                                                    submitInput.setAttribute('name', 'action');
-                                                    submitInput.setAttribute('type', 'submit');
-                                                    submitInput.setAttribute('value', 'query list');
-                                                    form.appendChild(submitInput);
+                                            const submitInput = document.createElement('input');
+                                            submitInput.setAttribute('name', 'action');
+                                            submitInput.setAttribute('type', 'submit');
+                                            submitInput.setAttribute('value', 'query list');
+                                            form.appendChild(submitInput);
 
-                                                    document.body.appendChild(form);
-                                                    submitInput.click();
-                                                    document.body.removeChild(form);
-                                                }}>View on SimpleMine</Button> : ''}
-                                        </Col>
-                                        <Col sm={2}>
-                                            {this.props.counters.length > 0 && this.state.genesOnly ?
-                                                <Button size="sm" variant="light" onClick={() => {
-                                                    const form = document.createElement('form');
-                                                    form.setAttribute('method', 'post');
-                                                    form.setAttribute(
-                                                        'action',
-                                                        'https://wormbase.org/tools/enrichment/tea/tea.cgi'
-                                                    );
-                                                    form.setAttribute('target', '_blank');
-                                                    form.setAttribute('enctype', 'multipart/form-data');
+                                            document.body.appendChild(form);
+                                            submitInput.click();
+                                            document.body.removeChild(form);
+                                        }}>View on SimpleMine</Button> : ''}&nbsp;
+                                    {this.props.counters.length > 0 && this.state.genesOnly ?
+                                        <Button size="sm" variant="outline-primary" onClick={() => {
+                                            const form = document.createElement('form');
+                                            form.setAttribute('method', 'post');
+                                            form.setAttribute(
+                                                'action',
+                                                'https://wormbase.org/tools/enrichment/tea/tea.cgi'
+                                            );
+                                            form.setAttribute('target', '_blank');
+                                            form.setAttribute('enctype', 'multipart/form-data');
 
-                                                    const geneListInput = document.createElement('textarea');
-                                                    geneListInput.setAttribute('type', 'hidden');
-                                                    geneListInput.setAttribute('name', 'genelist');
-                                                    geneListInput.value = this.props.counters.map(c => c.text).join(' ');
-                                                    form.appendChild(geneListInput);
+                                            const geneListInput = document.createElement('textarea');
+                                            geneListInput.setAttribute('type', 'hidden');
+                                            geneListInput.setAttribute('name', 'genelist');
+                                            geneListInput.value = this.props.counters.map(c => c.text).join(' ');
+                                            form.appendChild(geneListInput);
 
-                                                    const qvalueThresholdInput = document.createElement('input');
-                                                    qvalueThresholdInput.setAttribute('type', 'hidden');
-                                                    qvalueThresholdInput.setAttribute('name', 'qvalueThreshold');
-                                                    qvalueThresholdInput.setAttribute('value', '0.1');
-                                                    qvalueThresholdInput.id = 'qvalueThreshold';
-                                                    form.appendChild(qvalueThresholdInput);
+                                            const qvalueThresholdInput = document.createElement('input');
+                                            qvalueThresholdInput.setAttribute('type', 'hidden');
+                                            qvalueThresholdInput.setAttribute('name', 'qvalueThreshold');
+                                            qvalueThresholdInput.setAttribute('value', '0.1');
+                                            qvalueThresholdInput.id = 'qvalueThreshold';
+                                            form.appendChild(qvalueThresholdInput);
 
-                                                    const submitInput = document.createElement('input');
-                                                    submitInput.setAttribute('name', 'action');
-                                                    submitInput.setAttribute('type', 'submit');
-                                                    submitInput.setAttribute('value', 'Analyze List');
-                                                    form.appendChild(submitInput);
+                                            const submitInput = document.createElement('input');
+                                            submitInput.setAttribute('name', 'action');
+                                            submitInput.setAttribute('type', 'submit');
+                                            submitInput.setAttribute('value', 'Analyze List');
+                                            form.appendChild(submitInput);
 
-                                                    document.body.appendChild(form);
-                                                    submitInput.click();
-                                                    document.body.removeChild(form);
-                                                }}>View on Gene Set Enrichment tool</Button> : ''}
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            &nbsp;
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col sm={12}>
-                                            {!this.props.isLoading ?
-                                                <ExtWC ref={this.componentRef}
-                                                       redraw={this.state.redraw}
-                                                       words={this.props.counters}
-                                                       options={{
-                                                           rotations: 1,
-                                                           rotationAngles: [-0, 0],
-                                                           padding: 3,
-                                                           fontSizes: [14, 48],
-                                                           fontFamily: 'verdana'
-                                                       }}
-                                                       callbacks={{
-                                                           onWordClick: (word, event) => {
-                                                               let newKeywords = [...this.state.keywords];
-                                                               newKeywords.push(word.text)
-                                                               this.setState({keywords: newKeywords});
-                                                           }
-                                                       }}/> : ''}
-                                        </Col>
-                                    </Row>
+                                            document.body.appendChild(form);
+                                            submitInput.click();
+                                            document.body.removeChild(form);
+                                        }}>View on Gene Set Enrichment tool</Button> : ''}
                                 </Col>
                             </Row>
                         </Container>

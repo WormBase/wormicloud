@@ -12,12 +12,18 @@ import Trends from "./Trends";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import {Tooltip} from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import {IoIosHelpCircleOutline} from "react-icons/io";
+import NavItem from "react-bootstrap/NavItem";
+import NavLink from "react-bootstrap/NavLink";
+import Nav from "react-bootstrap/Nav";
 
 
 class Main extends React.Component {
 
     render() {
-        const helpTooltip = <Tooltip id="button-tooltip">Wormicloud performs fulltext literature searches using Textpressocentral and pulls abstracts from the matching papers to build word clouds that can unearth interesting relationships between entities.</Tooltip>;
+        const helpTooltip = <Tooltip id="button-tooltip">Wormicloud performs fulltext literature searches using Textpressocentral and pulls abstracts from the matching papers to build word clouds that can unearth interesting relationships between biological entities.</Tooltip>;
+        const trendsTooltip = <Tooltip id="button-tooltip">These trends are obtained on abstracts only, whereas keywords are matched on fulltext in searches and therefore they may be missing in the graphs.</Tooltip>;
+        const referencesTooltip = <Tooltip id="button-tooltip">References matched by the textpresso search and limited to 200 results are displayed here, sorted by a relevance score assigned by textpresso with respect to the keywords provided.</Tooltip>;
         return(
             <Container fluid>
                 <Row>
@@ -27,7 +33,7 @@ class Main extends React.Component {
                 </Row>
                 <Row>
                     <Col sm={12}>
-                        Discover C. elegans gene interactions through word clouds. <OverlayTrigger placement="bottom"
+                        Explore <i>C. elegans</i> literature through word clouds. <OverlayTrigger placement="bottom"
                                                                                                    delay={{ show: 250, hide: 400 }}
                                                                                                    overlay={helpTooltip}>
                         <Badge variant="secondary">How does it work?</Badge>
@@ -70,15 +76,38 @@ class Main extends React.Component {
                 <Row>
                     <Col sm={12}>
                         {this.props.counters.length > 0 ?
-                        <Tabs defaultActiveKey="references" id="uncontrolled-tab-example">
-                            <Tab eventKey="references" title="References">
-                                <ReferenceList />
-                                </Tab>
-                            <Tab eventKey="trends" title="Word Trends">
-                                <Trends />
-                            </Tab>
-                        </Tabs>
-                            : ''}
+                            <Tab.Container defaultActiveKey="references">
+                                <Row>
+                                    <Col>
+                                        <Nav variant="tabs" defaultActiveKey="references">
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="references">References <OverlayTrigger placement="bottom"
+                                                                                       delay={{ show: 250, hide: 400 }}
+                                                                                       overlay={referencesTooltip}>
+                                                    <IoIosHelpCircleOutline/></OverlayTrigger></Nav.Link>
+                                            </Nav.Item>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="trends">Word Trends <OverlayTrigger placement="bottom"
+                                                                                       delay={{ show: 250, hide: 400 }}
+                                                                                       overlay={trendsTooltip}>
+                                                    <IoIosHelpCircleOutline/></OverlayTrigger></Nav.Link>
+                                            </Nav.Item>
+                                        </Nav>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col sm={12}>
+                                        <Tab.Content>
+                                            <Tab.Pane eventKey="references">
+                                                <ReferenceList/>
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="trends">
+                                                <Trends/>
+                                            </Tab.Pane>
+                                        </Tab.Content>
+                                    </Col>
+                                </Row>
+                            </Tab.Container> : ''}
                     </Col>
                 </Row>
             </Container>

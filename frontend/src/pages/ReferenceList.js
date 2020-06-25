@@ -36,14 +36,16 @@ class ReferenceList extends React.Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col sm={5}>
-                                <h6>List of references - sorted by relevance and limited to 200 results</h6>
-                            </Col>
                             <Col sm={7}>
-                                <Button variant="light" onClick={() => {
+                                <Button size="sm" variant="outline-primary" onClick={() => {
                                     downloadFile(this.props.references.map((r) => r.index + '\t' + r.title + '\t' +
                                         r.journal + '\t' + r.year + '\t' + r.wb_id + '\t' + r.pmid).join('\n'), "references", "text/plain", "csv").then(r => {})}}
                                 >Download references</Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                &nbsp;
                             </Col>
                         </Row>
                         <Row>

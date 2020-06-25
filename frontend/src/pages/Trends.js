@@ -27,7 +27,6 @@ class Trends extends React.Component {
 
 
 	render() {
-
 		return (
 			<Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
 				<Row>
