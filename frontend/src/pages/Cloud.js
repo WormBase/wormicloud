@@ -250,7 +250,7 @@ class Cloud extends React.Component {
                                     }}>Download counters</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
                                         exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
-                                    }}>Export As JPEG</Button> : ''}&nbsp;
+                                    }}>Export as JPEG</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 && this.state.genesOnly ?
                                         <Button size="sm" variant="outline-primary" onClick={() => {
                                             const form = document.createElement('form');
