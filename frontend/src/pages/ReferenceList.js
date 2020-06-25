@@ -17,16 +17,14 @@ class ReferenceList extends React.Component {
         super(props);
         this.state = {
             elemPerPage: 20,
-            sortBy: ''
+            sortBy: 'index',
+            sortOrder: 1
         }
     }
     render() {
         const PaginatedReferences = withPaginatedList(ReferenceElement, (offset) => {
             return new Promise(((resolve, reject ) => {
-                let refs = this.props.references;
-                if (this.state.sortBy !== '') {
-                    refs = refs.slice().sort((a, b) => (a[this.state.sortBy] > b[this.state.sortBy]) ? 1 : -1);
-                }
+                let refs = this.props.references.slice().sort((a, b) => (a[this.state.sortBy] > b[this.state.sortBy]) ? this.state.sortOrder : -this.state.sortOrder);
                 if (refs.length > offset) {
                     resolve({elements: refs.slice(offset, offset + this.state.elemPerPage),
                         totNumElements: refs.length});
@@ -50,18 +48,25 @@ class ReferenceList extends React.Component {
                                         r.journal + '\t' + r.year + '\t' + r.wb_id + '\t' + r.pmid).join('\n'), "references", "text/plain", "csv").then(r => {})}}
                                 >Download references</Button>
                             </Col>
+                            <Col sm={3}>
+                                <Container fluid>
+                                    <Row>
+                                        <Col sm={3} align="right">Sort By:</Col>
+                                        <Col sm={9} align="left">
+                                            <FormControl size="sm" as="select" inline onChange={(event) => this.setState({sortBy: event.target.value, sortOrder: 1})}>
+                                                <option value='index'>Relevance</option>
+                                                <option value='title'>Title</option>
+                                                <option value='journal'>Journal</option>
+                                                <option value='year'>Year</option>
+                                                <option value='wb_id'>WBPaperID</option>
+                                                <option value='pmid'>PMID</option>
+                                            </FormControl>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Col>
                             <Col sm={2}>
-                                <FormGroup controlId="exampleForm.ControlSelect1">
-                                    <FormLabel>Sort By:</FormLabel>
-                                    <FormControl as="select" onChange={(event) => this.setState({sortBy: event.target.value})}>
-                                        <option value=''>Relevance</option>
-                                        <option value='title'>Title</option>
-                                        <option value='journal'>Journal</option>
-                                        <option value='year'>Year</option>
-                                        <option value='wb_id'>WBPaperID</option>
-                                        <option value='pmid'>PMID</option>
-                                    </FormControl>
-                                </FormGroup>
+                                <Button variant="outline-primary" size="sm" onClick={() => this.setState({sortOrder: -this.state.sortOrder})}>Reverse Order</Button>
                             </Col>
                         </Row>
                         <Row>
