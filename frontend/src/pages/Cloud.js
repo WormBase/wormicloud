@@ -42,7 +42,7 @@ class Cloud extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.genesOnly !== prevState.genesOnly) {
+        if (this.state.genesOnly !== prevState.genesOnly || this.state.keywords !== prevState.keywords || this.state.caseSensitive !== prevState.caseSensitive || this.state.publicationYearFrom !== prevState.publicationYearFrom || this.state.publicationYearTo !== prevState.publicationYearTo || this.state.logicOp !== prevState.logicOp) {
             this.props.resetCloud();
         }
         if (this.props.isLoading !== prevProps.isLoading) {
