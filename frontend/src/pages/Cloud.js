@@ -378,7 +378,7 @@ class Cloud extends React.Component {
                     show={this.state.showLongWaitMessage}
                     onHide={() => this.setState({showLongWaitMessage: false})}
                     title="Warning"
-                    body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
+                    body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords (or remove them if 'combine keywords by' is set to 'OR') to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
                 />
                 <ErrorModal
                     show={this.state.showYearsError}
