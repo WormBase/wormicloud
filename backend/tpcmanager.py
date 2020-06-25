@@ -21,6 +21,10 @@ class TPCManager(object):
             ssl._create_default_https_context = ssl._create_unverified_context
 
     @staticmethod
+    def remove_bad_chars(string):
+        return string.replace('\'', '').replace('\"', '').replace('\\', '').replace('\\', '')
+
+    @staticmethod
     def get_abstracts(papers: List):
         """get the abstracts from the provided list of papers and the respective years of publication
 
@@ -41,8 +45,8 @@ class TPCManager(object):
         Returns:
             List[str]: the list of references
         """
-        return [(paper["identifier"].split("/")[1], paper["title"].replace('\'', '').replace('\"', '')
-                 .replace('\\', ''), paper["journal"], paper["year"],
+        return [(paper["identifier"].split("/")[1], TPCManager.remove_bad_chars(paper["title"]),
+                 TPCManager.remove_bad_chars(paper["journal"]), TPCManager.remove_bad_chars(paper["year"]),
                  re.search(r'.* (PMID:[0-9]+) .*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
                 "PMID:") for paper in papers] if papers and papers != 'null' else []
 

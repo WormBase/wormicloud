@@ -30,11 +30,15 @@ class Cloud extends React.Component {
             keywords: [''],
             redraw: false,
             caseSensitive: true,
-            publicationYear: '',
+            publicationYearFrom: '',
+            publicationYearTo: '',
             genesOnly: false,
             logicOp: 'AND',
-            showLongWaitMessage: false
+            showLongWaitMessage: false,
+            showYearsError: false,
+            maxYearDiff: 10
         }
+        this.waitMessageTimeout = undefined;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -43,12 +47,15 @@ class Cloud extends React.Component {
         }
         if (this.props.isLoading !== prevProps.isLoading) {
             if (this.props.isLoading) {
-                setTimeout(() => {
+                this.waitMessageTimeout = setTimeout(() => {
                     if (this.props.isLoading) {
                         this.setState({showLongWaitMessage: true})
                     }}, 10000)
             } else{
                 this.setState({showLongWaitMessage: false});
+                if (this.waitMessageTimeout !== undefined) {
+                    clearTimeout(this.waitMessageTimeout);
+                }
             }
         }
     }
@@ -149,8 +156,12 @@ class Cloud extends React.Component {
                                                 Publication year:
                                             </Col>
                                             <Col>
-                                                <Form.Control type="text" placeholder="" value={this.state.publicationYear}
-                                                              onChange={(event) => {this.setState({publicationYear: event.target.value})}}/>
+                                                From <Form.Control type="text" placeholder="" value={this.state.publicationYearFrom}
+                                                              onChange={(event) => {this.setState({publicationYearFrom: event.target.value})}}/>
+                                            </Col>
+                                            <Col>
+                                                To <Form.Control type="text" placeholder="" value={this.state.publicationYearTo}
+                                                              onChange={(event) => {this.setState({publicationYearTo: event.target.value})}}/>
                                             </Col>
                                         </Row>
                                         <Row><Col>&nbsp;</Col></Row>
@@ -174,14 +185,22 @@ class Cloud extends React.Component {
                             <Row>
                                 <Col>
                                     <Button onClick={() => {
-                                        let filteredKeywords = this.state.keywords.filter(k => k !== '');
-                                        if (filteredKeywords.length > 0) {
-                                            this.props.resetCloud();
-                                            this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
-                                                this.state.publicationYear, this.state.genesOnly, this.state.logicOp);
-                                            this.setState({keywords: filteredKeywords});
+                                        if ((this.state.publicationYearFrom === '' && this.state.publicationYearTo === '' ) || (parseInt(this.state.publicationYearFrom) <= parseInt(this.state.publicationYearTo) && parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) <= this.state.maxYearDiff && parseInt(this.state.publicationYearFrom) > 1900 && parseInt(this.state.publicationYearTo) > 1900)) {
+                                            let years = [''];
+                                            if (this.state.publicationYearFrom !== '') {
+                                                years = Array.from(Array(parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) + 1), (_, i) => i + parseInt(this.state.publicationYearFrom))
+                                            }
+                                            let filteredKeywords = this.state.keywords.filter(k => k !== '');
+                                            if (filteredKeywords.length > 0) {
+                                                this.props.resetCloud();
+                                                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
+                                                    years, this.state.genesOnly, this.state.logicOp);
+                                                this.setState({keywords: filteredKeywords});
+                                            } else {
+                                                this.setState({error: "The provided keywords are not valid"})
+                                            }
                                         } else {
-                                            this.setState({error: "The provided keywords are not valid"})
+                                            this.setState({showYearsError: true})
                                         }
                                     }}>Generate word cloud {this.props.isLoading ? <Spinner as="span" animation="border"
                                                                                             size="sm" role="status"
@@ -371,6 +390,12 @@ class Cloud extends React.Component {
                     onHide={() => this.setState({showLongWaitMessage: false})}
                     title="Warning"
                     body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
+                />
+                <ErrorModal
+                    show={this.state.showYearsError}
+                    onHide={() => this.setState({showYearsError: false})}
+                    title="Error"
+                    body={"Please provide both 'from' and 'to' years. The maximum time span for searches is limited to 10 years."}
                 />
             </Container>
         );

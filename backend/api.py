@@ -78,38 +78,39 @@ class TPCWordListReader:
         self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
-        if "keywords" in req.media and "caseSensitive" in req.media and "year" in req.media and "logicOp" in req.media:
+        if "keywords" in req.media and "caseSensitive" in req.media and "years" in req.media and "logicOp" in req.media:
             keywords_lists = [[k] for k in req.media["keywords"]] if req.media["logicOp"] == 'Overlap' else \
                 [req.media["keywords"]]
             counters = []
             references = []
             abstracts = []
             years_abstracts = defaultdict(list)
-            for keywords_list in keywords_lists:
-                papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], req.media["year"],
-                                                     req.media["logicOp"])
-                references.extend(self.tpc_manager.get_references(papers))
-                if "genesOnly" in req.media and req.media["genesOnly"] and papers:
-                    paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
-                    genes_matches = self.tpc_manager.get_category_matches(
-                        keywords_list, req.media["caseSensitive"], req.media["year"],
-                        "Gene (C. elegans) (tpgce:0000001)")
-                    protein_matches = self.tpc_manager.get_category_matches(
-                        keywords_list, req.media["caseSensitive"], req.media["year"],
-                        "Protein (C. elegans) (tpprce:0000001)")
-                    abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]]) for gene_m in
-                                      genes_matches if "matches" in gene_m and gene_m["matches"] and
-                                      gene_m["identifier"] in paperid_year])
-                    abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]]) for
-                                      protein_m in protein_matches if "matches" in protein_m and protein_m["matches"]])
-                else:
-                    abstracts.extend(self.tpc_manager.get_abstracts(papers))
-                for ab, year in abstracts:
-                    years_abstracts[year].append(ab)
-                counters.append(get_word_counts(corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if
-                                "count" in req.media and int(req.media["count"]) > 0 else None,
-                                                gene_only=req.media["genesOnly"] if "genesOnly" in req.media else
-                                                False))
+            for year_filter in req.media["years"]:
+                for keywords_list in keywords_lists:
+                    papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], year_filter,
+                                                         req.media["logicOp"])
+                    references.extend(self.tpc_manager.get_references(papers))
+                    if "genesOnly" in req.media and req.media["genesOnly"] and papers:
+                        paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
+                        genes_matches = self.tpc_manager.get_category_matches(
+                            keywords_list, req.media["caseSensitive"], year_filter,
+                            "Gene (C. elegans) (tpgce:0000001)")
+                        protein_matches = self.tpc_manager.get_category_matches(
+                            keywords_list, req.media["caseSensitive"], year_filter,
+                            "Protein (C. elegans) (tpprce:0000001)")
+                        abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]]) for gene_m in
+                                          genes_matches if "matches" in gene_m and gene_m["matches"] and
+                                          gene_m["identifier"] in paperid_year])
+                        abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]]) for
+                                          protein_m in protein_matches if "matches" in protein_m and protein_m["matches"]])
+                    else:
+                        abstracts.extend(self.tpc_manager.get_abstracts(papers))
+                    for ab, year in abstracts:
+                        years_abstracts[year].append(ab)
+                    counters.append(get_word_counts(corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if
+                                    "count" in req.media and int(req.media["count"]) > 0 else None,
+                                                    gene_only=req.media["genesOnly"] if "genesOnly" in req.media else
+                                                    False))
             word_trends = []
             all_words = [w for counter in counters for w, _ in counter]
             for year, all_abstracts in years_abstracts.items():

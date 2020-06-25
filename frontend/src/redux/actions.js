@@ -7,16 +7,20 @@ export const TOGGLE_WORD = "TOGGLE_WORD";
 export const RESET_CLOUD ="RESET_CLOUD";
 export const DISMISS_ERROR = "DISMISS_ERROR";
 
-export const fetchWordCounters = (keywords, caseSensitive, year, genesOnly, logicOp) => {
+export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
         keywords = keywords.map(k => {return '"' + k + '"'});
-        if (year !== '') {
-            year = year + '*';
-        }
+        let yearsFix = years.map(y => {
+            if (y !== '') {
+                return y + '*';
+            } else {
+                return y;
+            }
+        });
         let apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
         axios
-          .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, year: year, genesOnly: genesOnly,
+          .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, years: yearsFix, genesOnly: genesOnly,
               logicOp: logicOp})
           .then(res => {
               if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0 && res.data.trends) {

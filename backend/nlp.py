@@ -27,7 +27,7 @@ def get_word_counts(corpus: List[str], count: int = None, gene_only: bool = Fals
     tokenizer = RegexpTokenizer(r'[0-9a-zA-Z]+\-[0-9a-zA-Z]+|\S+')
     lemmatizer = WordNetLemmatizer()
     abs_tokens = [lemmatizer.lemmatize(word).replace('.', '').replace('\"', '').replace(',', '').replace(';', '')
-                  .strip('()')
+                  .strip('()').strip('\'')
                   for abstract in corpus for word in tokenizer.tokenize(abstract)
                   if word not in stop_words and word not in EXCLUSION_LIST and len(word) > 1 and
                   (not gene_only or word not in GENE_EXCLUSION_LIST)]
