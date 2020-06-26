@@ -24,17 +24,26 @@ class Main extends React.Component {
         return(
             <Container fluid>
                 <Row>
-                    <Col sm={12}>
-                        <h3>Wormicloud</h3>
+                    <Col sm={6}>
+                        <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                            <Row>
+                                <Col sm={12}>
+                                    <h3>Wormicloud</h3>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm={12}>
+                                    Explore <i>C. elegans</i> literature through word clouds. <OverlayTrigger placement="bottom"
+                                                                                                              delay={{ show: 250, hide: 400 }}
+                                                                                                              overlay={helpTooltip}>
+                                    <Badge variant="secondary">How does it work?</Badge>
+                                </OverlayTrigger>
+                                </Col>
+                            </Row>
+                        </Container>
                     </Col>
-                </Row>
-                <Row>
-                    <Col sm={12}>
-                        Explore <i>C. elegans</i> literature through word clouds. <OverlayTrigger placement="bottom"
-                                                                                                   delay={{ show: 250, hide: 400 }}
-                                                                                                   overlay={helpTooltip}>
-                        <Badge variant="secondary">How does it work?</Badge>
-                    </OverlayTrigger>
+                    <Col sm={6} align="right">
+                        <img src={process.env.PUBLIC_URL + '/wormicloud_logo.jpg'} className="logo"/>
                     </Col>
                 </Row>
                 <Row>

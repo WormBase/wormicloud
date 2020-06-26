@@ -65,7 +65,7 @@ class Cloud extends React.Component {
         return(
             <Container fluid>
                 <Row>
-                    <Col>
+                    <Col sm={5}>
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                             <Row>
                                 <Col>
@@ -209,7 +209,7 @@ class Cloud extends React.Component {
                             </Row>
                         </Container>
                     </Col>
-                    <Col>
+                    <Col sm={7}>
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
 
                             <Row>

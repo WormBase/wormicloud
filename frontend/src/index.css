@@ -21,3 +21,7 @@ code {
   border-radius: 10px;
   font-family: "Trebuchet MS", sans-serif;
 }
+
+.logo {
+  width: 40%;
+}
