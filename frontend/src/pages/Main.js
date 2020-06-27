@@ -24,11 +24,11 @@ class Main extends React.Component {
         return(
             <Container fluid>
                 <Row>
-                    <Col sm={6}>
+                    <Col sm={4}>
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                             <Row>
                                 <Col sm={12}>
-                                    <h3>Wormicloud</h3>
+                                    <h1 style={{fontSize:'85px'}}>Wormicloud</h1>
                                 </Col>
                             </Row>
                             <Row>
@@ -42,7 +42,8 @@ class Main extends React.Component {
                             </Row>
                         </Container>
                     </Col>
-                    <Col sm={6} align="right">
+                    <Col sm={8} align="left">
+                        <br/>
                         <img src={process.env.PUBLIC_URL + '/wormicloud_logo.jpg'} className="logo"/>
                     </Col>
                 </Row>
@@ -52,10 +53,11 @@ class Main extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={11}>
+                    <Col sm={10}>
                         <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
                     </Col>
-                    <Col sm={1} align="right">
+                    <Col sm={2} align="right">
+                        <img src={process.env.PUBLIC_URL + '/logo_wormbase_gradient.svg'} className="wblogo"/><br/>
                         <a href="mailto:help@wormbase.org">Contact Us</a>
                     </Col>
                 </Row>
