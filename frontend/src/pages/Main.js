@@ -40,24 +40,19 @@ class Main extends React.Component {
                                 </OverlayTrigger>
                                 </Col>
                             </Row>
+                            <Row>
+                                <Col sm={10}>
+                                    <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
+                                </Col>
+                            </Row>
                         </Container>
                     </Col>
-                    <Col sm={8} align="left">
-                        <br/>
+                    <Col sm={6} align="left">
                         <img src={process.env.PUBLIC_URL + '/wormicloud_logo.jpg'} className="logo"/>
                     </Col>
-                </Row>
-                <Row>
-                    <Col sm={12}>
-                        &nbsp;
-                    </Col>
-                </Row>
-                <Row>
-                    <Col sm={10}>
-                        <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
-                    </Col>
                     <Col sm={2} align="right">
-                        <img src={process.env.PUBLIC_URL + '/logo_wormbase_gradient.svg'} className="wblogo"/><br/>
+                        <br/>
+                        <a href="https://www.wormbase.org"><img src={process.env.PUBLIC_URL + '/logo_wormbase_gradient.svg'} className="wblogo"/></a><br/>
                         <a href="mailto:help@wormbase.org">Contact Us</a>
                     </Col>
                 </Row>
