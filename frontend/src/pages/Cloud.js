@@ -257,7 +257,7 @@ class Cloud extends React.Component {
                                             form.setAttribute('method', 'post');
                                             form.setAttribute(
                                                 'action',
-                                                'https://wormbase.org/tools/mine/simplemine.cgi'
+                                                'https://wormbase.org//tools/mine/simplemine.cgi'
                                             );
                                             form.setAttribute('target', '_blank');
                                             form.setAttribute('enctype', 'multipart/form-data');
@@ -271,6 +271,7 @@ class Cloud extends React.Component {
                                             const columnHeaders = [
                                                 'WormBase Gene ID',
                                                 'Public Name',
+                                                'Species',
                                                 'WormBase Status',
                                                 'Sequence Name',
                                                 'Other Name',
@@ -301,6 +302,7 @@ class Cloud extends React.Component {
                                             ];
 
                                             const options = [
+                                                { name: 'caseSensitiveToggle', value: 'caseSensitive' },
                                                 { name: 'outputFormat', value: 'html' },
                                                 { name: 'duplicatesToggle', value: 'merge' },
                                                 { name: 'headers', value: columnHeaders.join('\t') },
@@ -318,6 +320,12 @@ class Cloud extends React.Component {
                                                 optionInput.setAttribute('checked', checked);
                                                 form.appendChild(optionInput);
                                             });
+
+                                            const speciesInput = document.createElement('input');
+                                            speciesInput.setAttribute('type', 'select');
+                                            speciesInput.setAttribute('name', 'species');
+                                            speciesInput.setAttribute('value', 'c_elegans');
+                                            form.appendChild(speciesInput);
 
                                             const submitInput = document.createElement('input');
                                             submitInput.setAttribute('name', 'action');

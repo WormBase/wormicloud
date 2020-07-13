@@ -28,7 +28,7 @@ class Main extends React.Component {
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                             <Row>
                                 <Col sm={12}>
-                                    <h1 style={{fontSize:'85px'}}>Wormicloud</h1>
+                                    <h1 style={{fontSize:'80px'}}>Wormicloud</h1>
                                 </Col>
                             </Row>
                             <Row>
@@ -41,7 +41,7 @@ class Main extends React.Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col sm={10}>
+                                <Col sm={12}>
                                     <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
                                 </Col>
                             </Row>
