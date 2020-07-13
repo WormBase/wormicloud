@@ -138,7 +138,7 @@ class TPCWordListReader:
             resp.body = '{{"counters": {}, "references": {}, "trends": {}}}'.format("{" + ", ".join(
                 ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                 ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
-                 "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\"}" for ref in references]) + "]" if
+                 "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] + "\"}" for ref in references]) + "]" if
               references else "[]", json.dumps(word_trends))
             resp.status = falcon.HTTP_OK
         else:

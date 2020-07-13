@@ -8,8 +8,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {downloadFile} from "../lib/file";
-import FormGroup from "react-bootstrap/FormGroup";
-import FormLabel from "react-bootstrap/FormLabel";
 import FormControl from "react-bootstrap/FormControl";
 
 class ReferenceList extends React.Component {
@@ -44,7 +42,7 @@ class ReferenceList extends React.Component {
                         <Row>
                             <Col sm={2}>
                                 <Button size="sm" variant="outline-primary" onClick={() => {
-                                    downloadFile(this.props.references.map((r) => r.index + '\t' + r.title + '\t' +
+                                    downloadFile(this.props.references.map((r) => r.index + '\t' + r.authors + '\t' + r.title + '\t' +
                                         r.journal + '\t' + r.year + '\t' + r.wb_id + '\t' + r.pmid).join('\n'), "references", "text/plain", "csv").then(r => {})}}
                                 >Download references</Button>
                             </Col>
