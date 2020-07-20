@@ -257,7 +257,7 @@ class Cloud extends React.Component {
                                             form.setAttribute('method', 'post');
                                             form.setAttribute(
                                                 'action',
-                                                'https://wormbase.org//tools/mine/simplemine.cgi'
+                                                'https://wormbase.org/tools/mine/simplemine.cgi'
                                             );
                                             form.setAttribute('target', '_blank');
                                             form.setAttribute('enctype', 'multipart/form-data');
@@ -265,72 +265,12 @@ class Cloud extends React.Component {
                                             const geneListInput = document.createElement('textarea');
                                             geneListInput.setAttribute('type', 'hidden');
                                             geneListInput.setAttribute('name', 'geneInput');
-                                            geneListInput.value = this.props.counters.map(c => c.text).join(' ');
+                                            geneListInput.value = this.props.counters.map(c => c.text).join('\n');
                                             form.appendChild(geneListInput);
-
-                                            const columnHeaders = [
-                                                'WormBase Gene ID',
-                                                'Public Name',
-                                                'Species',
-                                                'WormBase Status',
-                                                'Sequence Name',
-                                                'Other Name',
-                                                'Transcript',
-                                                'Operon',
-                                                'WormPep',
-                                                'Protein Domain',
-                                                'Uniprot',
-                                                'Reference Uniprot ID',
-                                                'TreeFam',
-                                                'RefSeq_mRNA',
-                                                'RefSeq_protein',
-                                                'Genetic Map Position',
-                                                'RNAi Phenotype Observed',
-                                                'Allele Phenotype Observed',
-                                                'Sequenced Allele',
-                                                'Interacting Gene',
-                                                'Expr_pattern Tissue',
-                                                'Genomic Study Tissue',
-                                                'Expr_pattern LifeStage',
-                                                'Genomic Study LifeStage',
-                                                'Disease Info',
-                                                'Human Ortholog',
-                                                'Reference',
-                                                'Concise Description',
-                                                'Automated Description',
-                                                'Expression Cluster Summary',
-                                            ];
-
-                                            const options = [
-                                                { name: 'caseSensitiveToggle', value: 'caseSensitive' },
-                                                { name: 'outputFormat', value: 'html' },
-                                                { name: 'duplicatesToggle', value: 'merge' },
-                                                { name: 'headers', value: columnHeaders.join('\t') },
-                                            ].concat(
-                                                columnHeaders.map((name) => ({
-                                                    name,
-                                                }))
-                                            );
-
-                                            options.forEach(({ name, value, checked = 'checked' }) => {
-                                                const optionInput = document.createElement('input');
-                                                optionInput.setAttribute('type', 'checkbox');
-                                                optionInput.setAttribute('name', name);
-                                                optionInput.setAttribute('value', value || name);
-                                                optionInput.setAttribute('checked', checked);
-                                                form.appendChild(optionInput);
-                                            });
-
-                                            const speciesInput = document.createElement('input');
-                                            speciesInput.setAttribute('type', 'select');
-                                            speciesInput.setAttribute('name', 'species');
-                                            speciesInput.setAttribute('value', 'c_elegans');
-                                            form.appendChild(speciesInput);
 
                                             const submitInput = document.createElement('input');
                                             submitInput.setAttribute('name', 'action');
                                             submitInput.setAttribute('type', 'submit');
-                                            submitInput.setAttribute('value', 'query list');
                                             form.appendChild(submitInput);
 
                                             document.body.appendChild(form);

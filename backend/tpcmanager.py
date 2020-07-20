@@ -4,9 +4,8 @@ import os
 import re
 import ssl
 import urllib.request
-from typing import List
-from dateutil import parser
 
+from typing import List
 from backend.nlp import get_year_from_date
 
 logger = logging.getLogger(__name__)
