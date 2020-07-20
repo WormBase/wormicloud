@@ -49,7 +49,8 @@ class TPCManager(object):
                  re.search(r'.* PMID:([0-9]+) .*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
                 "", TPCManager.remove_bad_chars(paper["author"])) for paper in papers] if papers and papers != 'null' else []
 
-    def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND'):
+    def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND',
+                   author: str = ''):
         """get all papers that match **all** the specified keywords
 
         Args:
@@ -57,6 +58,7 @@ class TPCManager(object):
             case_sensitive (bool): case sensitive search
             year (str): limit search to specific year
             logic_op (bool): logic operator used to combine keywords
+            author (str): author name to search
         Returns:
             List[List[str]]: the list of papers
         """
@@ -66,6 +68,8 @@ class TPCManager(object):
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
+        if author != '':
+            query["author"] = author
         if year != '':
             query["year"] = year
         data = json.dumps({"token": self.textpresso_api_token, "query": query, "include_fulltext": True, "count": 200})
@@ -76,13 +80,15 @@ class TPCManager(object):
         return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
 
     def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
-                             category: str = '', logic_op: str = 'AND'):
+                             category: str = '', author: str = '', logic_op: str = 'AND'):
         query = {
             "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
+        if author != '':
+            query["author"] = author
         if year != '':
             query["year"] = year
         data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category, "count": 200})

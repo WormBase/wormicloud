@@ -15,6 +15,9 @@ import {downloadFile} from "../lib/file";
 import {exportComponentAsJPEG} from "react-component-export-image";
 import {Tooltip} from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Badge from "react-bootstrap/Badge";
 
 class ExtWC extends React.Component {
  render() {
@@ -32,11 +35,13 @@ class Cloud extends React.Component {
             caseSensitive: true,
             publicationYearFrom: '',
             publicationYearTo: '',
+            author: '',
             genesOnly: false,
             logicOp: 'AND',
             showLongWaitMessage: false,
             showYearsError: false,
-            maxYearDiff: 10
+            maxYearDiff: 10,
+            viewAdvOpts: false
         }
         this.waitMessageTimeout = undefined;
     }
@@ -143,35 +148,61 @@ class Cloud extends React.Component {
                                         </Row>
                                         <Row>
                                             <Col>
-                                                <Form.Check type="checkbox" label="Case sensitive"
-                                                            checked={this.state.caseSensitive}
-                                                            onChange={() => {
-                                                                this.setState({caseSensitive: !this.state.caseSensitive})
-                                                            }}/>
-                                            </Col>
-                                        </Row>
-                                        <Row><Col>&nbsp;</Col></Row>
-                                        <Row>
-                                            <Col>
-                                                Publication year:
-                                            </Col>
-                                            <Col>
-                                                From <Form.Control type="text" placeholder="" value={this.state.publicationYearFrom}
-                                                              onChange={(event) => {this.setState({publicationYearFrom: event.target.value})}}/>
-                                            </Col>
-                                            <Col>
-                                                To <Form.Control type="text" placeholder="" value={this.state.publicationYearTo}
-                                                              onChange={(event) => {this.setState({publicationYearTo: event.target.value})}}/>
-                                            </Col>
-                                        </Row>
-                                        <Row><Col>&nbsp;</Col></Row>
-                                        <Row>
-                                            <Col>
                                                 <Form.Check type="checkbox" label="Word cloud with gene names only"
                                                             checked={this.state.genesOnly}
                                                             onChange={() => {
                                                                 this.setState({genesOnly: !this.state.genesOnly})
                                                             }}/>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>&nbsp;</Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <Accordion>
+                                                    <Accordion.Toggle as={Button} variant="link" eventKey="0" onClick={() => this.setState({viewAdvOpts: !this.state.viewAdvOpts})}>
+                                                        {this.state.viewAdvOpts ? 'Hide' : 'Show'} Advanced Options
+                                                    </Accordion.Toggle>
+                                                    <Accordion.Collapse eventKey="0">
+                                                        <Card>
+                                                            <Card.Body>
+                                                                <Container>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            <Form.Check type="checkbox" label="Case sensitive"
+                                                                                        checked={this.state.caseSensitive}
+                                                                                        onChange={() => {
+                                                                                            this.setState({caseSensitive: !this.state.caseSensitive})
+                                                                                        }}/>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row><Col>&nbsp;</Col></Row>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            Publication year:
+                                                                        </Col>
+                                                                        <Col>
+                                                                            From <Form.Control type="text" placeholder="" value={this.state.publicationYearFrom}
+                                                                                               onChange={(event) => {this.setState({publicationYearFrom: event.target.value})}}/>
+                                                                        </Col>
+                                                                        <Col>
+                                                                            To <Form.Control type="text" placeholder="" value={this.state.publicationYearTo}
+                                                                                             onChange={(event) => {this.setState({publicationYearTo: event.target.value})}}/>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row><Col>&nbsp;</Col></Row>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            Author: <Form.Control type="text" placeholder="" value={this.state.author}
+                                                                                                  onChange={(event) => {this.setState({author: event.target.value})}}/>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Container>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    </Accordion.Collapse>
+                                                </Accordion>
                                             </Col>
                                         </Row>
                                     </Container>
@@ -194,7 +225,7 @@ class Cloud extends React.Component {
                                             if (filteredKeywords.length > 0) {
                                                 this.props.resetCloud();
                                                 this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
-                                                    years, this.state.genesOnly, this.state.logicOp);
+                                                    years, this.state.genesOnly, this.state.logicOp, this.state.author);
                                                 this.setState({keywords: filteredKeywords});
                                             } else {
                                                 this.setState({error: "The provided keywords are not valid"})
