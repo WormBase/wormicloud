@@ -11,6 +11,7 @@ from falcon import HTTPStatus
 from backend.dbmanager import DBManager
 from backend.nlp import *
 from backend.tpcmanager import TPCManager
+from datetime import datetime
 
 
 class HandleCORS(object):
@@ -78,6 +79,7 @@ class TPCWordListReader:
         self.logger = logging.getLogger(__name__)
 
     def on_post(self, req, resp):
+        start = datetime.now()
         if "keywords" in req.media and "caseSensitive" in req.media and "years" in req.media and "logicOp" in req.media:
             keywords_lists = [[k] for k in req.media["keywords"]] if req.media["logicOp"] == 'Overlap' else \
                 [req.media["keywords"]]
@@ -88,29 +90,44 @@ class TPCWordListReader:
             for year_filter in req.media["years"]:
                 for keywords_list in keywords_lists:
                     papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], year_filter,
-                                                         req.media["logicOp"], req.media["author"])
+                                                         req.media["logicOp"], req.media["author"],
+                                                         req.media["maxResults"])
                     references.extend(self.tpc_manager.get_references(papers))
                     if "genesOnly" in req.media and req.media["genesOnly"] and papers:
                         paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
+                        paperid_score = {paper["identifier"]: paper["score"] for paper in papers}
                         genes_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
-                            "Gene (C. elegans) (tpgce:0000001)", req.media["author"])
+                            "Gene (C. elegans) (tpgce:0000001)", req.media["author"],
+                            max_results=req.media["maxResults"])
                         protein_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
-                            "Protein (C. elegans) (tpprce:0000001)", req.media["author"])
-                        abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]]) for gene_m in
-                                          genes_matches if "matches" in gene_m and gene_m["matches"] and
-                                          gene_m["identifier"] in paperid_year])
-                        abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]]) for
-                                          protein_m in protein_matches if "matches" in protein_m and protein_m["matches"]])
+                            "Protein (C. elegans) (tpprce:0000001)", req.media["author"],
+                            max_results=req.media["maxResults"])
+                        abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]],
+                                           paperid_score[gene_m["identifier"]]) for gene_m in genes_matches if
+                                          "matches" in gene_m and gene_m["matches"] and gene_m["identifier"] in
+                                          paperid_year])
+                        abstracts.extend([(" ".join(protein_m["matches"]), paperid_year[protein_m["identifier"]],
+                                           paperid_score[protein_m["identifier"]]) for protein_m in protein_matches
+                                          if "matches" in protein_m and protein_m["matches"]])
                     else:
                         abstracts.extend(self.tpc_manager.get_abstracts(papers))
-                    for ab, year in abstracts:
+                    for ab, year, score in abstracts:
                         years_abstracts[year].append(ab)
-                    counters.append(get_word_counts(corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if
-                                    "count" in req.media and int(req.media["count"]) > 0 else None,
-                                                    gene_only=req.media["genesOnly"] if "genesOnly" in req.media else
-                                                    False))
+                    if req.media["weightedScore"]:
+                        counter_all_abs = defaultdict(int)
+                        for ab in abstracts:
+                            for word, counter in get_word_counts(
+                                    corpus=[ab[0]], count=int(req.media["count"]) if "count" in req.media and int(
+                                        req.media["count"]) > 0 else None,
+                                    gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False):
+                                counter_all_abs[word] += counter * (ab[2] if req.media["weightedScore"] else 1)
+                        counters.append(list(counter_all_abs.items()))
+                    else:
+                        counters.append(get_word_counts(
+                                    corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None,
+                                    gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False))
             word_trends = []
             all_words = [w for counter in counters for w, _ in counter]
             for year, all_abstracts in years_abstracts.items():
@@ -141,6 +158,8 @@ class TPCWordListReader:
                  "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] + "\"}" for ref in references]) + "]" if
               references else "[]", json.dumps(word_trends))
             resp.status = falcon.HTTP_OK
+            end = datetime.now()
+            print(end - start)
         else:
             resp.status = falcon.HTTP_BAD_REQUEST
 

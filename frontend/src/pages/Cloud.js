@@ -17,7 +17,6 @@ import {Tooltip} from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import Badge from "react-bootstrap/Badge";
 
 class ExtWC extends React.Component {
  render() {
@@ -41,7 +40,9 @@ class Cloud extends React.Component {
             showLongWaitMessage: false,
             showYearsError: false,
             maxYearDiff: 10,
-            viewAdvOpts: false
+            viewAdvOpts: false,
+            maxResults: 200,
+            weightedScore: false
         }
         this.waitMessageTimeout = undefined;
     }
@@ -198,6 +199,27 @@ class Cloud extends React.Component {
                                                                                                   onChange={(event) => {this.setState({author: event.target.value})}}/>
                                                                         </Col>
                                                                     </Row>
+                                                                    <Row><Col>&nbsp;</Col></Row>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            Max number of results: <Form.Control as="select" value={this.state.maxResults.toString()}
+                                                                                                                 onChange={(event) => {this.setState({maxResults: parseInt(event.target.value)})}}>
+                                                                            <option value="200">200</option>
+                                                                            <option value="400">400</option>
+                                                                            <option value="1000">1000</option>
+                                                                        </Form.Control>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row><Col>&nbsp;</Col></Row>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            Word Counts: <Form.Control as="select" value={this.state.weightedScore.toString()}
+                                                                                                                 onChange={(event) => {this.setState({weightedScore: event.target.value === 'true'})}}>
+                                                                            <option value="false">Plain count</option>
+                                                                            <option value="true">Weighted by paper score</option>
+                                                                        </Form.Control>
+                                                                        </Col>
+                                                                    </Row>
                                                                 </Container>
                                                             </Card.Body>
                                                         </Card>
@@ -225,7 +247,8 @@ class Cloud extends React.Component {
                                             if (filteredKeywords.length > 0) {
                                                 this.props.resetCloud();
                                                 this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
-                                                    years, this.state.genesOnly, this.state.logicOp, this.state.author);
+                                                    years, this.state.genesOnly, this.state.logicOp, this.state.author,
+                                                    this.state.maxResults, this.state.weightedScore);
                                                 this.setState({keywords: filteredKeywords});
                                             } else {
                                                 this.setState({error: "The provided keywords are not valid"})

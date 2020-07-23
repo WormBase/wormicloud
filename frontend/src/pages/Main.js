@@ -20,7 +20,7 @@ class Main extends React.Component {
     render() {
         const helpTooltip = <Tooltip id="button-tooltip">Wormicloud performs fulltext literature searches using Textpressocentral and pulls abstracts from the matching papers to build word clouds that can unearth interesting relationships between biological entities.</Tooltip>;
         const trendsTooltip = <Tooltip id="button-tooltip">Note that the trends are obtained on abstracts only, whereas keywords are matched on fulltext in searches and therefore some of the latter may be missing from the graphs.</Tooltip>;
-        const referencesTooltip = <Tooltip id="button-tooltip">References matched by the textpresso search and limited to 200 results are displayed here, sorted by a relevance score assigned by textpresso with respect to the keywords provided.</Tooltip>;
+        const referencesTooltip = <Tooltip id="button-tooltip">References matched by the textpresso search and limited to the specified maximum number of results (for performance) are displayed here, sorted by a relevance score assigned by textpresso with respect to the keywords provided.</Tooltip>;
         return(
             <Container fluid>
                 <Row>

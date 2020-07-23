@@ -31,8 +31,8 @@ def get_word_counts(corpus: List[str], count: int = None, gene_only: bool = Fals
                   for abstract in corpus for word in tokenizer.tokenize(abstract)
                   if word not in stop_words and word not in EXCLUSION_LIST and len(word) > 1 and
                   (not gene_only or word not in GENE_EXCLUSION_LIST)]
-    abs_tokens = [abs_token for abs_token in abs_tokens if len(abs_token) > 1 and abs_token not in EXCLUSION_LIST and
-                  (not gene_only or abs_token not in GENE_EXCLUSION_LIST)]
+    abs_tokens = [abs_token for abs_token in abs_tokens if len(abs_token) > 1 and abs_token not in
+                  EXCLUSION_LIST and (not gene_only or abs_token not in GENE_EXCLUSION_LIST)]
     return Counter(abs_tokens).most_common(n=count)
 
 

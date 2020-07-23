@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 import os
 import re
 import ssl
@@ -32,7 +33,7 @@ class TPCManager(object):
         Returns:
             List[Tuple[str, int]]: the list of abstracts
         """
-        return [(paper["abstract"], get_year_from_date(paper["year"])) for paper in papers] \
+        return [(paper["abstract"], get_year_from_date(paper["year"]), paper["score"]) for paper in papers] \
             if papers and papers != 'null' else []
 
     @staticmethod
@@ -50,7 +51,7 @@ class TPCManager(object):
                 "", TPCManager.remove_bad_chars(paper["author"])) for paper in papers] if papers and papers != 'null' else []
 
     def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND',
-                   author: str = ''):
+                   author: str = '', max_results: int = 200):
         """get all papers that match **all** the specified keywords
 
         Args:
@@ -59,6 +60,7 @@ class TPCManager(object):
             year (str): limit search to specific year
             logic_op (bool): logic operator used to combine keywords
             author (str): author name to search
+            max_results (int): maximum number of results to be returned
         Returns:
             List[List[str]]: the list of papers
         """
@@ -72,15 +74,23 @@ class TPCManager(object):
             query["author"] = author
         if year != '':
             query["year"] = year
-        data = json.dumps({"token": self.textpresso_api_token, "query": query, "include_fulltext": True, "count": 200})
-        data = data.encode('utf-8')
-        req = urllib.request.Request(self.tpc_api_endpoint, data, headers={'Content-type': 'application/json',
-                                                                           'Accept': 'application/json'})
-        logger.debug("Sending request to Textpresso Central API")
-        return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+        papers = []
+        for i in range(math.ceil(max_results / 200)):
+            data = json.dumps({"token": self.textpresso_api_token, "query": query, "include_fulltext": True,
+                               "count": 200, "since_num": 200 * i})
+            data = data.encode('utf-8')
+            req = urllib.request.Request(self.tpc_api_endpoint, data, headers={'Content-type': 'application/json',
+                                                                               'Accept': 'application/json'})
+            logger.debug("Sending request to Textpresso Central API")
+            results = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+            if results:
+                papers.extend(results)
+            if not results or len(results) < 200:
+                break
+        return papers
 
     def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
-                             category: str = '', author: str = '', logic_op: str = 'AND'):
+                             category: str = '', author: str = '', logic_op: str = 'AND', max_results: int = 200):
         query = {
             "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
@@ -91,10 +101,17 @@ class TPCManager(object):
             query["author"] = author
         if year != '':
             query["year"] = year
-        data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category, "count": 200})
-        data = data.encode('utf-8')
-        req = urllib.request.Request(self.tpc_category_matches_endpoint, data,
-                                     headers={'Content-type': 'application/json', 'Accept': 'application/json'})
-        logger.debug("Sending request to Textpresso Central API")
-        return json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+        results = []
+        for i in range(math.ceil(max_results / 200)):
+            data = json.dumps({"token": self.textpresso_api_token, "query": query, "category": category, "count": 200})
+            data = data.encode('utf-8')
+            req = urllib.request.Request(self.tpc_category_matches_endpoint, data,
+                                         headers={'Content-type': 'application/json', 'Accept': 'application/json'})
+            logger.debug("Sending request to Textpresso Central API")
+            res = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+            if res:
+                results.extend(res)
+            if not res or len(res) < 200:
+                break
+        return results
 
