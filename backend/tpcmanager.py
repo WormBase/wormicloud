@@ -65,11 +65,12 @@ class TPCManager(object):
             List[List[str]]: the list of papers
         """
         query = {
-            "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
+        if keywords:
+            query["keywords"] = (" " + logic_op + " ").join(keywords)
         if author != '':
             query["author"] = author
         if year != '':
@@ -92,11 +93,12 @@ class TPCManager(object):
     def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
                              category: str = '', author: str = '', logic_op: str = 'AND', max_results: int = 200):
         query = {
-            "keywords": (" " + logic_op + " ").join(keywords),
             "type": "document",
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans"]
         }
+        if keywords:
+            query["keywords"] = (" " + logic_op + " ").join(keywords)
         if author != '':
             query["author"] = author
         if year != '':

@@ -244,7 +244,7 @@ class Cloud extends React.Component {
                                                 years = Array.from(Array(parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) + 1), (_, i) => i + parseInt(this.state.publicationYearFrom))
                                             }
                                             let filteredKeywords = this.state.keywords.filter(k => k !== '');
-                                            if (filteredKeywords.length > 0) {
+                                            if (filteredKeywords.length > 0 || this.state.author !== '') {
                                                 this.props.resetCloud();
                                                 this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
                                                     years, this.state.genesOnly, this.state.logicOp, this.state.author,
