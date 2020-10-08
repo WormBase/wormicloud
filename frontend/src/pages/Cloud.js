@@ -17,6 +17,8 @@ import {Tooltip} from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
+import queryString from 'query-string';
+import {withRouter} from "react-router-dom";
 
 class ExtWC extends React.Component {
  render() {
@@ -45,6 +47,19 @@ class Cloud extends React.Component {
             weightedScore: false
         }
         this.waitMessageTimeout = undefined;
+    }
+
+    componentDidMount() {
+        const value = queryString.parse(this.props.location.search);
+        if (value.keywords !== undefined) {
+            const keywords = value.keywords.split(',').filter(k => k !== '');
+            if (keywords.length > 0) {
+                let years = [''];
+                this.props.fetchWordCounters(keywords, this.state.caseSensitive, years, this.state.genesOnly,
+                    this.state.logicOp, this.state.author, this.state.maxResults, this.state.weightedScore);
+                this.setState({keywords: keywords});
+            }
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -424,4 +439,4 @@ const mapStateToProps = state => ({
     error: getError(state)
 });
 
-export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud, dismissError})(Cloud);
+export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud, dismissError})(withRouter(Cloud));

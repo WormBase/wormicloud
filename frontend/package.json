@@ -9,6 +9,7 @@
     "distinct-colors": "^3.0.0",
     "node": "^8.16.0",
     "paginated-list": "^1.0.10",
+    "query-string": "^6.13.5",
     "react": "^16.8.6",
     "react-component-export-image": "^0.1.4",
     "react-dom": "^16.8.6",
