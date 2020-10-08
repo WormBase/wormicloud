@@ -315,7 +315,7 @@ class Cloud extends React.Component {
                                     }}>Redraw cloud</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
                                         downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
-                                            .map((c) => c.text + '\t' + c.value).join('\n'), "counters", "text/plain", "csv").then(r => {});
+                                            .map((c) => '"' + c.text + '",' + c.value).join('\n'), "counters", "text/plain", "csv").then(r => {});
                                     }}>Download counters</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
                                         exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
