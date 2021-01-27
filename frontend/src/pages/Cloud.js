@@ -47,6 +47,8 @@ class Cloud extends React.Component {
             weightedScore: false
         }
         this.waitMessageTimeout = undefined;
+
+        this.generateCloud = this.generateCloud.bind(this);
     }
 
     componentDidMount() {
@@ -78,6 +80,27 @@ class Cloud extends React.Component {
                     clearTimeout(this.waitMessageTimeout);
                 }
             }
+        }
+    }
+
+    generateCloud() {
+        if ((this.state.publicationYearFrom === '' && this.state.publicationYearTo === '' ) || (parseInt(this.state.publicationYearFrom) <= parseInt(this.state.publicationYearTo) && parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) <= this.state.maxYearDiff && parseInt(this.state.publicationYearFrom) > 1900 && parseInt(this.state.publicationYearTo) > 1900)) {
+            let years = [''];
+            if (this.state.publicationYearFrom !== '') {
+                years = Array.from(Array(parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) + 1), (_, i) => i + parseInt(this.state.publicationYearFrom))
+            }
+            let filteredKeywords = this.state.keywords.filter(k => k !== '');
+            if (filteredKeywords.length > 0 || this.state.author !== '') {
+                this.props.resetCloud();
+                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
+                    years, this.state.genesOnly, this.state.logicOp, this.state.author,
+                    this.state.maxResults, this.state.weightedScore);
+                this.setState({keywords: filteredKeywords});
+            } else {
+                this.setState({error: "The provided keywords are not valid"})
+            }
+        } else {
+            this.setState({showYearsError: true})
         }
     }
 
@@ -253,24 +276,7 @@ class Cloud extends React.Component {
                             <Row>
                                 <Col>
                                     <Button onClick={() => {
-                                        if ((this.state.publicationYearFrom === '' && this.state.publicationYearTo === '' ) || (parseInt(this.state.publicationYearFrom) <= parseInt(this.state.publicationYearTo) && parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) <= this.state.maxYearDiff && parseInt(this.state.publicationYearFrom) > 1900 && parseInt(this.state.publicationYearTo) > 1900)) {
-                                            let years = [''];
-                                            if (this.state.publicationYearFrom !== '') {
-                                                years = Array.from(Array(parseInt(this.state.publicationYearTo) - parseInt(this.state.publicationYearFrom) + 1), (_, i) => i + parseInt(this.state.publicationYearFrom))
-                                            }
-                                            let filteredKeywords = this.state.keywords.filter(k => k !== '');
-                                            if (filteredKeywords.length > 0 || this.state.author !== '') {
-                                                this.props.resetCloud();
-                                                this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
-                                                    years, this.state.genesOnly, this.state.logicOp, this.state.author,
-                                                    this.state.maxResults, this.state.weightedScore);
-                                                this.setState({keywords: filteredKeywords});
-                                            } else {
-                                                this.setState({error: "The provided keywords are not valid"})
-                                            }
-                                        } else {
-                                            this.setState({showYearsError: true})
-                                        }
+                                        this.generateCloud()
                                     }}>Generate word cloud {this.props.isLoading ? <Spinner as="span" animation="border"
                                                                                             size="sm" role="status"
                                                                                             aria-hidden="true" variant="secondary"/> : ''}</Button>
@@ -299,6 +305,7 @@ class Cloud extends React.Component {
                                                        let newKeywords = [...this.state.keywords];
                                                        newKeywords.push(word.text)
                                                        this.setState({keywords: newKeywords});
+                                                       this.generateCloud();
                                                    }
                                                }}/> : ''}
                                 </Col>
