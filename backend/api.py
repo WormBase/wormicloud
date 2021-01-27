@@ -98,11 +98,11 @@ class TPCWordListReader:
                         paperid_score = {paper["identifier"]: paper["score"] for paper in papers}
                         genes_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
-                            "Gene (C. elegans) (tpgce:0000001)", req.media["author"],
+                            "Gene (C. elegans) (tpgce:0000000)", req.media["author"],
                             max_results=req.media["maxResults"])
                         protein_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
-                            "Protein (C. elegans) (tpprce:0000001)", req.media["author"],
+                            "Protein (C. elegans) (tpprce:0000000)", req.media["author"],
                             max_results=req.media["maxResults"])
                         abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]],
                                            paperid_score[gene_m["identifier"]]) for gene_m in genes_matches if
