@@ -91,7 +91,8 @@ class TPCManager(object):
         return papers
 
     def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
-                             category: str = '', author: str = '', logic_op: str = 'AND', max_results: int = 200):
+                             category: str = '', author: str = '', logic_op: str = 'AND', max_results: int = 200,
+                             lower: bool = False):
         query = {
             "type": "document",
             "case_sensitive": case_sensitive,
@@ -111,6 +112,10 @@ class TPCManager(object):
                                          headers={'Content-type': 'application/json', 'Accept': 'application/json'})
             logger.debug("Sending request to Textpresso Central API")
             res = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+            if lower:
+                for idx, p in enumerate(res):
+                    if 'matches' in p:
+                        res[idx]['matches'] = [w.lower() for w in p['matches']]
             if res:
                 results.extend(res)
             if not res or len(res) < 200:
