@@ -13,9 +13,20 @@ import {Tooltip} from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 import {IoIosHelpCircleOutline} from "react-icons/io";
 import Nav from "react-bootstrap/Nav";
-
+import Button from "react-bootstrap/Button";
+import { Player } from 'video-react';
+import Modal from "react-bootstrap/Modal";
+import videoTutorial from "../assets/videos/tutorial.mp4";
+import 'video-react/dist/video-react.css';
 
 class Main extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showTutorial: false
+        }
+    }
 
     render() {
         const helpTooltip = <Tooltip id="button-tooltip">Wormicloud performs fulltext literature searches using Textpressocentral and pulls abstracts from the matching papers to build word clouds that can unearth interesting relationships between biological entities.</Tooltip>;
@@ -24,7 +35,7 @@ class Main extends React.Component {
         return(
             <Container fluid>
                 <Row>
-                    <Col sm={4}>
+                    <Col sm={5}>
                         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                             <Row>
                                 <Col sm={12}>
@@ -37,7 +48,8 @@ class Main extends React.Component {
                                                                                                               delay={{ show: 250, hide: 400 }}
                                                                                                               overlay={helpTooltip}>
                                     <Badge variant="secondary">How does it work?</Badge>
-                                </OverlayTrigger>
+                                    </OverlayTrigger>&nbsp;
+                                    <Badge variant="primary" onClick={()=>{this.setState({showTutorial: true})}}>Video Tutorial</Badge>
                                 </Col>
                             </Row>
                             <Row>
@@ -47,7 +59,7 @@ class Main extends React.Component {
                             </Row>
                         </Container>
                     </Col>
-                    <Col sm={6} align="left">
+                    <Col sm={5} align="left">
                         <img src={process.env.PUBLIC_URL + '/wormicloud_logo.jpg'} className="logo"/>
                     </Col>
                     <Col sm={2} align="right">
@@ -113,7 +125,22 @@ class Main extends React.Component {
                             </Tab.Container> : ''}
                     </Col>
                 </Row>
+                <Modal size="lg" show={this.state.showTutorial} onHide={()=>{this.setState({showTutorial: false})}}>
+                    <Modal.Header>
+                        <Modal.Title>Wormicloud Tutorial</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Player width={720} height={500} playsInline fluid={false}
+                                src={videoTutorial} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={()=>{this.setState({showTutorial: false})}}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
+
         );
     }
 }
