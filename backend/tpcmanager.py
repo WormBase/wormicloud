@@ -83,7 +83,7 @@ class TPCManager(object):
             req = urllib.request.Request(self.tpc_api_endpoint, data, headers={'Content-type': 'application/json',
                                                                                'Accept': 'application/json'})
             logger.debug("Sending request to Textpresso Central API")
-            results = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+            results = json.loads(urllib.request.urlopen(req).read().decode('latin1'))
             if results:
                 papers.extend(results)
             if not results or len(results) < 200:
@@ -111,7 +111,7 @@ class TPCManager(object):
             req = urllib.request.Request(self.tpc_category_matches_endpoint, data,
                                          headers={'Content-type': 'application/json', 'Accept': 'application/json'})
             logger.debug("Sending request to Textpresso Central API")
-            res = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+            res = json.loads(urllib.request.urlopen(req).read().decode('latin1'))
             if lower:
                 for idx, p in enumerate(res):
                     if 'matches' in p:
