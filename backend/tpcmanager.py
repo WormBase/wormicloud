@@ -51,7 +51,7 @@ class TPCManager(object):
                 "", TPCManager.remove_bad_chars(paper["author"])) for paper in papers] if papers and papers != 'null' else []
 
     def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND',
-                   author: str = '', max_results: int = 200):
+                   author: str = '', max_results: int = 200, search_type: str = 'document'):
         """get all papers that match **all** the specified keywords
 
         Args:
@@ -61,11 +61,12 @@ class TPCManager(object):
             logic_op (bool): logic operator used to combine keywords
             author (str): author name to search
             max_results (int): maximum number of results to be returned
+            search_type (str): Textpresso search type, either document or sentence
         Returns:
             List[List[str]]: the list of papers
         """
         query = {
-            "type": "document",
+            "type": search_type,
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans and Suppl"]
         }
@@ -92,9 +93,9 @@ class TPCManager(object):
 
     def get_category_matches(self, keywords: List[str], case_sensitive: bool = True, year: str = '',
                              category: str = '', author: str = '', logic_op: str = 'AND', max_results: int = 200,
-                             lower: bool = False):
+                             lower: bool = False, search_type: str = 'document'):
         query = {
-            "type": "document",
+            "type": search_type,
             "case_sensitive": case_sensitive,
             "corpora": ["C. elegans and Suppl"]
         }

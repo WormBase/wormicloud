@@ -7,7 +7,8 @@ export const TOGGLE_WORD = "TOGGLE_WORD";
 export const RESET_CLOUD ="RESET_CLOUD";
 export const DISMISS_ERROR = "DISMISS_ERROR";
 
-export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp, author, maxResults, weightedScore) => {
+export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp, author, maxResults, weightedScore,
+                                  searchType) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
         keywords = keywords.map(k => {return '"' + k + '"'});
@@ -21,7 +22,7 @@ export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, log
         let apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
         axios
           .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, years: yearsFix, genesOnly: genesOnly,
-              logicOp: logicOp, author: author, maxResults: maxResults, weightedScore: weightedScore})
+              logicOp: logicOp, author: author, maxResults: maxResults, weightedScore: weightedScore, searchType: searchType})
           .then(res => {
               if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0 && res.data.trends) {
                   let i = 1;

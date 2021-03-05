@@ -91,7 +91,8 @@ class TPCWordListReader:
                 for keywords_list in keywords_lists:
                     papers = self.tpc_manager.get_papers(keywords_list, req.media["caseSensitive"], year_filter,
                                                          req.media["logicOp"], req.media["author"],
-                                                         req.media["maxResults"])
+                                                         req.media["maxResults"], search_type=req.media["searchType"]
+                        if "searchType" in req.media else "document")
                     references.extend(self.tpc_manager.get_references(papers))
                     if "genesOnly" in req.media and req.media["genesOnly"] and papers:
                         paperid_year = {paper["identifier"]: get_year_from_date(paper["year"]) for paper in papers}
@@ -99,11 +100,13 @@ class TPCWordListReader:
                         genes_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
                             "Gene (C. elegans) (tpgce:0000000)", req.media["author"],
-                            max_results=req.media["maxResults"], lower=True)
+                            max_results=req.media["maxResults"], lower=True, search_type=req.media["searchType"]
+                            if "searchType" in req.media else "document")
                         protein_matches = self.tpc_manager.get_category_matches(
                             keywords_list, req.media["caseSensitive"], year_filter,
                             "Protein (C. elegans) (tppce:0000000)", req.media["author"],
-                            max_results=req.media["maxResults"], lower=True)
+                            max_results=req.media["maxResults"], lower=True, search_type=req.media["searchType"]
+                            if "searchType" in req.media else "document")
                         abstracts.extend([(" ".join(gene_m["matches"]), paperid_year[gene_m["identifier"]],
                                            paperid_score[gene_m["identifier"]]) for gene_m in genes_matches if
                                           "matches" in gene_m and gene_m["matches"] and gene_m["identifier"] in

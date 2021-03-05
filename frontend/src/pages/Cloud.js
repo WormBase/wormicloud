@@ -34,6 +34,7 @@ class Cloud extends React.Component {
             keywords: [''],
             redraw: false,
             caseSensitive: true,
+            searchType: 'document',
             publicationYearFrom: '',
             publicationYearTo: '',
             author: '',
@@ -94,7 +95,7 @@ class Cloud extends React.Component {
                 this.props.resetCloud();
                 this.props.fetchWordCounters(this.state.keywords, this.state.caseSensitive,
                     years, this.state.genesOnly, this.state.logicOp, this.state.author,
-                    this.state.maxResults, this.state.weightedScore);
+                    this.state.maxResults, this.state.weightedScore, this.state.searchType);
                 this.setState({keywords: filteredKeywords});
             } else {
                 this.setState({error: "The provided keywords are not valid"})
@@ -214,6 +215,20 @@ class Cloud extends React.Component {
                                                                                         onChange={() => {
                                                                                             this.setState({caseSensitive: !this.state.caseSensitive})
                                                                                         }}/>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row><Col>&nbsp;</Col></Row>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            Search Scope:
+                                                                            <Form.Control as="select"
+                                                                                          checked={this.state.searchType}
+                                                                                          onChange={(event) => {
+                                                                                              this.setState({searchType: event.target.value})
+                                                                                          }}>
+                                                                                <option value="document">Document</option>
+                                                                                <option value="sentence">Sentence</option>
+                                                                            </Form.Control>
                                                                         </Col>
                                                                     </Row>
                                                                     <Row><Col>&nbsp;</Col></Row>
