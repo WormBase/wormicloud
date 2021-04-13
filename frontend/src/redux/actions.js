@@ -31,7 +31,7 @@ export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, log
                       keyword => {
                           return {text: keyword, value: res.data.counters[keyword], active: true }
                       });
-                  dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references, res.data.trends));
+                  dispatch(fetchWordCountersSuccess(res.data.counters, res.data.references, res.data.trends, res.data.descriptions));
               }
               else {
                   dispatch(fetchWordCountersError('No data found for the specified keywords'));
@@ -47,9 +47,9 @@ export const fetchWordCountersRequest = () => ({
    type: FETCH_WORD_COUNTERS_REQUEST,
 });
 
-export const fetchWordCountersSuccess = (counters, references, trends) => ({
+export const fetchWordCountersSuccess = (counters, references, trends, descriptions) => ({
     type: FETCH_WORD_COUNTERS_SUCCESS,
-    payload: { counters: counters, references: references, trends: trends }
+    payload: { counters: counters, references: references, trends: trends, descriptions: descriptions }
 });
 
 export const fetchWordCountersError = error => ({

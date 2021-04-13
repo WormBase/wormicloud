@@ -5,6 +5,7 @@ const initialState = {
     counters: [],
     references : [],
     trends: {},
+    descriptions: {},
     isLoading: false,
     error: null
 };
@@ -15,6 +16,7 @@ export const wordReducer = createReducer(initialState, {
         state.counters = action.payload.counters;
         state.references = action.payload.references;
         state.trends = action.payload.trends;
+        state.descriptions = action.payload.descriptions;
         state.isLoading = false;
         state.error = null;
     },

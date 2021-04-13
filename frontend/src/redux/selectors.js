@@ -3,6 +3,7 @@ export function getCounters (store) {
 }
 export const getReferences = store => store ? store.references : [];
 export const getTrends = store => store ? store.trends : {};
+export const getDescriptions = store => store ? store.descriptions : {};
 
 export const isLoading = store => store ? store.isLoading : false;
 export const getError = store => store ? store.error : null;

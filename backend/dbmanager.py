@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 import psycopg2 as psycopg2
 
@@ -39,10 +40,26 @@ class DBManager(object):
     def get_wb_geneid_from_gene_name(self, gene_name):
         self.cur.execute("SELECT gin_locus.joinkey FROM gin_locus "
                          "FULL OUTER JOIN gin_synonyms ON gin_locus.joinkey = gin_synonyms.joinkey "
-                         "WHERE gin_locus.gin_locus = '{}' OR gin_synonyms.gin_synonyms = '{}'".format(
-            gene_name, gene_name))
+                         "FULL OUTER JOIN gin_seqname ON gin_locus.joinkey = gin_seqname.joinkey "
+                         "WHERE gin_locus.gin_locus = '{}' OR gin_synonyms.gin_synonyms = '{}' "
+                         "OR gin_seqname.gin_seqname = '{}'".format(
+            gene_name, gene_name, gene_name))
         row = self.cur.fetchone()
         if row:
             return "WBGene" + row[0]
         else:
             return None
+
+    def get_gene_name_id_map(self, gene_names: List[str]):
+        self.cur.execute("SELECT gin_locus.joinkey, gin_locus.gin_locus, gin_synonyms.gin_synonyms, "
+                         "gin_seqname.gin_seqname FROM gin_locus "
+                         "FULL OUTER JOIN gin_synonyms ON gin_locus.joinkey = gin_synonyms.joinkey "
+                         "FULL OUTER JOIN gin_seqname ON gin_locus.joinkey = gin_seqname.joinkey "
+                         "WHERE gin_locus.gin_locus IN %(gene_names)s OR gin_synonyms.gin_synonyms IN %(gene_names)s "
+                         "OR gin_seqname.gin_seqname IN %(gene_names)s", {'gene_names': tuple(gene_names)})
+        gene_name_id = {}
+        for row in self.cur.fetchall():
+            for gene_name in (row[1], row[2], row[3]):
+                if gene_name and row[0]:
+                    gene_name_id[gene_name] = "WBGene" + row[0]
+        return gene_name_id

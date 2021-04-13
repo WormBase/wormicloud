@@ -6,7 +6,7 @@ import ReactWordcloud from "react-wordcloud";
 import Form from "react-bootstrap/Form";
 import {dismissError, fetchWordCounters, resetCloud, toggleWord} from "../redux/actions";
 import {connect} from "react-redux";
-import {getCounters, getError, isLoading} from "../redux/selectors";
+import {getCounters, getDescriptions, getError, isLoading} from "../redux/selectors";
 import Button from "react-bootstrap/Button";
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline, IoIosHelpCircleOutline } from 'react-icons/io';
 import Spinner from "react-bootstrap/Spinner";
@@ -321,6 +321,13 @@ class Cloud extends React.Component {
                                                        newKeywords.push(word.text)
                                                        this.setState({keywords: newKeywords});
                                                        this.generateCloud();
+                                                   },
+                                                   getWordTooltip: word => {
+                                                       if (this.state.genesOnly) {
+                                                           return `${word.text} (${word.value}) - Gene Description: ${this.props.descriptions[word.text]}`;
+                                                       } else {
+                                                           return `${word.text} (${word.value})`;
+                                                       }
                                                    }
                                                }}/> : ''}
                                 </Col>
@@ -457,6 +464,7 @@ function ErrorModal(props) {
 
 const mapStateToProps = state => ({
     counters: getCounters(state),
+    descriptions: getDescriptions(state),
     isLoading: isLoading(state),
     error: getError(state)
 });
