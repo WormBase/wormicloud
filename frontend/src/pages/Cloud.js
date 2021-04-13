@@ -330,7 +330,7 @@ class Cloud extends React.Component {
                                                        if (this.state.genesOnly) {
                                                            return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}<br/><br/>Gene Description: ${this.props.descriptions[word.text]}`;
                                                        } else {
-                                                           return `${word.text} (${word.value})`;
+                                                           return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}`;
                                                        }
                                                    }
                                                }}/> : ''}
