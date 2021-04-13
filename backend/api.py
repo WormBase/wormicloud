@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import gzip
 import json
 import logging
 from collections import defaultdict
@@ -14,7 +13,7 @@ from backend.nlp import *
 from backend.tpcmanager import TPCManager
 from datetime import datetime
 
-from backend.wb_api_manager import get_description_from_gene_id, get_alliance_descriptions
+from backend.wb_api_manager import get_alliance_descriptions
 
 
 class HandleCORS(object):
