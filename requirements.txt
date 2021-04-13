@@ -5,3 +5,4 @@ falcon~=2.0.0
 nltk~=3.5
 pyyaml~=5.3.1
 python-dateutil~=2.8.1
+requests~=2.25.1
