@@ -324,7 +324,7 @@ class Cloud extends React.Component {
                                                    },
                                                    getWordTooltip: word => {
                                                        if (this.state.genesOnly) {
-                                                           return `${word.text} (${word.value}) - Gene Description: ${this.props.descriptions[word.text]}`;
+                                                           return `Gene name: ${word.text}, Count: ${word.value}, Description: ${this.props.descriptions[word.text]}`;
                                                        } else {
                                                            return `${word.text} (${word.value})`;
                                                        }
