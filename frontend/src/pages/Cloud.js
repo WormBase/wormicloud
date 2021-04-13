@@ -19,6 +19,9 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import queryString from 'query-string';
 import {withRouter} from "react-router-dom";
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/scale.css';
+
 
 class ExtWC extends React.Component {
  render() {
@@ -313,7 +316,8 @@ class Cloud extends React.Component {
                                                    rotationAngles: [-0, 0],
                                                    padding: 3,
                                                    fontSizes: [14, 48],
-                                                   fontFamily: 'verdana'
+                                                   fontFamily: 'verdana',
+                                                   tooltipOptions: {allowHTML: true}
                                                }}
                                                callbacks={{
                                                    onWordClick: (word, event) => {
@@ -324,7 +328,7 @@ class Cloud extends React.Component {
                                                    },
                                                    getWordTooltip: word => {
                                                        if (this.state.genesOnly) {
-                                                           return `Gene name: ${word.text}, Count: ${word.value}, Description: ${this.props.descriptions[word.text]}`;
+                                                           return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}<br/><br/>Gene Description: ${this.props.descriptions[word.text]}`;
                                                        } else {
                                                            return `${word.text} (${word.value})`;
                                                        }
