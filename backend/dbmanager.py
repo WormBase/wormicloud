@@ -60,6 +60,7 @@ class DBManager(object):
         gene_name_id = {}
         for row in self.cur.fetchall():
             for gene_name in (row[1], row[2], row[3]):
-                if gene_name and row[0]:
-                    gene_name_id[gene_name] = "WBGene" + row[0]
+                if gene_name and row[0] and gene_name in gene_names:
+                    if gene_name not in gene_name_id:
+                        gene_name_id[gene_name] = "WBGene" + row[0]
         return gene_name_id
