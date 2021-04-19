@@ -138,6 +138,7 @@ class TPCWordListReader:
                             counters.append(get_word_counts(
                                         corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None,
                                         gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False))
+                counters = [[(word.replace("'", "").replace("\"", "").replace("\\", ""), count) for word, count in counter] for counter in counters]
                 word_trends = []
                 all_words = [w for counter in counters for w, _ in counter]
                 for year, all_abstracts in years_abstracts.items():
