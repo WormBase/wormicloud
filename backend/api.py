@@ -123,21 +123,21 @@ class TPCWordListReader:
                                               if "matches" in protein_m and protein_m["matches"]])
                         else:
                             abstracts.extend(self.tpc_manager.get_abstracts(papers))
-                        for ab, year, score in abstracts:
-                            years_abstracts[year].append(ab)
-                        if req.media["weightedScore"]:
-                            counter_all_abs = defaultdict(int)
-                            for ab in abstracts:
-                                for word, counter in get_word_counts(
-                                        corpus=[ab[0]], count=int(req.media["count"]) if "count" in req.media and int(
-                                            req.media["count"]) > 0 else None,
-                                        gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False):
-                                    counter_all_abs[word] += counter * (ab[2] if req.media["weightedScore"] else 1)
-                            counters.append(list(counter_all_abs.items()))
-                        else:
-                            counters.append(get_word_counts(
-                                        corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None,
-                                        gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False))
+                for ab, year, score in abstracts:
+                    years_abstracts[year].append(ab)
+                if req.media["weightedScore"]:
+                    counter_all_abs = defaultdict(int)
+                    for ab in abstracts:
+                        for word, counter in get_word_counts(
+                                corpus=[ab[0]], count=int(req.media["count"]) if "count" in req.media and int(
+                                    req.media["count"]) > 0 else None,
+                                gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False):
+                            counter_all_abs[word] += counter * (ab[2] if req.media["weightedScore"] else 1)
+                    counters.append(list(counter_all_abs.items()))
+                else:
+                    counters.append(get_word_counts(
+                        corpus=[ab[0] for ab in abstracts], count=int(req.media["count"]) if "count" in req.media and int(req.media["count"]) > 0 else None,
+                        gene_only=req.media["genesOnly"] if "genesOnly" in req.media else False))
                 counters = [[(word.replace("'", "").replace("\"", "").replace("\\", ""), count) for word, count in counter] for counter in counters]
                 word_trends = []
                 all_words = [w for counter in counters for w, _ in counter]
