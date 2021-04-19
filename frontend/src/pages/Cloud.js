@@ -352,7 +352,7 @@ class Cloud extends React.Component {
                                     }}>Download counters</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 ? <Button size="sm" variant="outline-primary" onClick={() => {
                                         exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
-                                    }}>Export as JPEG</Button> : ''}&nbsp;
+                                    }}>Export JPEG</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 && this.state.genesOnly ?
                                         <Button size="sm" variant="outline-primary" onClick={() => {
                                             const form = document.createElement('form');
@@ -378,7 +378,7 @@ class Cloud extends React.Component {
                                             document.body.appendChild(form);
                                             submitInput.click();
                                             document.body.removeChild(form);
-                                        }}>View on SimpleMine</Button> : ''}&nbsp;
+                                        }}>SimpleMine</Button> : ''}&nbsp;
                                     {this.props.counters.length > 0 && this.state.genesOnly ?
                                         <Button size="sm" variant="outline-primary" onClick={() => {
                                             const form = document.createElement('form');
@@ -412,7 +412,33 @@ class Cloud extends React.Component {
                                             document.body.appendChild(form);
                                             submitInput.click();
                                             document.body.removeChild(form);
-                                        }}>View on Gene Set Enrichment tool</Button> : ''}
+                                        }}>Gene Set Enrichment tool</Button> : ''}&nbsp;
+                                    {this.props.counters.length > 0 && this.state.genesOnly ?
+                                        <Button size="sm" variant="outline-primary" onClick={() => {
+                                            const form = document.createElement('form');
+                                            form.setAttribute('method', 'post');
+                                            form.setAttribute(
+                                                'action',
+                                                'https://wormbase.org/tools/mine/gene_sanitizer.cgi'
+                                            );
+                                            form.setAttribute('target', '_blank');
+                                            form.setAttribute('enctype', 'multipart/form-data');
+
+                                            const geneListInput = document.createElement('textarea');
+                                            geneListInput.setAttribute('type', 'hidden');
+                                            geneListInput.setAttribute('name', 'geneInput');
+                                            geneListInput.value = this.props.counters.map(c => c.text).sort().join('\n');
+                                            form.appendChild(geneListInput);
+
+                                            const submitInput = document.createElement('input');
+                                            submitInput.setAttribute('name', 'action');
+                                            submitInput.setAttribute('type', 'submit');
+                                            form.appendChild(submitInput);
+
+                                            document.body.appendChild(form);
+                                            submitInput.click();
+                                            document.body.removeChild(form);
+                                        }}>Gene name sanitizer</Button> : ''}
                                 </Col>
                             </Row>
                         </Container>

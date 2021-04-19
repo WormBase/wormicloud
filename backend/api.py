@@ -167,7 +167,7 @@ class TPCWordListReader:
                 if req.media["genesOnly"]:
                     gene_name_id_map = self.db_manager.get_gene_name_id_map(
                         [gene_name for gene_name, count in sorted(list(merged_counters.items()), key=lambda x: x[1],
-                                                                  reverse=True)[0:100]])
+                                                                  reverse=True)])
                     gene_id_desc_map = get_alliance_descriptions()
                     gene_descriptions = {gene_name: gene_id_desc_map[gene_id] if gene_id in gene_id_desc_map else ""
                                          for gene_name, gene_id in gene_name_id_map.items()}
