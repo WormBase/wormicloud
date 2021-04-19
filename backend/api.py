@@ -169,8 +169,8 @@ class TPCWordListReader:
                         [gene_name for gene_name, count in sorted(list(merged_counters.items()), key=lambda x: x[1],
                                                                   reverse=True)[0:100]])
                     gene_id_desc_map = get_alliance_descriptions()
-                    gene_descriptions = {gene_name: gene_id_desc_map[gene_id] for gene_name, gene_id in
-                                         gene_name_id_map.items()}
+                    gene_descriptions = {gene_name: gene_id_desc_map[gene_id] if gene_id in gene_id_desc_map else ""
+                                         for gene_name, gene_id in gene_name_id_map.items()}
                 resp.body = '{{"counters": {}, "references": {}, "trends": {}, "descriptions": {}}}'.format("{" + ", ".join(
                     ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                     ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
