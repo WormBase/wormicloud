@@ -51,17 +51,21 @@ class DBManager(object):
             return None
 
     def get_gene_name_id_map(self, gene_names: List[str]):
-        self.cur.execute("SELECT gin_locus.joinkey, gin_locus.gin_locus, gin_synonyms.gin_synonyms, "
-                         "gin_seqname.gin_seqname FROM gin_locus "
-                         "FULL OUTER JOIN gin_synonyms ON gin_locus.joinkey = gin_synonyms.joinkey "
-                         "FULL OUTER JOIN gin_seqname ON gin_locus.joinkey = gin_seqname.joinkey "
-                         "WHERE gin_locus.gin_locus IN %(gene_names)s OR gin_synonyms.gin_synonyms IN %(gene_names)s "
-                         "OR gin_seqname.gin_seqname IN %(gene_names)s", {'gene_names': tuple(gene_names)})
-        gene_name_id = {}
-        for row in self.cur.fetchall():
-            for gene_name in (row[1], row[2], row[3]):
-                if gene_name and row[0] and gene_name in gene_names:
-                    priority = 3 if gene_name == row[1] else 2 if gene_name == row[2] else 1
-                    if gene_name not in gene_name_id or priority > gene_name_id[gene_name][1]:
-                        gene_name_id[gene_name] = ("WBGene" + row[0], priority)
-        return {gene_name: gene_id_pr[0] for gene_name, gene_id_pr in gene_name_id.items()}
+        if gene_names:
+            self.cur.execute("SELECT gin_locus.joinkey, gin_locus.gin_locus, gin_synonyms.gin_synonyms, "
+                             "gin_seqname.gin_seqname FROM gin_locus "
+                             "FULL OUTER JOIN gin_synonyms ON gin_locus.joinkey = gin_synonyms.joinkey "
+                             "FULL OUTER JOIN gin_seqname ON gin_locus.joinkey = gin_seqname.joinkey "
+                             "WHERE gin_locus.gin_locus IN %(gene_names)s OR gin_synonyms.gin_synonyms IN %(gene_names)s "
+                             "OR gin_seqname.gin_seqname IN %(gene_names)s", {'gene_names': tuple(gene_names)})
+            gene_name_id = {}
+            for row in self.cur.fetchall():
+                for gene_name in (row[1], row[2], row[3]):
+                    if gene_name and row[0] and gene_name in gene_names:
+                        priority = 3 if gene_name == row[1] else 2 if gene_name == row[2] else 1
+                        if gene_name not in gene_name_id or priority > gene_name_id[gene_name][1]:
+                            gene_name_id[gene_name] = ("WBGene" + row[0], priority)
+            return {gene_name: gene_id_pr[0] for gene_name, gene_id_pr in gene_name_id.items()}
+        else:
+            return {}
+
