@@ -317,7 +317,7 @@ class Cloud extends React.Component {
                                                    padding: 3,
                                                    fontSizes: [14, 48],
                                                    fontFamily: 'verdana',
-                                                   tooltipOptions: {allowHTML: true}
+                                                   tooltipOptions: {allowHTML: true, maxWidth: 500}
                                                }}
                                                callbacks={{
                                                    onWordClick: (word, event) => {
