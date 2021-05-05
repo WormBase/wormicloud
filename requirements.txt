@@ -3,7 +3,7 @@ wordcloud~=1.7.0
 psycopg2-binary
 falcon~=2.0.0
 nltk~=3.5
-pyyaml~=5.3.1
+pyyaml~=5.4.1
 python-dateutil~=2.8.1
 requests~=2.25.1
 gensim~=4.0.1
