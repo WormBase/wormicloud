@@ -7,7 +7,7 @@ export const SET_YEAR_RANGE = "SET_YEAR_RANGE";
 export const SET_AUTHOR = "SET_AUTHOR";
 export const SET_MAX_NUM_RESULTS = "SET_MAX_NUM_RESULTS";
 export const SET_COUNTER_TYPE = "SET_COUNTER_TYPE";
-export const SET_CLUSTERING_OPTION = "SET_CLUSTERING_OPTION";
+export const SET_CLUSTERING_OPTIONS = "SET_CLUSTERING_OPTIONS";
 
 export const setKeywords = keywords => ({
     type: SET_KEYWORDS,
@@ -74,7 +74,7 @@ export const setCounterType = counterType => ({
 });
 
 export const setClusteringOptions = (clusterWords, minSim) => ({
-    type: SET_CLUSTERING_OPTION,
+    type: SET_CLUSTERING_OPTIONS,
     payload: {
         clusterWords: clusterWords,
         minSim: minSim

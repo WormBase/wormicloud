@@ -15,7 +15,7 @@ const initialState = {
     counterType: 'plain',
     clusteringOptions: {
         clusterWords: false,
-        clusteringMinSim: 0.0
+        clusteringMinSim: 0.6
     }
 
 };
@@ -33,8 +33,10 @@ export default createReducer(initialState, {
     SET_AUTHOR: (state, action) => {state.author = action.payload.author},
     SET_MAX_NUM_RESULTS: (state, action) => {state.maxNumResults = action.payload.maxNumResults},
     SET_COUNTER_TYPE: (state, action) => {state.counterType = action.payload.counterType},
-    SET_CLUSTERING_OPTIONS: (state, action) => {state.clusteringOptions = {
-        clusterWords: action.payload.clusterWords,
-        clusteringMinSim: action.payload.minSim
-    }},
+    SET_CLUSTERING_OPTIONS: (state, action) => {
+        state.clusteringOptions = {
+            clusterWords: action.payload.clusterWords,
+            clusteringMinSim: action.payload.minSim
+        }
+    },
 });

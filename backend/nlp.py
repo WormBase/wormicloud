@@ -68,8 +68,6 @@ def cluster_words_by_similarity(model, counter_map, min_sim: float = 0.5):
         cluster_counter_map[node_highest_count[0]] = node_highest_count[1]
     return cluster_counter_map
 
-    return None
-
 
 def get_word_similarity(model, word1, word2):
     return model.similarity(word1, word2)

@@ -153,24 +153,25 @@ const SearchForm = (props) => {
                                                             delay={{show: 250, hide: 400}}
                                                             overlay={<Tooltip id="button-tooltip">Show only words with highest counts in each cluster</Tooltip>}>
                                                                             <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
-                                                                        checked={props.clusteringOptions.clusteringWords}
+                                                                        checked={props.clusteringOptions.clusterWords}
                                                                         onChange={() => {
                                                                             props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
                                                                         }}/>
                                                         </Col>
                                                     </Row>
                                                     <Row><Col>&nbsp;</Col></Row>
-                                                    {props.clusteringOptions.clusteringWords ?
-                                                        <Row>
+                                                    {props.clusteringOptions.clusterWords ?
+                                                        <><Row>
                                                             <Col xs="auto">
-                                                                Minimum word similarity
+                                                                <h6>Minimum word similarity</h6>
                                                                 <Form.Control type="text" placeholder=""
                                                                               value={props.clusteringOptions.clusteringMinSim}
                                                                               onChange={(event) => {
                                                                                   props.setClusteringOptions(props.clusteringOptions.clusterWords, event.target.value)
                                                                               }}/>
                                                             </Col>
-                                                        </Row> : ''}
+                                                        </Row><Row><Col>&nbsp;</Col></Row></> : ''}
+
                                                     <Row>
                                                         <Col xs="auto">
                                                             <h6>Search Scope</h6>

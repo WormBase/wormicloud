@@ -20,18 +20,11 @@ import {
     getScope,
     getYearRange
 } from "../redux/selectors/search";
-import {
-    setAuthor,
-    setCaseSensitive,
-    setClusteringOptions, setCounterType,
-    setGeneNamesOnly,
-    setKeywords,
-    setLogicOp, setMaxNumResults, setScope, setYearRange
-} from "../redux/actions/search";
 import SearchForm from "../components/SearchForm";
 import Spinner from "react-bootstrap/Spinner";
 import CloudButtons from "../components/CloudButtons";
 import ErrorModal from "../components/ErrorModal";
+import {setKeywords} from "../redux/actions/search";
 
 
 class ExtWC extends React.Component {
@@ -209,5 +202,4 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud, setKeywords,
-    setLogicOp, setGeneNamesOnly, setCaseSensitive, setScope, setYearRange, setAuthor, setMaxNumResults, setCounterType,
-    setClusteringOptions, dismissError, setError})(withRouter(Cloud));
+    dismissError, setError})(withRouter(Cloud));

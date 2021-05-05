@@ -187,7 +187,7 @@ class TPCWordListReader:
                     gene_id_desc_map = get_alliance_descriptions()
                     gene_descriptions = {gene_name: gene_id_desc_map[gene_id] if gene_id in gene_id_desc_map else ""
                                          for gene_name, gene_id in gene_name_id_map.items()}
-                if cluster_words:
+                if cluster_words and len(merged_counters) > 0:
                     merged_counters = cluster_words_by_similarity(self.we_model, merged_counters, min_similarity)
                 resp.body = '{{"counters": {}, "references": {}, "trends": {}, "descriptions": {}}}'.format("{" + ", ".join(
                     ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
