@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,7 +7,6 @@ import {dismissError, fetchWordCounters, resetCloud, setError, toggleWord} from 
 import {connect} from "react-redux";
 import {getCounters, getDescriptions, getError, isLoading} from "../redux/selectors/cloud";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import queryString from 'query-string';
 import {withRouter} from "react-router-dom";
 import 'tippy.js/dist/tippy.css';
@@ -32,6 +31,7 @@ import {
 import SearchForm from "../components/SearchForm";
 import Spinner from "react-bootstrap/Spinner";
 import CloudButtons from "../components/CloudButtons";
+import ErrorModal from "../components/ErrorModal";
 
 
 class ExtWC extends React.Component {
@@ -188,31 +188,6 @@ const Cloud = (props) => {
             />
         </Container>
     );
-}
-
-const ErrorModal = (props) => {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        {props.title}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>
-                        {props.body}
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
 }
 
 const mapStateToProps = state => ({
