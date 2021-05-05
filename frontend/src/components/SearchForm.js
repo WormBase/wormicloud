@@ -118,6 +118,7 @@ const SearchForm = (props) => {
                                 <Form.Check type="checkbox" label="Word cloud with gene names only"
                                             checked={props.geneNamesOnly}
                                             onChange={() => {
+                                                props.setClusteringOptions(false, props.clusteringOptions.clusteringMinSim);
                                                 props.setGeneNamesOnly(!props.geneNamesOnly);
                                             }}/>
                             </Col>
@@ -145,20 +146,23 @@ const SearchForm = (props) => {
                                                                         }}/>
                                                         </Col>
                                                     </Row>
-                                                    <Row><Col>&nbsp;</Col></Row>
-                                                    <Row>
-                                                        <Col xs="auto">
-                                                            <Form.Check type="checkbox"
-                                                                        label={<h6>Cluster words by similarity <OverlayTrigger
-                                                            delay={{show: 250, hide: 400}}
-                                                            overlay={<Tooltip id="button-tooltip">Show only words with highest counts in each cluster</Tooltip>}>
-                                                                            <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
-                                                                        checked={props.clusteringOptions.clusterWords}
-                                                                        onChange={() => {
-                                                                            props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
-                                                                        }}/>
-                                                        </Col>
-                                                    </Row>
+                                                    {!props.geneNamesOnly ?
+                                                        <>
+                                                        <Row><Col>&nbsp;</Col></Row>
+                                                        <Row>
+                                                            <Col xs="auto">
+                                                                <Form.Check type="checkbox"
+                                                                            label={<h6>Cluster words by similarity <OverlayTrigger
+                                                                                delay={{show: 250, hide: 400}}
+                                                                                overlay={<Tooltip id="button-tooltip">Show only words with highest counts in each cluster</Tooltip>}>
+                                                                                <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
+                                                                            checked={props.clusteringOptions.clusterWords}
+                                                                            onChange={() => {
+                                                                                props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
+                                                                            }}/>
+                                                            </Col>
+                                                        </Row>
+                                                        </> : ''}
                                                     <Row><Col>&nbsp;</Col></Row>
                                                     {props.clusteringOptions.clusterWords ?
                                                         <><Row>
