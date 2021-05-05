@@ -32,8 +32,6 @@ import {
 import SearchForm from "../components/SearchForm";
 import Spinner from "react-bootstrap/Spinner";
 import CloudButtons from "../components/CloudButtons";
-import {downloadFile} from "../lib/file";
-import {exportComponentAsJPEG} from "react-component-export-image";
 
 
 class ExtWC extends React.Component {
@@ -172,109 +170,7 @@ class Cloud extends React.Component {
                             </Row>
                             <Row>
                                 <Col sm={12} align="right">
-                                    <div>
-                                        {this.props.counters.length > 0 ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                this.props.setRedraw();
-                                            }}>Redraw cloud</Button> : ''}&nbsp;
-                                        {this.props.counters.length > 0 ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                downloadFile(this.props.counters.sort((a, b) => (a.value > b.value) ? -1 : 1)
-                                                    .map((c) => this.props.geneNamesOnly ? '"' + c.text + '",' + c.value + ',"' + this.props.descriptions[c.text] + '"' : '"' + c.text + '",' + c.value).join('\n'), "counters", "text/plain", "csv").then(r => {
-                                                });
-                                            }}>Download counters</Button> : ''}&nbsp;
-                                        {this.props.counters.length > 0 ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                console.log(this.componentRef);
-                                                exportComponentAsJPEG(this.componentRef, 'wormicloud.jpg', '#FFFFFF')
-                                            }}>Export JPEG</Button> : ''}&nbsp;
-                                        {this.props.counters.length > 0 && this.props.geneNamesOnly ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                const form = document.createElement('form');
-                                                form.setAttribute('method', 'post');
-                                                form.setAttribute(
-                                                    'action',
-                                                    'https://wormbase.org/tools/mine/simplemine.cgi'
-                                                );
-                                                form.setAttribute('target', '_blank');
-                                                form.setAttribute('enctype', 'multipart/form-data');
-
-                                                const geneListInput = document.createElement('textarea');
-                                                geneListInput.setAttribute('type', 'hidden');
-                                                geneListInput.setAttribute('name', 'geneInput');
-                                                geneListInput.value = this.props.counters.map(c => c.text).join('\n');
-                                                form.appendChild(geneListInput);
-
-                                                const submitInput = document.createElement('input');
-                                                submitInput.setAttribute('name', 'action');
-                                                submitInput.setAttribute('type', 'submit');
-                                                form.appendChild(submitInput);
-
-                                                document.body.appendChild(form);
-                                                submitInput.click();
-                                                document.body.removeChild(form);
-                                            }}>SimpleMine</Button> : ''}&nbsp;
-                                        {this.props.counters.length > 0 && this.props.geneNamesOnly ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                const form = document.createElement('form');
-                                                form.setAttribute('method', 'post');
-                                                form.setAttribute(
-                                                    'action',
-                                                    'https://wormbase.org/tools/enrichment/tea/tea.cgi'
-                                                );
-                                                form.setAttribute('target', '_blank');
-                                                form.setAttribute('enctype', 'multipart/form-data');
-
-                                                const geneListInput = document.createElement('textarea');
-                                                geneListInput.setAttribute('type', 'hidden');
-                                                geneListInput.setAttribute('name', 'genelist');
-                                                geneListInput.value = this.props.counters.map(c => c.text).join(' ');
-                                                form.appendChild(geneListInput);
-
-                                                const qvalueThresholdInput = document.createElement('input');
-                                                qvalueThresholdInput.setAttribute('type', 'hidden');
-                                                qvalueThresholdInput.setAttribute('name', 'qvalueThreshold');
-                                                qvalueThresholdInput.setAttribute('value', '0.1');
-                                                qvalueThresholdInput.id = 'qvalueThreshold';
-                                                form.appendChild(qvalueThresholdInput);
-
-                                                const submitInput = document.createElement('input');
-                                                submitInput.setAttribute('name', 'action');
-                                                submitInput.setAttribute('type', 'submit');
-                                                submitInput.setAttribute('value', 'Analyze List');
-                                                form.appendChild(submitInput);
-
-                                                document.body.appendChild(form);
-                                                submitInput.click();
-                                                document.body.removeChild(form);
-                                            }}>Gene Set Enrichment tool</Button> : ''}&nbsp;
-                                        {this.props.counters.length > 0 && this.props.geneNamesOnly ?
-                                            <Button size="sm" variant="outline-primary" onClick={() => {
-                                                const form = document.createElement('form');
-                                                form.setAttribute('method', 'post');
-                                                form.setAttribute(
-                                                    'action',
-                                                    'https://wormbase.org/tools/mine/gene_sanitizer.cgi'
-                                                );
-                                                form.setAttribute('target', '_blank');
-                                                form.setAttribute('enctype', 'multipart/form-data');
-
-                                                const geneListInput = document.createElement('textarea');
-                                                geneListInput.setAttribute('type', 'hidden');
-                                                geneListInput.setAttribute('name', 'geneInput');
-                                                geneListInput.value = this.props.counters.map(c => c.text).sort().join('\n');
-                                                form.appendChild(geneListInput);
-
-                                                const submitInput = document.createElement('input');
-                                                submitInput.setAttribute('name', 'action');
-                                                submitInput.setAttribute('type', 'submit');
-                                                form.appendChild(submitInput);
-
-                                                document.body.appendChild(form);
-                                                submitInput.click();
-                                                document.body.removeChild(form);
-                                            }}>Gene name sanitizer</Button> : ''}
-                                    </div>
+                                    <CloudButtons myRef={this.componentRef} />
                                 </Col>
                             </Row>
                         </Container>
