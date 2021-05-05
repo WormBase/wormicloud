@@ -40,163 +40,154 @@ class ExtWC extends React.Component {
  }
 }
 
-class Cloud extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            showLongWaitMessage: false,
-            showYearsError: false,
+const Cloud = (props) => {
+    const [showLongWaitMessage, setShowLongWaitMessage] = useState(false);
+    const [showYearsError, setShowYearsError] = useState(false);
+    const maxYearDiff = 10;
+    let componentRef = useRef();
+    let waitMessageTimeout = useRef();
 
-        }
-        this.maxYearDiff = 10;
-        this.componentRef = createRef();
-        this.waitMessageTimeout = undefined;
-    }
-
-    componentDidMount() {
-        const value = queryString.parse(this.props.location.search);
+    useEffect(() => {
+        const value = queryString.parse(props.location.search);
         if (value.keywords !== undefined) {
             const keywords = value.keywords.split(',').filter(k => k !== '');
             if (keywords.length > 0) {
                 let years = [''];
-                this.props.fetchWordCounters(keywords, this.props.caseSensitive, years, this.props.genesOnly,
-                    this.props.logicOp, this.props.author, this.props.maxResults, this.props.weightedScore);
-                this.setState({keywords: keywords});
+                props.fetchWordCounters(keywords, props.caseSensitive, years, props.genesOnly,
+                    props.logicOp, props.author, props.maxResults, props.weightedScore);
+                props.setKeywords(keywords);
             }
         }
-    }
+    }, []);
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.genesOnly !== prevProps.genesOnly || this.props.caseSensitive !== prevProps.caseSensitive || this.props.publicationYearFrom !== prevProps.publicationYearFrom || this.props.publicationYearTo !== prevProps.publicationYearTo || this.props.logicOp !== prevProps.logicOp) {
-            this.props.resetCloud();
-        }
-        if (this.props.isLoading !== prevProps.isLoading) {
-            if (this.props.isLoading) {
-                this.waitMessageTimeout = setTimeout(() => {
-                    if (this.props.isLoading) {
-                        this.setState({showLongWaitMessage: true})
-                    }
-                }, 10000)
-            } else {
-                this.setState({showLongWaitMessage: false});
-                if (this.waitMessageTimeout !== undefined) {
-                    clearTimeout(this.waitMessageTimeout);
+    useEffect(() => {
+        props.resetCloud();
+    }, [props.geneNamesOnly, props.caseSensitive, props.yearRange, props.logicOp]);
+
+    useEffect(() => {
+        if (props.isLoading) {
+            waitMessageTimeout.current = setTimeout(() => {
+                if (props.isLoading) {
+                    setShowLongWaitMessage(true);
                 }
+            }, 10000)
+        } else {
+            setShowLongWaitMessage(false);
+            if (waitMessageTimeout.current !== undefined) {
+                clearTimeout(waitMessageTimeout.current);
             }
         }
-    }
+    }, [props.isLoading]);
 
-    generateCloud = () => {
-        if ((this.props.yearRange.yearStart === '' && this.props.yearRange.yearEnd === '') || (parseInt(this.props.yearRange.yearStart) <= parseInt(this.props.yearRange.yearEnd) && parseInt(this.props.yearRange.yearEnd) - parseInt(this.props.yearRange.yearStart) <= this.maxYearDiff && parseInt(this.props.yearRange.yearStart) > 1900 && parseInt(this.props.yearRange.yearEnd) > 1900)) {
+    const generateCloud = () => {
+        if ((props.yearRange.yearStart === '' && props.yearRange.yearEnd === '') || (parseInt(props.yearRange.yearStart) <= parseInt(props.yearRange.yearEnd) && parseInt(props.yearRange.yearEnd) - parseInt(props.yearRange.yearStart) <= maxYearDiff && parseInt(props.yearRange.yearStart) > 1900 && parseInt(props.yearRange.yearEnd) > 1900)) {
             let years = [''];
-            if (this.props.yearRange.yearStart !== '') {
-                years = Array.from(Array(parseInt(this.props.yearRange.yearEnd) - parseInt(this.props.yearRange.yearStart) + 1), (_, i) => i + parseInt(this.props.yearRange.yearStart))
+            if (props.yearRange.yearStart !== '') {
+                years = Array.from(Array(parseInt(props.yearRange.yearEnd) - parseInt(props.yearRange.yearStart) + 1), (_, i) => i + parseInt(props.yearRange.yearStart))
             }
-            let filteredKeywords = this.props.keywords.filter(k => k !== '');
-            if (filteredKeywords.length > 0 || this.props.author !== '') {
-                this.props.resetCloud();
-                this.props.fetchWordCounters(this.props.keywords, this.props.caseSensitive,
-                    years, this.props.geneNamesOnly, this.props.logicOp, this.props.author,
-                    this.props.maxNumResults, this.props.counterType, this.props.scope,
-                    this.props.clusteringOptions.clusterWords, this.props.clusteringOptions.clusteringMinSim);
-                this.props.setKeywords(filteredKeywords);
+            let filteredKeywords = props.keywords.filter(k => k !== '');
+            if (filteredKeywords.length > 0 || props.author !== '') {
+                props.resetCloud();
+                props.fetchWordCounters(props.keywords, props.caseSensitive,
+                    years, props.geneNamesOnly, props.logicOp, props.author,
+                    props.maxNumResults, props.counterType, props.scope,
+                    props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
+                props.setKeywords(filteredKeywords);
             } else {
-                this.props.setError("The provided keywords are not valid");
+                props.setError("The provided keywords are not valid");
             }
         } else {
-            this.setState({showYearsError: true});
+            setShowYearsError(true);
         }
     }
 
-    render() {
-        return (
-            <Container fluid>
-                <Row>
-                    <Col sm={5}>
-                        <SearchForm/>
-                        <br/>
-                        <Button onClick={() => {
-                            this.generateCloud()
-                        }}>Generate word cloud {this.props.isLoading ? <Spinner as="span" animation="border"
-                                                                                size="sm" role="status"
-                                                                                aria-hidden="true"
-                                                                                variant="secondary"/> : ''}</Button>
-                    </Col>
-                    <Col sm={7}>
-                        <Container fluid style={{paddingLeft: 0, paddingRight: 0}}>
-                            <Row>
-                                <Col sm={12}>
-                                    {!this.props.isLoading ?
-                                        <ExtWC ref={this.componentRef}
-                                               redraw={this.props.redraw}
-                                               words={this.props.counters}
-                                               options={{
-                                                   rotations: 1,
-                                                   rotationAngles: [-0, 0],
-                                                   padding: 3,
-                                                   fontSizes: [14, 48],
-                                                   fontFamily: 'verdana',
-                                                   tooltipOptions: {allowHTML: true, maxWidth: 500}
-                                               }}
-                                               callbacks={{
-                                                   onWordClick: (word, event) => {
-                                                       let newKeywords = [...this.props.keywords];
-                                                       newKeywords.push(word.text)
-                                                       this.props.setKeywords(newKeywords);
-                                                       this.props.resetCloud();
-                                                       let years = [''];
-                                                       if (this.props.yearRange.yearStart !== '') {
-                                                           years = Array.from(Array(parseInt(this.props.yearRange.yearEnd) - parseInt(this.props.yearRange.yearStart) + 1), (_, i) => i + parseInt(this.props.yearRange.yearStart))
-                                                       }
-                                                       this.props.fetchWordCounters(this.props.keywords, this.props.caseSensitive,
-                                                           years, this.props.geneNamesOnly, this.props.logicOp, this.props.author,
-                                                           this.props.maxNumResults, this.props.counterType, this.props.scope,
-                                                           this.props.clusteringOptions.clusterWords, this.props.clusteringOptions.clusteringMinSim);
-                                                   },
-                                                   getWordTooltip: word => {
-                                                       if (this.props.geneNamesOnly) {
-                                                           return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}<br/><br/>Gene Description: ${this.props.descriptions[word.text]}`;
-                                                       } else {
-                                                           return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}`;
-                                                       }
+    return (
+        <Container fluid>
+            <Row>
+                <Col sm={5}>
+                    <SearchForm/>
+                    <br/>
+                    <Button onClick={() => {
+                        generateCloud()
+                    }}>Generate word cloud {props.isLoading ? <Spinner as="span" animation="border"
+                                                                            size="sm" role="status"
+                                                                            aria-hidden="true"
+                                                                            variant="secondary"/> : ''}</Button>
+                </Col>
+                <Col sm={7}>
+                    <Container fluid style={{paddingLeft: 0, paddingRight: 0}}>
+                        <Row>
+                            <Col sm={12}>
+                                {!props.isLoading ?
+                                    <ExtWC ref={componentRef}
+                                           redraw={props.redraw}
+                                           words={props.counters}
+                                           options={{
+                                               rotations: 1,
+                                               rotationAngles: [-0, 0],
+                                               padding: 3,
+                                               fontSizes: [14, 48],
+                                               fontFamily: 'verdana',
+                                               tooltipOptions: {allowHTML: true, maxWidth: 500}
+                                           }}
+                                           callbacks={{
+                                               onWordClick: (word, event) => {
+                                                   let newKeywords = [...props.keywords];
+                                                   newKeywords.push(word.text)
+                                                   props.setKeywords(newKeywords);
+                                                   props.resetCloud();
+                                                   let years = [''];
+                                                   if (props.yearRange.yearStart !== '') {
+                                                       years = Array.from(Array(parseInt(props.yearRange.yearEnd) - parseInt(props.yearRange.yearStart) + 1), (_, i) => i + parseInt(props.yearRange.yearStart))
                                                    }
-                                               }}/> : ''}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    &nbsp;
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col sm={12} align="right">
-                                    <CloudButtons myRef={this.componentRef} />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                </Row>
-                <ErrorModal
-                    show={this.props.error !== null}
-                    onHide={this.props.dismissError}
-                    title="Error"
-                    body={this.props.error}
-                />
-                <ErrorModal
-                    show={this.state.showLongWaitMessage}
-                    onHide={() => this.setState({showLongWaitMessage: false})}
-                    title="Warning"
-                    body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords (or remove them if 'combine keywords by' is set to 'OR') to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
-                />
-                <ErrorModal
-                    show={this.state.showYearsError}
-                    onHide={() => this.setState({showYearsError: false})}
-                    title="Error"
-                    body={"Please provide both 'from' and 'to' years. The maximum time span for searches is limited to 10 years."}
-                />
-            </Container>
-        );
-    }
+                                                   props.fetchWordCounters(props.keywords, props.caseSensitive,
+                                                       years, props.geneNamesOnly, props.logicOp, props.author,
+                                                       props.maxNumResults, props.counterType, props.scope,
+                                                       props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
+                                               },
+                                               getWordTooltip: word => {
+                                                   if (props.geneNamesOnly) {
+                                                       return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}<br/><br/>Gene Description: ${props.descriptions[word.text]}`;
+                                                   } else {
+                                                       return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}`;
+                                                   }
+                                               }
+                                           }}/> : ''}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                &nbsp;
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col sm={12} align="right">
+                                <CloudButtons myRef={componentRef} />
+                            </Col>
+                        </Row>
+                    </Container>
+                </Col>
+            </Row>
+            <ErrorModal
+                show={props.error !== null}
+                onHide={props.dismissError}
+                title="Error"
+                body={props.error}
+            />
+            <ErrorModal
+                show={showLongWaitMessage}
+                onHide={() => setShowLongWaitMessage(false)}
+                title="Warning"
+                body={"The search on Textpressocentral is taking a long time. Please wait until you see the word cloud or reload this page to perform another search. You can try to add more keywords (or remove them if 'combine keywords by' is set to 'OR') to speed up the search. Also, gene only clouds require more queries to be performed at the same time and may take longer."}
+            />
+            <ErrorModal
+                show={showYearsError}
+                onHide={() => setShowYearsError(false)}
+                title="Error"
+                body={"Please provide both 'from' and 'to' years. The maximum time span for searches is limited to 10 years."}
+            />
+        </Container>
+    );
 }
 
 const ErrorModal = (props) => {
