@@ -7,10 +7,11 @@ const initialState = {
     trends: {},
     descriptions: {},
     isLoading: false,
-    error: null
+    error: null,
+    redraw: false
 };
 
-export const wordReducer = createReducer(initialState, {
+export default createReducer(initialState, {
     FETCH_WORD_COUNTERS_REQUEST: (state, action) => {state.isLoading = true},
     FETCH_WORD_COUNTERS_SUCCESS: (state, action) => {
         state.counters = action.payload.counters;
@@ -40,5 +41,11 @@ export const wordReducer = createReducer(initialState, {
     RESET_CLOUD: (state, action) => {
         state.counters = [];
         state.references = [];
+    },
+    SET_ERROR: (state, action) => {
+        state.error = action.payload.error
+    },
+    SET_REDRAW: (state, action) => {
+        state.redraw = !state.redraw;
     }
 });

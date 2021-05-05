@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import {getReferences} from "../redux/selectors";
+import {getReferences} from "../redux/selectors/cloud";
 import ReferenceElement from "./ReferenceElement";
 import withPaginatedList from "paginated-list";
 import Container from "react-bootstrap/Container";

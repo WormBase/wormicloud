@@ -25,7 +25,7 @@ class TPCManager(object):
         return string.replace('\'', '').replace('\"', '').replace('\\', '').replace('\\', '')
 
     @staticmethod
-    def get_abstracts(papers: List):
+    def get_ab_year_score(papers: List):
         """get the abstracts from the provided list of papers and the respective years of publication
 
         Args:

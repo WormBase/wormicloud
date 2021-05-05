@@ -4,11 +4,13 @@ export const FETCH_WORD_COUNTERS_REQUEST = "FETCH_WORD_COUNTERS_REQUEST";
 export const FETCH_WORD_COUNTERS_SUCCESS = "FETCH_WORD_COUNTERS_SUCCESS";
 export const FETCH_WORD_COUNTERS_ERROR = "FETCH_WORD_COUNTERS_ERROR";
 export const TOGGLE_WORD = "TOGGLE_WORD";
-export const RESET_CLOUD ="RESET_CLOUD";
+export const RESET_CLOUD = "RESET_CLOUD";
+export const SET_ERROR = "SET_ERROR";
 export const DISMISS_ERROR = "DISMISS_ERROR";
+export const SET_REDRAW = "SET_REDRAW";
 
-export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp, author, maxResults, weightedScore,
-                                  searchType) => {
+export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp, author, maxResults, counterType,
+                                  searchType, clusterWords, clusterWordsMinSim) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
         keywords = keywords.map(k => {return '"' + k + '"'});
@@ -22,7 +24,8 @@ export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, log
         let apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
         axios
           .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, years: yearsFix, genesOnly: genesOnly,
-              logicOp: logicOp, author: author, maxResults: maxResults, weightedScore: weightedScore, searchType: searchType})
+              logicOp: logicOp, author: author, maxResults: maxResults, weightedScore: counterType === "weighted", searchType: searchType,
+              clusterWords: clusterWords, clusterWordsMinSim: clusterWordsMinSim})
           .then(res => {
               if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0 && res.data.trends) {
                   let i = 1;
@@ -70,3 +73,12 @@ export const resetCloud = () => ({
 export const dismissError = () => ({
     type: DISMISS_ERROR
 });
+
+export const setError = error => ({
+   type: SET_ERROR,
+   payload: { error }
+});
+
+export const setRedraw = () => ({
+    type: SET_REDRAW
+})

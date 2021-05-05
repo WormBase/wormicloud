@@ -6,7 +6,7 @@ import Cloud from "./Cloud";
 import ReferenceList from "./ReferenceList";
 import Tab from "react-bootstrap/Tab";
 import {connect} from "react-redux";
-import {getCounters} from "../redux/selectors";
+import {getCounters} from "../redux/selectors/cloud";
 import Trends from "./Trends";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import {Tooltip} from "react-bootstrap";

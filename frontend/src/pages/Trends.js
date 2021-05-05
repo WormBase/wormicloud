@@ -1,5 +1,5 @@
 import React from 'react';
-import {getCounters, getTrends} from "../redux/selectors";
+import {getCounters, getTrends} from "../redux/selectors/cloud";
 import {connect} from "react-redux";
 import {LineChart, CartesianGrid, XAxis, YAxis, Legend, Line, Tooltip, ResponsiveContainer} from 'recharts';
 import Container from "react-bootstrap/Container";
