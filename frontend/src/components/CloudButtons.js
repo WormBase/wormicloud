@@ -6,6 +6,7 @@ import {getGeneNamesOnly, getRedraw} from "../redux/selectors/search";
 import {connect} from "react-redux";
 import {setRedraw} from "../redux/actions/cloud";
 import {getCounters, getDescriptions} from "../redux/selectors/cloud";
+import PropTypes from "prop-types";
 
 const CloudButtons = (props) => {
     return (
@@ -120,5 +121,13 @@ const mapStateToProps = state => ({
     geneNamesOnly: getGeneNamesOnly(state),
     descriptions: getDescriptions(state)
 });
+
+CloudButtons.propType = {
+    counters: PropTypes.array,
+    geneNamesOnly: PropTypes.bool,
+    descriptions: PropTypes.object
+}
+
+
 
 export default connect(mapStateToProps, {setRedraw})(CloudButtons);

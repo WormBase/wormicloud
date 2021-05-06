@@ -42,16 +42,54 @@ const Cloud = (props) => {
 
     useEffect(() => {
         const value = queryString.parse(props.location.search);
-        if (value.keywords !== undefined) {
-            const keywords = value.keywords.split(',').filter(k => k !== '');
-            if (keywords.length > 0) {
-                let years = [''];
-                props.fetchWordCounters(keywords, props.caseSensitive, years, props.genesOnly,
-                    props.logicOp, props.author, props.maxResults, props.weightedScore);
+        let keywords = [];
+        let caseSensitive = true;
+        let author = '';
+        let geneNamesOnly = false;
+        let maxNumResults = 200;
+        let logicOp = 'AND';
+        let counterType = 'plain';
+        let scope = 'document';
+        let clusterWords = false;
+        let clusterWordsMinSim = 0.0;
+        if (value.keywords !== undefined || value.author !== undefined) {
+            if (value.keywords !== undefined) {
+                keywords = value.keywords.split(',').filter(k => k !== '');
+            }
+            if (value.caseSensitive !== undefined && ['true', 'false'].includes(value.caseSensitive)) {
+                caseSensitive = value.caseSensitive === 'true';
+            }
+            if (value.author !== undefined) {
+                author = value.author;
+            }
+            if (value.geneNamesOnly !== undefined && ['true', 'false'].includes(value.geneNamesOnly)) {
+                geneNamesOnly = value.geneNamesOnly === 'true';
+            }
+            if (value.maxNumResults !== undefined) {
+                maxNumResults = parseInt(value.maxNumResults);
+            }
+            if (value.logicOp !== undefined && ['AND', 'OR'].includes(value.logicOp)) {
+                logicOp = value.logicOp;
+            }
+            if (value.counterType !== undefined && ['plain', 'weighted'].includes(value.counterType)) {
+                counterType = value.counterType;
+            }
+            if (value.scope !== undefined && ['document', 'sentence'].includes(value.scope)) {
+                scope = value.scope;
+            }
+            if (value.clusterWords !== undefined && ['true', 'false'].includes(value.clusterWords)) {
+                clusterWords = value.clusterWords === 'true';
+            }
+            if (value.clusterWordsMinSim !== undefined) {
+                clusterWordsMinSim = parseFloat(value.clusterWordsMinSim);
+            }
+            if (keywords.length > 0 || author !== '') {
+                props.fetchWordCounters(keywords, caseSensitive, [''], geneNamesOnly, logicOp, author, maxNumResults,
+                    counterType, scope, clusterWords, clusterWordsMinSim);
                 props.setKeywords(keywords);
             }
         }
-    }, []);
+    }, [props.location]);
 
     useEffect(() => {
         props.resetCloud();
@@ -121,7 +159,7 @@ const Cloud = (props) => {
                                                padding: 3,
                                                fontSizes: [14, 48],
                                                fontFamily: 'verdana',
-                                               tooltipOptions: {allowHTML: true, maxWidth: 500}
+                                               tooltipOptions: {allowHTML: true, maxWidth: 500, interactive: true}
                                            }}
                                            callbacks={{
                                                onWordClick: (word, event) => {
