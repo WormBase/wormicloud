@@ -159,7 +159,7 @@ const Cloud = (props) => {
                                                padding: 3,
                                                fontSizes: [14, 48],
                                                fontFamily: 'verdana',
-                                               tooltipOptions: {allowHTML: true, maxWidth: 500, interactive: true}
+                                               tooltipOptions: {allowHTML: true, maxWidth: 500}
                                            }}
                                            callbacks={{
                                                onWordClick: (word, event) => {

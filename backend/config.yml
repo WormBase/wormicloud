@@ -650,6 +650,14 @@ exclusion_list :
   - "yourself"
   - "yourselves"
   - "you've"
+  - "conclusions:"
+  - "conclusion"
+  - "conclusions"
+  - "conclusion:"
+  - "background:"
+  - "background"
+  - "results:"
+  - "results"
 
 gene_exclusion_list:
   - run

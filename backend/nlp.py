@@ -20,6 +20,7 @@ with open(os.path.join(os.getcwd(), "backend", "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
         EXCLUSION_LIST = config["exclusion_list"]
         EXCLUSION_LIST.extend([word.capitalize() for word in EXCLUSION_LIST])
+        EXCLUSION_LIST.extend([word.upper() for word in EXCLUSION_LIST])
         GENE_EXCLUSION_LIST = config["gene_exclusion_list"]
         GENE_EXCLUSION_LIST.extend([word.capitalize() for word in GENE_EXCLUSION_LIST])
         GENE_EXCLUSION_LIST.extend([word.upper() for word in GENE_EXCLUSION_LIST])
@@ -59,14 +60,17 @@ def cluster_words_by_similarity(model, counter_map, min_sim: float = 0.5):
             sim = get_word_similarity(model, word_pair[0], word_pair[1])
             if sim > min_sim:
                 graph.add_edge(word_pair[0], word_pair[1], weight=sim)
-    g_distance_dict = {(e1, e2): 1 / weight for e1, e2, weight in graph.edges(data='weight')}
-    nx.set_edge_attributes(graph, g_distance_dict, 'distance')
-    comm_structure = greedy_modularity_communities(graph, weight="weight")
-    cluster_counter_map = {}
-    for subgraph_comm in comm_structure:
-        node_highest_count = sorted([(node, counter_map[node]) for node in subgraph_comm], key=lambda x: x[1])[-1]
-        cluster_counter_map[node_highest_count[0]] = node_highest_count[1]
-    return cluster_counter_map
+    if len(graph.edges) > 0:
+        g_distance_dict = {(e1, e2): 1 / weight for e1, e2, weight in graph.edges(data='weight')}
+        nx.set_edge_attributes(graph, g_distance_dict, 'distance')
+        comm_structure = greedy_modularity_communities(graph, weight="weight")
+        cluster_counter_map = {}
+        for subgraph_comm in comm_structure:
+            node_highest_count = sorted([(node, counter_map[node]) for node in subgraph_comm], key=lambda x: x[1])[-1]
+            cluster_counter_map[node_highest_count[0]] = node_highest_count[1]
+        return cluster_counter_map
+    else:
+        return counter_map
 
 
 def get_word_similarity(model, word1, word2):

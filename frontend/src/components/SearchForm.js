@@ -152,9 +152,9 @@ const SearchForm = (props) => {
                                                         <Row>
                                                             <Col xs="auto">
                                                                 <Form.Check type="checkbox"
-                                                                            label={<h6>Cluster words by similarity <OverlayTrigger
+                                                                            label={<h6>Filter out less significant words <OverlayTrigger
                                                                                 delay={{show: 250, hide: 400}}
-                                                                                overlay={<Tooltip id="button-tooltip">Show only words with highest counts in each cluster</Tooltip>}>
+                                                                                overlay={<Tooltip id="button-tooltip">Cluster words by similarity, show those with highest counts in each cluster and filter out the others </Tooltip>}>
                                                                                 <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
                                                                             checked={props.clusteringOptions.clusterWords}
                                                                             onChange={() => {
