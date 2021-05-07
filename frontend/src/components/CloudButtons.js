@@ -2,10 +2,10 @@ import React from 'react';
 import {downloadFile} from "../lib/file";
 import {exportComponentAsJPEG} from "react-component-export-image";
 import Button from "react-bootstrap/Button";
-import {getGeneNamesOnly, getRedraw} from "../redux/selectors/search";
+import {getGeneNamesOnly} from "../redux/selectors/search";
 import {connect} from "react-redux";
 import {setRedraw} from "../redux/actions/cloud";
-import {getCounters, getDescriptions} from "../redux/selectors/cloud";
+import {getCounters, getDescriptions, getRedraw} from "../redux/selectors/cloud";
 import PropTypes from "prop-types";
 
 const CloudButtons = (props) => {

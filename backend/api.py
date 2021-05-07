@@ -135,6 +135,7 @@ class TPCWordListReader:
                 author = req.media["author"]
                 max_api_results = req.media["maxResults"]
                 cluster_words = req.media["clusterWords"]
+                cluster_show_best_words = req.media["clusterShowBestWords"]
                 weighted_score = req.media["weightedScore"]
                 min_similarity = float(req.media["clusterWordsMinSim"]) if "clusterWordsMinSim" in req.media else 0.7
                 references = []
@@ -187,13 +188,16 @@ class TPCWordListReader:
                     gene_id_desc_map = get_alliance_descriptions()
                     gene_descriptions = {gene_name: gene_id_desc_map[gene_id] if gene_id in gene_id_desc_map else ""
                                          for gene_name, gene_id in gene_name_id_map.items()}
+                clusters = {word: idx for idx, word in enumerate(merged_counters.keys())}
                 if cluster_words and len(merged_counters) > 0:
-                    merged_counters = cluster_words_by_similarity(self.we_model, merged_counters, min_similarity)
-                resp.body = '{{"counters": {}, "references": {}, "trends": {}, "descriptions": {}}}'.format("{" + ", ".join(
+                    merged_counters, clusters = cluster_words_by_similarity(self.we_model, merged_counters,
+                                                                            min_similarity, cluster_show_best_words)
+                resp.body = '{{"counters": {}, "references": {}, "trends": {}, "descriptions": {}, "clusters": {}}}'.format("{" + ", ".join(
                     ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                     ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
                      "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] + "\"}" for ref in references]) + "]" if
-                  references else "[]", json.dumps(word_trends), json.dumps(gene_descriptions) if gene_descriptions else "{}")
+                  references else "[]", json.dumps(word_trends), json.dumps(gene_descriptions) if gene_descriptions
+                  else "{}", json.dumps(clusters))
                 resp.status = falcon.HTTP_OK
                 end = datetime.now()
                 print(end - start)

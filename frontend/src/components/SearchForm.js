@@ -118,7 +118,7 @@ const SearchForm = (props) => {
                                 <Form.Check type="checkbox" label="Word cloud with gene names only"
                                             checked={props.geneNamesOnly}
                                             onChange={() => {
-                                                props.setClusteringOptions(false, props.clusteringOptions.clusteringMinSim);
+                                                props.setClusteringOptions(false, props.clusteringOptions.clusteringMinSim, false);
                                                 props.setGeneNamesOnly(!props.geneNamesOnly);
                                             }}/>
                             </Col>
@@ -148,34 +148,48 @@ const SearchForm = (props) => {
                                                     </Row>
                                                     {!props.geneNamesOnly ?
                                                         <>
-                                                        <Row><Col>&nbsp;</Col></Row>
-                                                        <Row>
-                                                            <Col xs="auto">
-                                                                <Form.Check type="checkbox"
-                                                                            label={<h6>Filter out less significant words <OverlayTrigger
-                                                                                delay={{show: 250, hide: 400}}
-                                                                                overlay={<Tooltip id="button-tooltip">Cluster words by similarity, show those with highest counts in each cluster and filter out the others </Tooltip>}>
-                                                                                <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
-                                                                            checked={props.clusteringOptions.clusterWords}
-                                                                            onChange={() => {
-                                                                                props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
-                                                                            }}/>
-                                                            </Col>
-                                                        </Row>
+                                                            <Row><Col>&nbsp;</Col></Row>
+                                                            <Row>
+                                                                <Col xs="auto">
+                                                                    <Form.Check type="checkbox"
+                                                                                label={<h6>Group similar words by color <OverlayTrigger
+                                                                                    delay={{show: 250, hide: 400}}
+                                                                                    overlay={<Tooltip id="button-tooltip">Apply clustering on word similarity graph and color words by cluster membership</Tooltip>}>
+                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
+                                                                                checked={props.clusteringOptions.clusterWords}
+                                                                                onChange={() => {
+                                                                                    props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords);
+                                                                                }}/>
+                                                                </Col>
+                                                            </Row>
                                                         </> : ''}
                                                     <Row><Col>&nbsp;</Col></Row>
                                                     {props.clusteringOptions.clusterWords ?
-                                                        <><Row>
-                                                            <Col xs="auto">
-                                                                <h6>Minimum word similarity</h6>
-                                                                <Form.Control type="text" placeholder=""
-                                                                              value={props.clusteringOptions.clusteringMinSim}
-                                                                              onChange={(event) => {
-                                                                                  props.setClusteringOptions(props.clusteringOptions.clusterWords, event.target.value)
-                                                                              }}/>
-                                                            </Col>
-                                                        </Row><Row><Col>&nbsp;</Col></Row></> : ''}
-
+                                                        <>
+                                                            <Row>
+                                                                <Col xs="auto">
+                                                                    <Form.Check type="checkbox"
+                                                                                label={<h6>Show only most significant word in each cluster <OverlayTrigger
+                                                                                    delay={{show: 250, hide: 400}}
+                                                                                    overlay={<Tooltip id="button-tooltip">Word with highest count in the matched papers</Tooltip>}>
+                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
+                                                                                checked={props.clusteringOptions.showBestWords}
+                                                                                onChange={() => {
+                                                                                    props.setClusteringOptions(props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, !props.clusteringOptions.showBestWords);
+                                                                                }}/>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row><Col>&nbsp;</Col></Row>
+                                                            <Row>
+                                                                <Col xs="auto">
+                                                                    <h6>Minimum word similarity</h6>
+                                                                    <Form.Control type="text" placeholder=""
+                                                                                  value={props.clusteringOptions.clusteringMinSim}
+                                                                                  onChange={(event) => {
+                                                                                      props.setClusteringOptions(props.clusteringOptions.clusterWords, event.target.value, props.clusteringOptions.showBestWords)
+                                                                                  }}/>
+                                                                </Col>
+                                                            </Row><Row><Col>&nbsp;</Col></Row></> : ''}
                                                     <Row>
                                                         <Col xs="auto">
                                                             <h6>Search Scope</h6>
@@ -233,10 +247,10 @@ const SearchForm = (props) => {
                                                                           onChange={(event) => {
                                                                               props.setMaxNumResults(parseInt(event.target.value))
                                                                           }}>
-                                                            <option value="200">200</option>
-                                                            <option value="400">400</option>
-                                                            <option value="1000">1000</option>
-                                                        </Form.Control>
+                                                                <option value="200">200</option>
+                                                                <option value="400">400</option>
+                                                                <option value="1000">1000</option>
+                                                            </Form.Control>
                                                         </Col>
                                                     </Row>
                                                     <Row><Col>&nbsp;</Col></Row>
@@ -248,9 +262,9 @@ const SearchForm = (props) => {
                                                                           onChange={(event) => {
                                                                               props.setCounterType(event.target.value)
                                                                           }}>
-                                                            <option value="plain">Plain count</option>
-                                                            <option value="weighted">Weighted by paper score</option>
-                                                        </Form.Control>
+                                                                <option value="plain">Plain count</option>
+                                                                <option value="weighted">Weighted by paper score</option>
+                                                            </Form.Control>
                                                         </Col>
                                                     </Row>
                                                 </Container>

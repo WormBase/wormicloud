@@ -9,8 +9,7 @@ export const getYearRange = store => getSearchState(store) ? getSearchState(stor
 export const getAuthor = store => getSearchState(store) ? getSearchState(store).author : '';
 export const getMaxNumResults = store => getSearchState(store) ? getSearchState(store).maxNumResults : 200;
 export const getCounterType = store => getSearchState(store) ? getSearchState(store).counterType : 'plain';
-export const getClusteringOptions = store => getSearchState(store) ? getSearchState(store).clusteringOptions : {clusterWords: false, clusteringMinSim: 0.6};
-export const getRedraw = store => getSearchState(store) ? getSearchState(store).redraw : false;
+export const getClusteringOptions = store => getSearchState(store) ? getSearchState(store).clusteringOptions : {clusterWords: false, clusteringMinSim: 0.6, showBestWords: false};
 
 
 

@@ -50,8 +50,8 @@ def get_year_from_date(datestring):
     return 0
 
 
-def cluster_words_by_similarity(model, counter_map, min_sim: float = 0.5):
-    words = [word for word, count in counter_map.items()][0:500]
+def cluster_words_by_similarity(model, counter_map, min_sim: float = 0.5, best_words_only: bool = False):
+    words = [word for word in counter_map.keys()][0:500]
     graph = nx.Graph()
     for word in words:
         graph.add_node(word)
@@ -64,13 +64,17 @@ def cluster_words_by_similarity(model, counter_map, min_sim: float = 0.5):
         g_distance_dict = {(e1, e2): 1 / weight for e1, e2, weight in graph.edges(data='weight')}
         nx.set_edge_attributes(graph, g_distance_dict, 'distance')
         comm_structure = greedy_modularity_communities(graph, weight="weight")
-        cluster_counter_map = {}
-        for subgraph_comm in comm_structure:
-            node_highest_count = sorted([(node, counter_map[node]) for node in subgraph_comm], key=lambda x: x[1])[-1]
-            cluster_counter_map[node_highest_count[0]] = node_highest_count[1]
-        return cluster_counter_map
+        cluster_membership_map = {}
+        cluster_best_map = {}
+        for idx, subgraph_comm in enumerate(comm_structure):
+            if best_words_only:
+                node_highest_count = sorted([(node, counter_map[node]) for node in subgraph_comm], key=lambda x: x[1])[-1]
+                cluster_best_map[node_highest_count[0]] = node_highest_count[1]
+            for node in subgraph_comm:
+                cluster_membership_map[node] = idx
+        return cluster_best_map if best_words_only else counter_map, cluster_membership_map
     else:
-        return counter_map
+        return counter_map, {word: idx for idx, word in enumerate(counter_map.keys())}
 
 
 def get_word_similarity(model, word1, word2):

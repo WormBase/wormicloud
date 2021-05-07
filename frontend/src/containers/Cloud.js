@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ReactWordcloud from "react-wordcloud";
 import {dismissError, fetchWordCounters, resetCloud, setError, toggleWord} from "../redux/actions/cloud";
 import {connect} from "react-redux";
-import {getCounters, getDescriptions, getError, isLoading} from "../redux/selectors/cloud";
+import {getCounters, getDescriptions, getError, getRedraw, isLoading} from "../redux/selectors/cloud";
 import Button from "react-bootstrap/Button";
 import queryString from 'query-string';
 import {withRouter} from "react-router-dom";
@@ -16,7 +16,7 @@ import {
     getCaseSensitive, getClusteringOptions, getCounterType,
     getGeneNamesOnly,
     getKeywords,
-    getLogicOp, getMaxNumResults, getRedraw,
+    getLogicOp, getMaxNumResults,
     getScope,
     getYearRange
 } from "../redux/selectors/search";
@@ -25,6 +25,7 @@ import Spinner from "react-bootstrap/Spinner";
 import CloudButtons from "../components/CloudButtons";
 import ErrorModal from "../components/ErrorModal";
 import {setKeywords} from "../redux/actions/search";
+import distinctColors from "distinct-colors";
 
 
 class ExtWC extends React.Component {
@@ -39,6 +40,7 @@ const Cloud = (props) => {
     const maxYearDiff = 10;
     let componentRef = useRef();
     let waitMessageTimeout = useRef();
+    const palette = useMemo(() => distinctColors({count: 200}).sort(() => Math.random() - 0.5), [props.redraw]);
 
     useEffect(() => {
         const value = queryString.parse(props.location.search);
@@ -52,6 +54,7 @@ const Cloud = (props) => {
         let scope = 'document';
         let clusterWords = false;
         let clusterWordsMinSim = 0.0;
+        let clusterShowBestWords = false;
         if (value.keywords !== undefined || value.author !== undefined) {
             if (value.keywords !== undefined) {
                 keywords = value.keywords.split(',').filter(k => k !== '');
@@ -83,9 +86,12 @@ const Cloud = (props) => {
             if (value.clusterWordsMinSim !== undefined) {
                 clusterWordsMinSim = parseFloat(value.clusterWordsMinSim);
             }
+            if (value.clusterShowBestWords !== undefined) {
+                clusterShowBestWords = parseFloat(value.clusterShowBestWords);
+            }
             if (keywords.length > 0 || author !== '') {
                 props.fetchWordCounters(keywords, caseSensitive, [''], geneNamesOnly, logicOp, author, maxNumResults,
-                    counterType, scope, clusterWords, clusterWordsMinSim);
+                    counterType, scope, clusterWords, clusterWordsMinSim, clusterShowBestWords);
                 props.setKeywords(keywords);
             }
         }
@@ -122,7 +128,8 @@ const Cloud = (props) => {
                 props.fetchWordCounters(props.keywords, props.caseSensitive,
                     years, props.geneNamesOnly, props.logicOp, props.author,
                     props.maxNumResults, props.counterType, props.scope,
-                    props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
+                    props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim,
+                    props.clusteringOptions.showBestWords);
                 props.setKeywords(filteredKeywords);
             } else {
                 props.setError("The provided keywords are not valid");
@@ -174,15 +181,17 @@ const Cloud = (props) => {
                                                    props.fetchWordCounters(props.keywords, props.caseSensitive,
                                                        years, props.geneNamesOnly, props.logicOp, props.author,
                                                        props.maxNumResults, props.counterType, props.scope,
-                                                       props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim);
+                                                       props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords);
                                                },
                                                getWordTooltip: word => {
                                                    if (props.geneNamesOnly) {
                                                        return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}<br/><br/>Gene Description: ${props.descriptions[word.text]}`;
                                                    } else {
-                                                       return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}`;
+                                                       let clusteringStr = props.clusteringOptions.clusterWords ? `<br/><br/>Cluster: ${word.cluster + 1}` : '';
+                                                       return `<strong>${word.text}</strong><br/><br/>Count: ${word.value}${clusteringStr}`;
                                                    }
-                                               }
+                                               },
+                                               getWordColor: word => palette[word.cluster]
                                            }}/> : ''}
                             </Col>
                         </Row>

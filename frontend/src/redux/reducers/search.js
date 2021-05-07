@@ -15,7 +15,8 @@ const initialState = {
     counterType: 'plain',
     clusteringOptions: {
         clusterWords: false,
-        clusteringMinSim: 0.6
+        clusteringMinSim: 0.6,
+        showBestWords: false
     }
 
 };
@@ -36,7 +37,8 @@ export default createReducer(initialState, {
     SET_CLUSTERING_OPTIONS: (state, action) => {
         state.clusteringOptions = {
             clusterWords: action.payload.clusterWords,
-            clusteringMinSim: action.payload.minSim
+            clusteringMinSim: action.payload.minSim,
+            showBestWords: action.payload.showBestWords
         }
     },
 });

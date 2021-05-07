@@ -73,11 +73,12 @@ export const setCounterType = counterType => ({
     }
 });
 
-export const setClusteringOptions = (clusterWords, minSim) => ({
+export const setClusteringOptions = (clusterWords, minSim, showBestWords) => ({
     type: SET_CLUSTERING_OPTIONS,
     payload: {
         clusterWords: clusterWords,
-        minSim: minSim
+        minSim: minSim,
+        showBestWords: showBestWords
     }
 });
 
