@@ -40,7 +40,7 @@ const Cloud = (props) => {
     const maxYearDiff = 10;
     let componentRef = useRef();
     let waitMessageTimeout = useRef();
-    const palette = useMemo(() => distinctColors({count: 200}).sort(() => Math.random() - 0.5), [props.redraw]);
+    const palette = useMemo(() => distinctColors({count: 200, lightMin: 40, lightMax: 80}).sort(() => Math.random() - 0.5), [props.redraw]);
 
     useEffect(() => {
         const value = queryString.parse(props.location.search);
@@ -202,7 +202,8 @@ const Cloud = (props) => {
                         </Row>
                         <Row>
                             <Col sm={12} align="right">
-                                <CloudButtons myRef={componentRef} />
+                                <CloudButtons counters={props.counters} geneNamesOnly={props.geneNamesOnly}
+                                              descriptions={props.descriptions} myRef={componentRef} />
                             </Col>
                         </Row>
                     </Container>
