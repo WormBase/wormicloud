@@ -8,7 +8,7 @@ import {setRedraw} from "../redux/actions/cloud";
 import {getCounters, getDescriptions, getRedraw} from "../redux/selectors/cloud";
 import PropTypes from "prop-types";
 
-const CloudButtons = ({counters, geneNamesOnly, descriptions, myRef}) => {
+const CloudButtons = ({counters, geneNamesOnly, descriptions, myRef, setRedraw}) => {
     return (
         <div>
             {counters.length > 0 ?
@@ -114,7 +114,22 @@ const CloudButtons = ({counters, geneNamesOnly, descriptions, myRef}) => {
                 }}>Gene name sanitizer</Button>&nbsp;</> : ''}
             {!geneNamesOnly && counters.length > 0 && counters.reduce((sum, curCounter) => sum + curCounter.cluster, 0) !== ((counters.length - 1) * counters.length / 2) ?
                 <Button size="sm" variant="outline-primary" onClick={() => {
-                    downloadFile("WORD, CLUSTER\n" + counters.map((c) => '"' + c.text + '",' + c.cluster + 1).join('\n'), "clustering_info", "text/plain", "csv").then(r => {
+                    let cluster_ids = new Set(counters.map(c => c.cluster));
+                    let cluster_membership = {};
+                    cluster_ids.forEach(cluster_id => {
+                        if (cluster_id !== undefined) {
+                            cluster_id += 1;
+                        }
+                        cluster_membership[cluster_id] = []
+                    });
+                    counters.forEach(counter => {
+                        let cluster_id = counter.cluster;
+                        if (counter.cluster !== undefined) {
+                            cluster_id = cluster_id + 1;
+                        }
+                        cluster_membership[cluster_id].push(counter.text)
+                    });
+                    downloadFile("CLUSTER_ID\tWORDS\n" + Object.entries(cluster_membership).map(([k, v]) => k + '\t' + v.join(', ')).join('\n'), "clustering_info", "text/plain", "csv").then(r => {
                     });
                 }}>Download clustering info</Button> : null}
         </div>
