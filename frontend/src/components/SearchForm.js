@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {IoIosAddCircleOutline, IoIosHelpCircleOutline, IoIosRemoveCircleOutline} from "react-icons/io";
+import {FcIdea} from "react-icons/fc"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
@@ -155,7 +156,7 @@ const SearchForm = (props) => {
                                                                                 label={<h6>Group similar words by color <OverlayTrigger
                                                                                     delay={{show: 250, hide: 400}}
                                                                                     overlay={<Tooltip id="button-tooltip">Apply clustering on word similarity graph and color words by cluster membership</Tooltip>}>
-                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger></h6>}
+                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger>&nbsp;<FcIdea/></h6>}
                                                                                 checked={props.clusteringOptions.clusterWords}
                                                                                 onChange={() => {
                                                                                     props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords);

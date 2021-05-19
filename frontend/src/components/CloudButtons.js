@@ -119,6 +119,8 @@ const CloudButtons = ({counters, geneNamesOnly, descriptions, myRef, setRedraw})
                     cluster_ids.forEach(cluster_id => {
                         if (cluster_id !== undefined) {
                             cluster_id += 1;
+                        } else {
+                            cluster_id = 'not clustered';
                         }
                         cluster_membership[cluster_id] = []
                     });
@@ -126,6 +128,8 @@ const CloudButtons = ({counters, geneNamesOnly, descriptions, myRef, setRedraw})
                         let cluster_id = counter.cluster;
                         if (counter.cluster !== undefined) {
                             cluster_id = cluster_id + 1;
+                        } else {
+                            cluster_id = 'not clustered'
                         }
                         cluster_membership[cluster_id].push(counter.text)
                     });
