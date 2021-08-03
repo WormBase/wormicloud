@@ -48,7 +48,8 @@ class TPCManager(object):
         return [(paper["identifier"].split("/")[1], TPCManager.remove_bad_chars(paper["title"]),
                  TPCManager.remove_bad_chars(paper["journal"]), TPCManager.remove_bad_chars(paper["year"]),
                  re.search(r'.* PMID:([0-9]+) .*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
-                "", TPCManager.remove_bad_chars(paper["author"])) for paper in papers] if papers and papers != 'null' else []
+                "", TPCManager.remove_bad_chars(paper["author"]), paper["doc_type"]) for paper in papers] if \
+            papers and papers != 'null' else []
 
     def get_papers(self, keywords: List[str], case_sensitive: bool = True, year: str = '', logic_op: str = 'AND',
                    author: str = '', max_results: int = 200, search_type: str = 'document'):

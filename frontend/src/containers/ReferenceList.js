@@ -24,7 +24,7 @@ const ReferenceList = (props) => {
             } else {
                 resolve({elements: [], totNumElements: 0});
             }})
-        )}, [[1, 'Relevance'], [4, 'Title'], [2, 'Journal'], [1, 'Year'], [2, 'WB ID'], [2, 'PMID']]);
+        )}, [[1, 'Relevance'], [4, 'Title'], [1, 'Journal'], [1, 'Year'], [1, 'Paper type'], [2, 'WB ID'], [2, 'PMID']]);
         return (
             <div>
                 {props.references.length > 0 ?
@@ -38,7 +38,7 @@ const ReferenceList = (props) => {
                             <Col sm={2}>
                                 <Button size="sm" variant="outline-primary" onClick={() => {
                                     downloadFile(props.references.map((r) => '"' + r.index + '","' + r.authors + '","' + r.title + '","' +
-                                        r.journal + '","' + r.year + '","' + r.wb_id + '","' + r.pmid + '"').join('\n'), "references", "text/plain", "csv").then(r => {})}}
+                                        r.journal + '","' + r.year + '","' + r.paper_type + '","' + r.wb_id + '","' + r.pmid + '"').join('\n'), "references", "text/plain", "csv").then(r => {})}}
                                 >Download references</Button>
                             </Col>
                             <Col sm={3}>
@@ -51,6 +51,7 @@ const ReferenceList = (props) => {
                                                 <option value='title'>Title</option>
                                                 <option value='journal'>Journal</option>
                                                 <option value='year'>Year</option>
+                                                <option value='paper_type'>Paper Type</option>
                                                 <option value='wb_id'>WBPaperID</option>
                                                 <option value='pmid'>PMID</option>
                                             </FormControl>

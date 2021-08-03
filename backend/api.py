@@ -195,7 +195,8 @@ class TPCWordListReader:
                 resp.body = '{{"counters": {}, "references": {}, "trends": {}, "descriptions": {}, "clusters": {}}}'.format("{" + ", ".join(
                     ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                     ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
-                     "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] + "\"}" for ref in references]) + "]" if
+                     "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] +
+                     "\", \"paper_type\":\"" + ref[6] + "\"}" for ref in references]) + "]" if
                   references else "[]", json.dumps(word_trends), json.dumps(gene_descriptions) if gene_descriptions
                   else "{}", json.dumps(clusters))
                 resp.status = falcon.HTTP_OK

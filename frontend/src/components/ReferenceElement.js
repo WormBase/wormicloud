@@ -9,8 +9,9 @@ const ReferenceElement = (props) => {
             <Row>
                 <Col sm={1}>{props.element.index}</Col>
                 <Col sm={4}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + props.element.wb_id}><p dangerouslySetInnerHTML={{__html: props.element.title}}/></a></Col>
-                <Col sm={2}>{props.element.journal}</Col>
+                <Col sm={1}>{props.element.journal}</Col>
                 <Col sm={1}>{props.element.year}</Col>
+                <Col sm={1}>{props.element.paper_type}</Col>
                 <Col sm={2}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + props.element.wb_id}>{props.element.wb_id}</a></Col>
                 <Col sm={2}><a target="_blank" rel="noopener noreferrer" href={"https://pubmed.ncbi.nlm.nih.gov/" + props.element.pmid}>PMID:{props.element.pmid}</a></Col>
             </Row>
