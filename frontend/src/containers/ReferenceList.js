@@ -24,7 +24,7 @@ const ReferenceList = (props) => {
             } else {
                 resolve({elements: [], totNumElements: 0});
             }})
-        )});
+        )}, [[1, 'Order'], [4, 'Title'], [2, 'Journal'], [1, 'Year'], [2, 'WB ID'], [2, 'PMID']]);
         return (
             <div>
                 {props.references.length > 0 ?

@@ -7,7 +7,7 @@
     "axios": "^0.21.1",
     "distinct-colors": "^3.0.0",
     "node": "^8.16.0",
-    "paginated-list": "^1.0.10",
+    "paginated-list": "^1.1.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.13.5",
     "react": "^16.13.0",
