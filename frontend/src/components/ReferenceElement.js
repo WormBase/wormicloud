@@ -8,7 +8,7 @@ const ReferenceElement = (props) => {
         <Container fluid>
             <Row>
                 <Col sm={1}>{props.element.index}</Col>
-                <Col sm={4}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + props.element.wb_id}>{props.element.title}</a></Col>
+                <Col sm={4}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + props.element.wb_id}><p dangerouslySetInnerHTML={{__html: props.element.title}}/></a></Col>
                 <Col sm={2}>{props.element.journal}</Col>
                 <Col sm={1}>{props.element.year}</Col>
                 <Col sm={2}><a target="_blank" rel="noopener noreferrer" href={"https://wormbase.org/resources/paper/" + props.element.wb_id}>{props.element.wb_id}</a></Col>
