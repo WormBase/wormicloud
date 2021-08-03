@@ -15,7 +15,7 @@ const ChangeLog = () => {
                     <h5>Version 2.0</h5>
                     <ul>
                         <li><strong>Release date:</strong> June 2021</li>
-                        <li><FcIdea/> <strong>New Features:</strong></li>
+                        <li><strong>New Features:</strong></li>
                         <ul>
                             <li><u>Group similar words by color</u> (advanced options): builds a similarity graph of words through a
                                 &nbsp;<a href="https://github.com/ncbi-nlp/BioSentVec" target="_blank">pre-trained word embedding model</a>

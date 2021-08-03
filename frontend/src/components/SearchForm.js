@@ -29,6 +29,7 @@ import {
     setScope,
     setYearRange
 } from "../redux/actions/search";
+import Badge from "react-bootstrap/Badge";
 
 const SearchForm = (props) => {
 
@@ -156,7 +157,7 @@ const SearchForm = (props) => {
                                                                                 label={<h6>Group similar words by color <OverlayTrigger
                                                                                     delay={{show: 250, hide: 400}}
                                                                                     overlay={<Tooltip id="button-tooltip">Apply clustering on word similarity graph and color words by cluster membership</Tooltip>}>
-                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger>&nbsp;<FcIdea/></h6>}
+                                                                                    <IoIosHelpCircleOutline/></OverlayTrigger>&nbsp;<Badge variant="primary">New</Badge></h6>}
                                                                                 checked={props.clusteringOptions.clusterWords}
                                                                                 onChange={() => {
                                                                                     props.setClusteringOptions(!props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords);
