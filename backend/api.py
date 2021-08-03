@@ -6,6 +6,9 @@ import logging
 from collections import defaultdict
 import falcon
 
+import urllib.request
+import urllib.error
+
 from wsgiref import simple_server
 from falcon import HTTPStatus
 from backend.dbmanager import DBManager
@@ -121,6 +124,16 @@ class TPCWordListReader:
                     counter in counters]
         return counters
 
+    @staticmethod
+    def get_paper_num_curated_entities(paper_id):
+        req = urllib.request.Request("http://rest.wormbase.org/rest/widget/paper/" + paper_id + "/referenced")
+        try:
+            results = json.loads(urllib.request.urlopen(req).read().decode('latin1'))
+            return sum([len(field_value) for field_value in results["fields"]["refers_to"]["data"].values() if
+                        field_value])
+        except urllib.error.HTTPError:
+            return 0
+
     def on_post(self, req, resp):
         with self.db_manager:
             start = datetime.now()
@@ -196,7 +209,8 @@ class TPCWordListReader:
                     ["\"" + word + "\":" + str(count) for word, count in merged_counters.items()]) + "}", "[" + ",".join(
                     ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
                      "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] +
-                     "\", \"paper_type\":\"" + ref[6] + "\"}" for ref in references]) + "]" if
+                     "\", \"paper_type\":\"" + ref[6] + "\", \"num_curated_entities\":" +
+                     str(self.get_paper_num_curated_entities(ref[0])) + "}" for ref in references]) + "]" if
                   references else "[]", json.dumps(word_trends), json.dumps(gene_descriptions) if gene_descriptions
                   else "{}", json.dumps(clusters))
                 resp.status = falcon.HTTP_OK
