@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import clusteringImg from "../assets/images/changelog/clustering.jpg"
 import coloredCloudImg from "../assets/images/changelog/colored_cloud.jpg"
-import {FcIdea} from "react-icons/fc";
 
 
 const ChangeLog = () => {
@@ -14,7 +13,7 @@ const ChangeLog = () => {
                 <Col>
                     <h5>Version 2.0</h5>
                     <ul>
-                        <li><strong>Release date:</strong> June 2021</li>
+                        <li><strong>Release date:</strong> September 2021</li>
                         <li><strong>New Features:</strong></li>
                         <ul>
                             <li><u>Group similar words by color</u> (advanced options): builds a similarity graph of words through a
@@ -28,6 +27,10 @@ const ChangeLog = () => {
                                 only the top 500 words in terms of counter are clustered. The remaining words are not clustered and appear under the
                                 'not clustered' label in the clustering info file. <br/><br/>
                                 <img src={clusteringImg} style={{width: '300px'}}/> <img src={coloredCloudImg} style={{width: '500px'}}/>
+                            </li>
+                            <li><u>Show number of curated objects per paper</u> (advanced options): uses WormBase API to retrieve the number of objects
+                                already curated for each paper returned by searches and display the count in the reference list. This option is disabled
+                                by default since it may slow down searches. It can be enabled through the 'advanced options' menu.
                             </li>
                         </ul>
                     </ul>
