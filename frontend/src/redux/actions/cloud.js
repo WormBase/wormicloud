@@ -10,7 +10,7 @@ export const DISMISS_ERROR = "DISMISS_ERROR";
 export const SET_REDRAW = "SET_REDRAW";
 
 export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, logicOp, author, maxResults, counterType,
-                                  searchType, clusterWords, clusterWordsMinSim, clusterShowBestWords) => {
+                                  searchType, clusterWords, clusterWordsMinSim, clusterShowBestWords, countCuratedObjects) => {
     return dispatch => {
         dispatch(fetchWordCountersRequest());
         keywords = keywords.map(k => {return '"' + k + '"'});
@@ -25,7 +25,8 @@ export const fetchWordCounters = (keywords, caseSensitive, years, genesOnly, log
         axios
           .post(apiEndpoint, {keywords: keywords, caseSensitive: caseSensitive, years: yearsFix, genesOnly: genesOnly,
               logicOp: logicOp, author: author, maxResults: maxResults, weightedScore: counterType === "weighted", searchType: searchType,
-              clusterWords: clusterWords, clusterWordsMinSim: clusterWordsMinSim, clusterShowBestWords: clusterShowBestWords})
+              clusterWords: clusterWords, clusterWordsMinSim: clusterWordsMinSim, clusterShowBestWords: clusterShowBestWords,
+              countCuratedObjects: countCuratedObjects})
           .then(res => {
               if (res.data.counters && res.data.references && Object.keys(res.data.counters).length !== 0 && res.data.trends) {
                   let i = 1;

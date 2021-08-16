@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import {downloadFile} from "../lib/file";
 import FormControl from "react-bootstrap/FormControl";
+import {getShowNumCuratedObjects} from "../redux/selectors/search";
 
 const ReferenceList = (props) => {
     const [elemPerPage, setElemPerPage] = useState(20);
@@ -24,7 +25,11 @@ const ReferenceList = (props) => {
             } else {
                 resolve({elements: [], totNumElements: 0});
             }})
-        )}, [[1, 'Relevance'], [3, 'Title'], [1, 'Journal'], [1, 'Year'], [1, 'Paper type'], [2, 'WB ID'], [2, 'PMID'], [1, 'Num Curated Objects']]);
+        )}, props.showNumCuratedObjects
+        ?
+        [[1, 'Relevance'], [3, 'Title'], [1, 'Journal'], [1, 'Year'], [1, 'Paper type'], [2, 'WB ID'], [2, 'PMID'], [1, 'Num Curated Objects']]
+        :
+        [[1, 'Relevance'], [4, 'Title'], [1, 'Journal'], [1, 'Year'], [1, 'Paper type'], [2, 'WB ID'], [2, 'PMID']]);
         return (
             <div>
                 {props.references.length > 0 ?
@@ -54,7 +59,11 @@ const ReferenceList = (props) => {
                                                 <option value='paper_type'>Paper Type</option>
                                                 <option value='wb_id'>WBPaperID</option>
                                                 <option value='pmid'>PMID</option>
-                                                <option value='num_curated_entities'>Num Curated Objects</option>
+                                                {
+                                                    props.showNumCuratedObjects ?
+                                                        <option value='num_curated_entities'>Num Curated Objects</option>
+                                                    : null
+                                                }
                                             </FormControl>
                                         </Col>
                                     </Row>
@@ -82,6 +91,7 @@ const ReferenceList = (props) => {
 
 const mapStateToProps = state => ({
     references: getReferences(state),
+    showNumCuratedObjects: getShowNumCuratedObjects(state)
 });
 
 export default connect(mapStateToProps, {})(ReferenceList)

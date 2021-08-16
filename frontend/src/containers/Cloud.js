@@ -17,7 +17,7 @@ import {
     getGeneNamesOnly,
     getKeywords,
     getLogicOp, getMaxNumResults,
-    getScope,
+    getScope, getShowNumCuratedObjects,
     getYearRange
 } from "../redux/selectors/search";
 import SearchForm from "../components/SearchForm";
@@ -55,6 +55,7 @@ const Cloud = (props) => {
         let clusterWords = false;
         let clusterWordsMinSim = 0.0;
         let clusterShowBestWords = false;
+        let showNumCuratedObjects = false;
         if (value.keywords !== undefined || value.author !== undefined) {
             if (value.keywords !== undefined) {
                 keywords = value.keywords.split(',').filter(k => k !== '');
@@ -89,9 +90,12 @@ const Cloud = (props) => {
             if (value.clusterShowBestWords !== undefined) {
                 clusterShowBestWords = parseFloat(value.clusterShowBestWords);
             }
+            if (value.showNumCuratedObjects !== undefined && ['true', 'false'].includes(value.showNumCuratedObjects)) {
+                showNumCuratedObjects = value.showNumCuratedObjects === 'true';
+            }
             if (keywords.length > 0 || author !== '') {
                 props.fetchWordCounters(keywords, caseSensitive, [''], geneNamesOnly, logicOp, author, maxNumResults,
-                    counterType, scope, clusterWords, clusterWordsMinSim, clusterShowBestWords);
+                    counterType, scope, clusterWords, clusterWordsMinSim, clusterShowBestWords, showNumCuratedObjects);
                 props.setKeywords(keywords);
             }
         }
@@ -129,7 +133,7 @@ const Cloud = (props) => {
                     years, props.geneNamesOnly, props.logicOp, props.author,
                     props.maxNumResults, props.counterType, props.scope,
                     props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim,
-                    props.clusteringOptions.showBestWords);
+                    props.clusteringOptions.showBestWords, props.showNumCuratedObjects);
                 props.setKeywords(filteredKeywords);
             } else {
                 props.setError("The provided keywords are not valid");
@@ -246,7 +250,8 @@ const mapStateToProps = state => ({
     author: getAuthor(state),
     maxNumResults: getMaxNumResults(state),
     counterType: getCounterType(state),
-    clusteringOptions: getClusteringOptions(state)
+    clusteringOptions: getClusteringOptions(state),
+    showNumCuratedObjects: getShowNumCuratedObjects(state)
 });
 
 export default connect(mapStateToProps, {toggleWord, fetchWordCounters, resetCloud, setKeywords,

@@ -26,7 +26,7 @@ import {
     setGeneNamesOnly,
     setKeywords,
     setLogicOp, setMaxNumResults,
-    setScope,
+    setScope, setShowNumCuratedObjects,
     setYearRange
 } from "../redux/actions/search";
 import Badge from "react-bootstrap/Badge";
@@ -191,7 +191,18 @@ const SearchForm = (props) => {
                                                                                       props.setClusteringOptions(props.clusteringOptions.clusterWords, event.target.value, props.clusteringOptions.showBestWords)
                                                                                   }}/>
                                                                 </Col>
-                                                            </Row><Row><Col>&nbsp;</Col></Row></> : ''}
+                                                            </Row><Row><Col>&nbsp;</Col></Row></> : ''
+                                                    }
+                                                    <Row>
+                                                        <Col xs="auto">
+                                                            <Form.Check type="checkbox" label={<h6>show number of objects in papers already curated by WB</h6>}
+                                                                        checked={props.showNumCuratedObjects}
+                                                                        onChange={() => {
+                                                                            props.setShowNumCuratedObjects(!props.showNumCuratedObjects);
+                                                                        }}/>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row><Col>&nbsp;</Col></Row>
                                                     <Row>
                                                         <Col xs="auto">
                                                             <h6>Search Scope</h6>
@@ -298,4 +309,4 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {resetCloud, setKeywords,
     setLogicOp, setGeneNamesOnly, setCaseSensitive, setScope, setYearRange, setAuthor, setMaxNumResults, setCounterType,
-    setClusteringOptions})(SearchForm);
+    setClusteringOptions, setShowNumCuratedObjects})(SearchForm);

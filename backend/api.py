@@ -151,6 +151,7 @@ class TPCWordListReader:
                 cluster_show_best_words = req.media["clusterShowBestWords"]
                 weighted_score = req.media["weightedScore"]
                 min_similarity = float(req.media["clusterWordsMinSim"]) if "clusterWordsMinSim" in req.media else 0.7
+                count_curated_objects = req.media["countCuratedObjects"]
                 references = []
                 ab_year_score = []
                 years_abstracts = defaultdict(list)
@@ -210,7 +211,8 @@ class TPCWordListReader:
                     ["{\"wb_id\":\"" + ref[0] + "\", \"title\":\"" + ref[1] + "\", \"journal\":\"" + ref[2] +
                      "\", \"year\":\"" + ref[3] + "\", \"pmid\":\"" + ref[4] + "\", \"authors\":\"" + ref[5] +
                      "\", \"paper_type\":\"" + ref[6] + "\", \"num_curated_entities\":" +
-                     str(self.get_paper_num_curated_entities(ref[0])) + "}" for ref in references]) + "]" if
+                     (str(self.get_paper_num_curated_entities(ref[0])) if count_curated_objects else "0") + "}"
+                     for ref in references]) + "]" if
                   references else "[]", json.dumps(word_trends), json.dumps(gene_descriptions) if gene_descriptions
                   else "{}", json.dumps(clusters))
                 resp.status = falcon.HTTP_OK

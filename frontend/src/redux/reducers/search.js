@@ -17,8 +17,8 @@ const initialState = {
         clusterWords: false,
         clusteringMinSim: 0.6,
         showBestWords: false
-    }
-
+    },
+    showNumCuratedObjects: false
 };
 
 export default createReducer(initialState, {
@@ -41,4 +41,7 @@ export default createReducer(initialState, {
             showBestWords: action.payload.showBestWords
         }
     },
+    SET_SHOW_NUM_CURATED_OBJECTS: (state, action) => {
+        state.showNumCuratedObjects = action.payload.showNumCuratedObjects;
+    }
 });

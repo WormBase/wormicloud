@@ -8,6 +8,7 @@ export const SET_AUTHOR = "SET_AUTHOR";
 export const SET_MAX_NUM_RESULTS = "SET_MAX_NUM_RESULTS";
 export const SET_COUNTER_TYPE = "SET_COUNTER_TYPE";
 export const SET_CLUSTERING_OPTIONS = "SET_CLUSTERING_OPTIONS";
+export const SET_SHOW_NUM_CURATED_OBJECTS = "SET_SHOW_NUM_CURATED_OBJECTS";
 
 export const setKeywords = keywords => ({
     type: SET_KEYWORDS,
@@ -82,7 +83,7 @@ export const setClusteringOptions = (clusterWords, minSim, showBestWords) => ({
     }
 });
 
-
-
-
-
+export const setShowNumCuratedObjects = showNumCuratedObjects => ({
+    type: SET_SHOW_NUM_CURATED_OBJECTS,
+    payload: { showNumCuratedObjects }
+});

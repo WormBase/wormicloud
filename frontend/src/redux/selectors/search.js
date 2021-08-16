@@ -10,7 +10,7 @@ export const getAuthor = store => getSearchState(store) ? getSearchState(store).
 export const getMaxNumResults = store => getSearchState(store) ? getSearchState(store).maxNumResults : 200;
 export const getCounterType = store => getSearchState(store) ? getSearchState(store).counterType : 'plain';
 export const getClusteringOptions = store => getSearchState(store) ? getSearchState(store).clusteringOptions : {clusterWords: false, clusteringMinSim: 0.6, showBestWords: false};
-
+export const getShowNumCuratedObjects = store => getSearchState(store) ? getSearchState(store).showNumCuratedObjects : false;
 
 
 
