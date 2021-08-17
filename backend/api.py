@@ -129,8 +129,8 @@ class TPCWordListReader:
         req = urllib.request.Request("http://rest.wormbase.org/rest/widget/paper/" + paper_id + "/referenced")
         try:
             results = json.loads(urllib.request.urlopen(req).read().decode('latin1'))
-            return sum([len(field_value) for field_value in results["fields"]["refers_to"]["data"].values() if
-                        field_value])
+            return sum([field_value if isinstance(field_value, int) else len(field_value) for field_value in
+                        results["fields"]["refers_to"]["data"].values() if field_value])
         except urllib.error.HTTPError:
             return 0
 
