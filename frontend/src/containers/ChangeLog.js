@@ -30,7 +30,7 @@ const ChangeLog = () => {
                             </li>
                             <li><u>Show number of curated objects per paper</u> (advanced options): uses WormBase API to retrieve the number of objects
                                 already curated for each paper returned by searches and display the count in the reference list. This option is disabled
-                                by default since it may slow down searches. It can be enabled through the 'advanced options' menu.
+                                by default. It can be enabled through the 'advanced options' menu.
                             </li>
                         </ul>
                     </ul>

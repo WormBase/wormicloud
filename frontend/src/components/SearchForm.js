@@ -195,7 +195,7 @@ const SearchForm = (props) => {
                                                     }
                                                     <Row>
                                                         <Col xs="auto">
-                                                            <Form.Check type="checkbox" label={<h6>show number of objects in papers already curated by WB&nbsp;<Badge variant="primary">New</Badge></h6>}
+                                                            <Form.Check type="checkbox" label={<h6>show number of objects already curated by WB for each paper&nbsp;<Badge variant="primary">New</Badge></h6>}
                                                                         checked={props.showNumCuratedObjects}
                                                                         onChange={() => {
                                                                             props.setShowNumCuratedObjects(!props.showNumCuratedObjects);
