@@ -16,7 +16,7 @@ import {
     getGeneNamesOnly,
     getKeywords,
     getLogicOp, getMaxNumResults,
-    getScope,
+    getScope, getShowNumCuratedObjects,
     getYearRange
 } from "../redux/selectors/search";
 import {resetCloud} from "../redux/actions/cloud";
@@ -304,7 +304,8 @@ const mapStateToProps = state => ({
     author: getAuthor(state),
     maxNumResults: getMaxNumResults(state),
     counterType: getCounterType(state),
-    clusteringOptions: getClusteringOptions(state)
+    clusteringOptions: getClusteringOptions(state),
+    showNumCuratedObjects: getShowNumCuratedObjects(state)
 });
 
 export default connect(mapStateToProps, {resetCloud, setKeywords,
