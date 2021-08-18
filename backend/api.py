@@ -217,6 +217,7 @@ class TPCWordListReader:
                   else "{}", json.dumps(clusters))
                 resp.status = falcon.HTTP_OK
                 end = datetime.now()
+                print("request successfully served")
                 print(end - start)
             else:
                 resp.status = falcon.HTTP_BAD_REQUEST
