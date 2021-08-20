@@ -185,7 +185,7 @@ const Cloud = (props) => {
                                                    props.fetchWordCounters(props.keywords, props.caseSensitive,
                                                        years, props.geneNamesOnly, props.logicOp, props.author,
                                                        props.maxNumResults, props.counterType, props.scope,
-                                                       props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords);
+                                                       props.clusteringOptions.clusterWords, props.clusteringOptions.clusteringMinSim, props.clusteringOptions.showBestWords, props.showNumCuratedObjects);
                                                },
                                                getWordTooltip: word => {
                                                    if (props.geneNamesOnly) {

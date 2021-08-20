@@ -13,7 +13,7 @@ const ChangeLog = () => {
                 <Col>
                     <h5>Version 2.0</h5>
                     <ul>
-                        <li><strong>Release date:</strong> August 18 2021</li>
+                        <li><strong>Release date:</strong> August 18, 2021</li>
                         <li><strong>New Features:</strong></li>
                         <ul>
                             <li><u>Group similar words by color</u> (advanced options): builds a similarity graph of words through a
