@@ -15,7 +15,7 @@ const initialState = {
     counterType: 'plain',
     clusteringOptions: {
         clusterWords: false,
-        clusteringMinSim: 0.6,
+        clusteringMinSim: 0.7,
         showBestWords: false
     },
     showNumCuratedObjects: false
