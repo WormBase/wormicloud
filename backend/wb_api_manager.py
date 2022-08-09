@@ -11,7 +11,7 @@ def get_description_from_gene_id(gene_id):
 
 
 def get_alliance_descriptions():
-    response = urllib.request.urlopen("https://fms.alliancegenome.org/download/GENE-DESCRIPTION-TSV_WB.tsv.gz")
+    response = urllib.request.urlopen("https://fms.alliancegenome.org/api/data/download/GENE-DESCRIPTION-TSV_WB.tsv.gz")
     gene_id_description_map = {}
     with gzip.GzipFile(fileobj=response, mode='r') as fin:
         for line in fin:
