@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 class TPCManager(object):
     def __init__(self, textpresso_api_token):
         self.textpresso_api_token = textpresso_api_token
-        self.tpc_api_endpoint = "http://textpressocentral.org:9001/v1/textpresso/api/search_documents"
-        self.tpc_category_matches_endpoint = "http://textpressocentral.org:9001/v1/textpresso/api/get_category_matches_document_fulltext"
+        self.tpc_api_endpoint = "https://www.alliancegenome.org/textpresso/wb/v1/textpresso/api/search_documents"
+        self.tpc_category_matches_endpoint = "https://www.alliancegenome.org/textpresso/wb/v1/textpresso/api/get_category_matches_document_fulltext"
         if not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
             ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -47,7 +47,7 @@ class TPCManager(object):
         """
         return [(paper["identifier"].split("/")[1], TPCManager.remove_bad_chars(paper["title"]),
                  TPCManager.remove_bad_chars(paper["journal"]), TPCManager.remove_bad_chars(paper["year"]),
-                 re.search(r'.* PMID:([0-9]+) .*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
+                 re.search(r'.*PMID:([0-9]+).*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
                 "", TPCManager.remove_bad_chars(paper["author"]), paper["doc_type"]) for paper in papers] if \
             papers and papers != 'null' else []
 
