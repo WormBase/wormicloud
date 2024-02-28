@@ -45,7 +45,7 @@ class TPCManager(object):
         Returns:
             List[str]: the list of references
         """
-        return [(paper["identifier"].split("/")[1], TPCManager.remove_bad_chars(paper["title"]),
+        return [(re.search(r'.*WB:(WBPaper[0-9]+).*', paper["accession"]).group(1), TPCManager.remove_bad_chars(paper["title"]),
                  TPCManager.remove_bad_chars(paper["journal"]), TPCManager.remove_bad_chars(paper["year"]),
                  re.search(r'.*PMID:([0-9]+).*', paper["accession"]).group(1) if "PMID:" in paper["accession"] else
                 "", TPCManager.remove_bad_chars(paper["author"]), paper["doc_type"]) for paper in papers] if \
