@@ -20,7 +20,7 @@
     "react-wordcloud": "^1.2.7",
     "recharts": "^1.8.5",
     "redux": "^4.1.0",
-    "redux-thunk": "latest",
+    "redux-thunk": "^2.3.0",
     "video-react": "^0.14.1"
   },
   "scripts": {
