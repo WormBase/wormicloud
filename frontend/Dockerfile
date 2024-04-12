@@ -3,6 +3,7 @@ RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY frontend/ .
+RUN curl -o frontend/src/assets/videos/tutorial.mp4 https://caltech-curation.textpressolab.com/files/pub/wormicloud/tutorial.mp4
 RUN npm install --silent
 RUN npm run build --production
 
