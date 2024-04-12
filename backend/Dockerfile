@@ -10,9 +10,10 @@ ENV DB_NAME=""
 ENV DB_USER=""
 ENV DB_PASSWD=""
 ENV PORT=8010
+ENV MODEL_PATH=""
 ENV TPC_TOKEN=""
 ENV PYTHONPATH=$PYTHONPATH:/usr/src/app/
 
 EXPOSE ${PORT}
 
-CMD python3 backend/api.py -N ${DB_NAME} -U ${DB_USER} -P "${DB_PASSWD}" -H ${DB_HOST} -p ${PORT} -t ${TPC_TOKEN}
+CMD python3 backend/api.py -N ${DB_NAME} -U ${DB_USER} -P "${DB_PASSWD}" -H ${DB_HOST} -p ${PORT} -m ${MODEL_PATH} -t ${TPC_TOKEN}
