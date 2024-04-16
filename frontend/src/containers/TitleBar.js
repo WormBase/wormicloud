@@ -41,7 +41,7 @@ const TitleBar = () => {
                             </Row>
                             <Row>
                                 <Col sm={12}>
-                                    <h6><i>Powered by <a href="https://www.textpressocentral.org/tpc">Textpressocentral</a></i></h6>
+                                    <h6><i>Powered by <a href="https://alliancegenome.org/textpresso/wb/tpc">Textpressocentral</a></i></h6>
                                 </Col>
                             </Row>
                         </Container>
