@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 class TPCManager(object):
     def __init__(self, textpresso_api_token):
         self.textpresso_api_token = textpresso_api_token
-        self.tpc_api_endpoint = "https://www.alliancegenome.org/textpresso/wb/v1/textpresso/api/search_documents"
-        self.tpc_category_matches_endpoint = "https://www.alliancegenome.org/textpresso/wb/v1/textpresso/api/get_category_matches_document_fulltext"
+        self.tpc_api_endpoint = "https://wb-textpresso.alliancegenome.org/v1/textpresso/api/search_documents"
+        self.tpc_category_matches_endpoint = "https://wb-textpresso.alliancegenome.org/v1/textpresso/api/get_category_matches_document_fulltext"
         if not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
             ssl._create_default_https_context = ssl._create_unverified_context
 
