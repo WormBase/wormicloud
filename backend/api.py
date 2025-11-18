@@ -126,7 +126,7 @@ class TPCWordListReader:
 
     @staticmethod
     def get_paper_num_curated_entities(paper_id):
-        req = urllib.request.Request("https://wormbase.org/rest/widget/paper/" + paper_id + "/referenced")
+        req = urllib.request.Request("http://rest-ws297.us-east-1.elasticbeanstalk.com/rest/widget/paper/" + paper_id + "/referenced")
         try:
             results = json.loads(urllib.request.urlopen(req).read().decode('latin1'))
             return sum([field_value if isinstance(field_value, int) else len(field_value) for field_value in
